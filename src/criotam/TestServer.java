@@ -12,27 +12,37 @@ package criotam;
 import static criotam.TestServer.builder;
 import static criotam.TestServer.fileName;
 import static criotam.TestServer.playerID;
+import static criotam.TestServer.threadFlag;
 import java.io.*;
 import java.text.*;
 import java.util.*;
 import java.net.*;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 // Server class
 public class TestServer 
 {
-    public static SensorDatabase database;
+    //public static SensorDatabase database;
     
     public static ServerSocket ss;
 
     public static volatile boolean flag = true;
+    
+    public static volatile boolean threadFlag = true;
     
     public static StringBuilder builder;
     
     public static String fileName = "C://Users/AVINASH/Desktop/criotam/csv/";
     
     public static String playerID = "";
+    
+    public static String tableName = "Exp1_";
+    
+    public static Socket prevConnectedSocket;
+    
+    public static int count = 0;
 
     
     public static void main(String[] args) throws IOException 
@@ -41,6 +51,10 @@ public class TestServer
         flag = true;
         
         playerID = args[0];
+        
+        tableName += playerID;
+        
+        count = 0;
         
         System.out.println("STARTING SERVER");
 
@@ -56,11 +70,17 @@ public class TestServer
             try
             {
                 // socket object to receive incoming client requests
+                /*if(count == 0)*/{                   //comment out for single user connection
+                    
                 s = ss.accept();
+                
+                count++;
+                    
+                prevConnectedSocket = s;
                 
                 System.out.println("A new client is connected : " + s);
                  
-                database = new SensorDatabase();
+                //database = new SensorDatabase();
                 
                 // obtaining input and out streams
                 DataInputStream dis = new DataInputStream(s.getInputStream());
@@ -73,11 +93,14 @@ public class TestServer
  
                 // Invoking the start() method
                 t.start();
+                
+                }
                  
             }
             catch (Exception e){
                 s.close();
                 e.printStackTrace();
+                count = 0;
             }
         }
     }
@@ -85,6 +108,9 @@ public class TestServer
     public int index = 1 ;
     
     public void exitProgram() {
+        
+        Exp1Sensordb exp1Sensordb = new Exp1Sensordb(tableName);
+        
         try {
             
             if(builder!=null){
@@ -103,6 +129,10 @@ public class TestServer
                         PrintWriter pw = new PrintWriter(file);
                         pw.write(builder.toString());
                         pw.close();
+                        
+                        exp1Sensordb.insertData(tableName, fileName);
+                        
+                        exp1Sensordb.closeConn();
                         //TODO: store filename
                         break;
                     }
@@ -112,9 +142,12 @@ public class TestServer
             }
             //TODO: store file name in database
             
-            //System.exit(0);
+            System.out.println("CLosing server.......");
+            prevConnectedSocket.close();
             ss.close();
+            threadFlag = false;
             flag = false;
+            count = 0;
             
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -140,17 +173,32 @@ class ClientHandler extends Thread
     public int index = 1;
     
     public Exp1Sensordb exp1Sensordb;
+    
+    public Exp1Graph exp1Graph;
+    
+    public int time = 0;
+      
+    ArrayList<Double> yAxis;
+    
+    ArrayList<Integer> xAxis;
 
     // Constructor
-    public ClientHandler(Socket s, DataInputStream dis, DataOutputStream dos) 
+    public ClientHandler(Socket s, DataInputStream dis, DataOutputStream dos) throws Exception 
     {
         this.s = s;
         this.dis = dis;
         this.dos = dos;
+        this.time = 0;
+        xAxis = new ArrayList();
+        yAxis = new ArrayList();
+        
         builder = new StringBuilder(); 
         TestServer.builder = this.builder;
         this.tableName = "Exp1_" + TestServer.playerID;
         exp1Sensordb = new Exp1Sensordb(this.tableName);
+        TestServer.threadFlag = true;
+        this.exp1Graph = new Exp1Graph();
+        
     }
  
     @Override
@@ -158,7 +206,8 @@ class ClientHandler extends Thread
     {
         String received;
         String toreturn;
-        while (true) 
+        //TODO: stop using flag
+        while (TestServer.threadFlag) 
         {
             try {
   
@@ -190,6 +239,12 @@ class ClientHandler extends Thread
                                 PrintWriter pw = new PrintWriter(file);
                                 pw.write(builder.toString());
                                 pw.close();
+                                
+                                exp1Sensordb.insertData(tableName, fileName);
+                                
+                                exp1Sensordb.closeConn();
+                                
+                                
                                 //TODO: store filename
                                 break;
                             }
@@ -198,26 +253,39 @@ class ClientHandler extends Thread
                     }
                     
                     TestServer.builder = null;
-                    TestServer.database.closeConn();
-                    TestServer.database = null;
+                    TestServer.count = 0;
+                    //TestServer.database.closeConn();
+                    //TestServer.database = null;
                     break;
                 }
                 
-                //TODO: store in csv file and plot graph
+                
+                xAxis.add(time);
+                
+                yAxis.add(Double.parseDouble(received.split(":")[0]+""));
+                
+                time++;
+                
+                this.exp1Graph.plotData(xAxis, yAxis);
+
+                //TODO: plot graph
                 builder.append(received+"\n");
                 TestServer.builder = this.builder;
                 //System.out.println(TestServer.database.InsertData(received+""));
                  
             } catch (IOException e) {
                 e.printStackTrace();
-                TestServer.database.closeConn();
-                TestServer.database = null;
+                TestServer.count = 0;
+                //TestServer.database.closeConn();
+                //TestServer.database = null;
             }
         }
          
         try
         {
             // closing resources
+            //this.s.close();
+            TestServer.count = 0;
             this.dis.close();
             this.dos.close();
              

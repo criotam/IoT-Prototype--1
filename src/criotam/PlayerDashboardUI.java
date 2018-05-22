@@ -12,6 +12,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
 
 /**
  *
@@ -23,6 +29,10 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
     public String playerID;
     
     public String[] resultID;
+    
+    public Exp1Sensordb exp1Sensordb;
+    
+    public String tableName;
     
     /**
      * Creates new form PlayerDashboardUI
@@ -48,6 +58,9 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
             exp1_info_weight.setText("Weight "+playerInfo.getString("weight"));
             exp1_info_height.setText("Height "+ playerInfo.getString("height"));
             exp1_info_sex.setText("Sex "+playerInfo.getString("sex"));
+            
+            playerID = playerInfo.getString("playerid");
+                    
         }else{
             System.out.println("null resultset");
         }
@@ -62,6 +75,7 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel2 = new javax.swing.JPanel();
+        jDialog = new javax.swing.JDialog();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
@@ -91,6 +105,17 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 100, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout jDialogLayout = new javax.swing.GroupLayout(jDialog.getContentPane());
+        jDialog.getContentPane().setLayout(jDialogLayout);
+        jDialogLayout.setHorizontalGroup(
+            jDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jDialogLayout.setVerticalGroup(
+            jDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -329,8 +354,68 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        switch(jTabbedPane1.getSelectedIndex()){
+            case 0: tableName = "exp1_"+playerID; break;
+            case 1: tableName = "exp2_"+playerID; break;
+            case 2: tableName = "exp3_"+playerID; break;
+        }
+        
+        if(jComboBox1.getSelectedIndex()==4){
+            try {
+                showExp1RawSensorHistory();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    //for exp1
+    public void showExp1RawSensorHistory() throws SQLException{
+        exp1Sensordb = new Exp1Sensordb(tableName);
+        ResultSet rs = exp1Sensordb.getRawSensorFileNames(tableName);
+        if(rs == null){
+            infoBox("No History Data available!");
+        }else
+            showPopUpMenu(rs, "fileName");
+    }
+    
+    public void showPopUpMenu(ResultSet rs, String coloumn) throws SQLException{
+        
+        DefaultListModel<String> model = new DefaultListModel<>();
+        JList list = new JList(model);
+        
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setViewportView(list);
+        
+        while(rs.next()){
+            model.addElement(rs.getString(coloumn));
+        }
+        
+        CustomDialog dialog = new CustomDialog("Choose file: ", list);
+        dialog.setOnOk(e -> {
+            try {
+                displayGraph(dialog.getSelectedItem().toString().trim()+"");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        dialog.show();
+        
+    }
+    
+    public void infoBox(String message)
+    {
+        JOptionPane.showMessageDialog(null, message,
+                "Error " + "", JOptionPane.INFORMATION_MESSAGE);
+        
+    }
+    
+    public void displayGraph(String fileName) throws Exception{
+        
+        new ReadCsvFile(fileName);
+        
+    } 
+    
     TestServer testServer ;
     
     class ServerHandler extends Thread {
@@ -403,6 +488,7 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
     private javax.swing.JLabel exp1_info_weight;
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JDialog jDialog;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

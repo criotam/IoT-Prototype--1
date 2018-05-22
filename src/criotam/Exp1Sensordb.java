@@ -8,6 +8,7 @@ package criotam;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Statement;
 
 /**
@@ -16,7 +17,7 @@ import java.sql.Statement;
  */
 public class Exp1Sensordb {
     
-    String url = "jdbc:mysql://localhost/criotam";
+    String url = "jdbc:mysql://localhost/criotamdb";
     String USER = "root";
     String PASS = "";
 
@@ -31,9 +32,10 @@ public class Exp1Sensordb {
 		            Class.forName("com.mysql.cj.jdbc.Driver");
 		            con = DriverManager.getConnection(url, USER, PASS);
 		                        
-		            String table = "CREATE TABLE IF NOT EXISTS" + tableName + "(\n"
+		            String table = "CREATE TABLE IF NOT EXISTS " + tableName + "(\n"
 		                    + " id BIGINT NOT NULL AUTO_INCREMENT,\n"
-		                    + "	fileName text NOT NULL\n"
+		                    + "	fileName text NOT NULL,\n"
+                                    +"primary key (id)"
 		                    + ");";
 		            
 		            Statement stmt = con.createStatement();
@@ -59,7 +61,7 @@ public class Exp1Sensordb {
                         
             Statement ps = con.createStatement();
             
-            String sql = "CREATE DATABASE IF NOT EXISTS criotam";
+            String sql = "CREATE DATABASE IF NOT EXISTS criotamdb";
             
             ps.executeUpdate(sql);
             
@@ -92,6 +94,29 @@ public class Exp1Sensordb {
 	    }
 
  }
+   //function to grt raw sensor fileName
+   public ResultSet getRawSensorFileNames(String tableName){
+       
+       try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection(url, USER, PASS);
+            
+            PreparedStatement ps = con.prepareStatement("select fileName from " + tableName);
+            
+            ResultSet rs = ps.executeQuery();
+            
+            if(rs.next()){
+                return rs;
+            }
+            
+            con.close();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+       
+       return null;
+   }
    
    public void closeConn(){
 

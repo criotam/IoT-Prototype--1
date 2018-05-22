@@ -120,8 +120,8 @@ public class PlayerSearchUI extends javax.swing.JFrame {
        if(!jTextField1.getText().toString().trim().isEmpty()){
            if(searchPlayer(jTextField1.getText().toString().trim())){
                try {
-                   this.dispose();
                    new PlayerDashboardUI(rs).setVisible(true);
+                   this.dispose();
                } catch (SQLException ex) {
                    ex.printStackTrace();
                }
