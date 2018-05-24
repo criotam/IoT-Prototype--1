@@ -5,6 +5,9 @@
  */
 package criotam;
 
+import criotam.websocketclient.DataListnerHandler;
+import criotam.database.Exp1Sensordb;
+import criotam.graph.GraphHandler;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -25,7 +28,9 @@ import javax.swing.JScrollPane;
  */
 public class PlayerDashboardUI extends javax.swing.JFrame {
 
+    
     public ResultSet playerInfo;
+    
     public String playerID;
     
     public String[] resultID;
@@ -33,6 +38,31 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
     public Exp1Sensordb exp1Sensordb;
     
     public String tableName;
+    
+    public GraphHandler graphHandler;
+    
+    
+    public String exp1_lc_URI = "ws://localhost:8080/WebServer/loadCellStreaming";
+    
+    public String exp2_lc_URI = "ws://localhost:8080/WebServer/exp2loadcelllistener";
+    
+    public String exp2_emg_URI = "ws://localhost:8080/WebServer/exp2emglistener";
+    
+    public String exp3_fp_URI = "ws://localhost:8080/WebServer/exp3forceplatelistener";
+    
+    public String exp3_emg_URI = "ws://localhost:8080/WebServer/exp3emglistener";
+    
+    
+    public String fileName_exp1_lc = "C://Users/AVINASH/Desktop/criotam/csv/exp1/LoadCell/";
+    
+    public String fileName_exp2_lc = "C://Users/AVINASH/Desktop/criotam/csv/exp2/LoadCell/";
+    
+    public String fileName_exp2_emg = "C://Users/AVINASH/Desktop/criotam/csv/exp2/emg/";
+    
+    public String fileName_exp3_fp = "C://Users/AVINASH/Desktop/criotam/csv/exp3/ForcePlate/";
+    
+    public String fileName_exp3_emg = "C://Users/AVINASH/Desktop/criotam/csv/exp3/emg/";
+    
     
     /**
      * Creates new form PlayerDashboardUI
@@ -78,13 +108,32 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
         jDialog = new javax.swing.JDialog();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
-        jPanel5 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         start = new javax.swing.JButton();
-        stop = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
+        stop = new javax.swing.JButton();
+        exp1_ok = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        exp2_lc_start = new javax.swing.JButton();
+        exp2_lc_stop = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
+        exp2_emg_start = new javax.swing.JButton();
+        exp2_emg_stop = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
+        exp2_history_menu = new javax.swing.JComboBox<>();
+        exp2_ok = new javax.swing.JButton();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
+        exp3_fp_start = new javax.swing.JButton();
+        exp3_fp_stop = new javax.swing.JButton();
+        jLabel11 = new javax.swing.JLabel();
+        exp3_emg_start = new javax.swing.JButton();
+        exp3_emg_stop = new javax.swing.JButton();
+        jLabel12 = new javax.swing.JLabel();
+        exp3_history_menu = new javax.swing.JComboBox<>();
+        exp3_ok = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         exp1_info_name = new javax.swing.JLabel();
@@ -93,8 +142,10 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
         exp1_info_weight = new javax.swing.JLabel();
         exp1_info_height = new javax.swing.JLabel();
         exp1_info_sex = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
+        ActionBar = new javax.swing.JPanel();
+        selectplayer = new javax.swing.JLabel();
+        newplayer = new javax.swing.JLabel();
+        live = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -124,8 +175,7 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
         jTabbedPane1.setBackground(new java.awt.Color(255, 102, 0));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-
-        jPanel5.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel1.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
         jLabel1.setText("Start Load Cells Recording");
@@ -139,15 +189,6 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
             }
         });
 
-        stop.setBackground(new java.awt.Color(255, 255, 255));
-        stop.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
-        stop.setText("STOP");
-        stop.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                stopActionPerformed(evt);
-            }
-        });
-
         jLabel2.setBackground(new java.awt.Color(255, 255, 255));
         jLabel2.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -157,55 +198,303 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
         jComboBox1.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Force", "Moment", "Acceleration", "Velocity", "Raw Sensor Data" }));
         jComboBox1.setSelectedIndex(0);
-
-        jButton1.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        jButton1.setText("Ok");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jComboBox1ActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addContainerGap(37, Short.MAX_VALUE)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        stop.setBackground(new java.awt.Color(255, 255, 255));
+        stop.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        stop.setText("STOP");
+        stop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stopActionPerformed(evt);
+            }
+        });
+
+        exp1_ok.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        exp1_ok.setText("Ok");
+        exp1_ok.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exp1_okActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(start)
+                        .addGap(18, 18, 18)
+                        .addComponent(stop))
                     .addComponent(jLabel2)
-                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(jPanel5Layout.createSequentialGroup()
-                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel1)
-                                .addGroup(jPanel5Layout.createSequentialGroup()
-                                    .addComponent(start)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(stop)))
-                            .addGap(36, 36, 36))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel5Layout.createSequentialGroup()
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jButton1)
-                            .addGap(32, 32, 32)))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(exp1_ok)))
+                .addContainerGap(77, Short.MAX_VALUE))
         );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(50, 50, 50)
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(21, 21, 21)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(start)
                     .addComponent(stop))
-                .addGap(44, 44, 44)
+                .addGap(26, 26, 26)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(exp1_ok, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(87, Short.MAX_VALUE))
         );
+
+        jTabbedPane1.addTab("Experiment1", jPanel1);
+
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabel7.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        jLabel7.setText("Start Load Cells Recording");
+
+        exp2_lc_start.setBackground(new java.awt.Color(255, 255, 255));
+        exp2_lc_start.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        exp2_lc_start.setText("START");
+        exp2_lc_start.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exp2_lc_startActionPerformed(evt);
+            }
+        });
+
+        exp2_lc_stop.setBackground(new java.awt.Color(255, 255, 255));
+        exp2_lc_stop.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        exp2_lc_stop.setText("STOP");
+        exp2_lc_stop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exp2_lc_stopActionPerformed(evt);
+            }
+        });
+
+        jLabel8.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        jLabel8.setText("Start EMG Recording");
+
+        exp2_emg_start.setBackground(new java.awt.Color(255, 255, 255));
+        exp2_emg_start.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        exp2_emg_start.setText("START");
+        exp2_emg_start.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exp2_emg_startActionPerformed(evt);
+            }
+        });
+
+        exp2_emg_stop.setBackground(new java.awt.Color(255, 255, 255));
+        exp2_emg_stop.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        exp2_emg_stop.setText("STOP");
+        exp2_emg_stop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exp2_emg_stopActionPerformed(evt);
+            }
+        });
+
+        jLabel9.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel9.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel9.setText("View History");
+        jLabel9.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+
+        exp2_history_menu.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        exp2_history_menu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Force", "Moment", "Acceleration", "Velocity", "Raw Sensor Data" }));
+        jComboBox1.setSelectedIndex(0);
+        exp2_history_menu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exp2_history_menuActionPerformed(evt);
+            }
+        });
+
+        exp2_ok.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        exp2_ok.setText("Ok");
+        exp2_ok.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exp2_okActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(exp2_history_menu, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(exp2_ok))
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel8)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(exp2_lc_start)
+                        .addGap(18, 18, 18)
+                        .addComponent(exp2_lc_stop))
+                    .addComponent(jLabel7)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(exp2_emg_start)
+                        .addGap(18, 18, 18)
+                        .addComponent(exp2_emg_stop)))
+                .addContainerGap(81, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(exp2_lc_stop)
+                    .addComponent(exp2_lc_start))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(exp2_emg_stop)
+                    .addComponent(exp2_emg_start))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(exp2_history_menu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(exp2_ok, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(45, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Experiment2", jPanel3);
+
+        jPanel7.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel7.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabel10.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        jLabel10.setText("Start Force Plate Recording");
+
+        exp3_fp_start.setBackground(new java.awt.Color(255, 255, 255));
+        exp3_fp_start.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        exp3_fp_start.setText("START");
+        exp3_fp_start.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exp3_fp_startActionPerformed(evt);
+            }
+        });
+
+        exp3_fp_stop.setBackground(new java.awt.Color(255, 255, 255));
+        exp3_fp_stop.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        exp3_fp_stop.setText("STOP");
+        exp3_fp_stop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exp3_fp_stopActionPerformed(evt);
+            }
+        });
+
+        jLabel11.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        jLabel11.setText("Start EMG Recording");
+
+        exp3_emg_start.setBackground(new java.awt.Color(255, 255, 255));
+        exp3_emg_start.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        exp3_emg_start.setText("START");
+        exp3_emg_start.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exp3_emg_startActionPerformed(evt);
+            }
+        });
+
+        exp3_emg_stop.setBackground(new java.awt.Color(255, 255, 255));
+        exp3_emg_stop.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        exp3_emg_stop.setText("STOP");
+        exp3_emg_stop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exp3_emg_stopActionPerformed(evt);
+            }
+        });
+
+        jLabel12.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel12.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel12.setText("View History");
+        jLabel12.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+
+        exp3_history_menu.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        exp3_history_menu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Force", "Moment", "Acceleration", "Velocity", "Raw Sensor Data" }));
+        jComboBox1.setSelectedIndex(0);
+        exp3_history_menu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exp3_history_menuActionPerformed(evt);
+            }
+        });
+
+        exp3_ok.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        exp3_ok.setText("Ok");
+        exp3_ok.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exp3_okActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addComponent(exp3_history_menu, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(exp3_ok))
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel11)
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addComponent(exp3_fp_start)
+                        .addGap(18, 18, 18)
+                        .addComponent(exp3_fp_stop))
+                    .addComponent(jLabel10)
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addComponent(exp3_emg_start)
+                        .addGap(18, 18, 18)
+                        .addComponent(exp3_emg_stop)))
+                .addContainerGap(81, Short.MAX_VALUE))
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(exp3_fp_stop)
+                    .addComponent(exp3_fp_start))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(exp3_emg_stop)
+                    .addComponent(exp3_emg_start))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(exp3_history_menu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(exp3_ok, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(45, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Experiment3", jPanel7);
 
         jPanel6.setBackground(new java.awt.Color(0, 102, 102));
 
@@ -275,84 +564,102 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
                 .addComponent(exp1_info_height)
                 .addGap(18, 18, 18)
                 .addComponent(exp1_info_sex)
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        ActionBar.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        selectplayer.setText("Select Player");
+        selectplayer.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                selectplayerMouseClicked(evt);
+            }
+        });
+
+        newplayer.setText("New Player");
+        newplayer.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                newplayerMouseClicked(evt);
+            }
+        });
+
+        live.setText("Live");
+
+        javax.swing.GroupLayout ActionBarLayout = new javax.swing.GroupLayout(ActionBar);
+        ActionBar.setLayout(ActionBarLayout);
+        ActionBarLayout.setHorizontalGroup(
+            ActionBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ActionBarLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(selectplayer)
+                .addGap(18, 18, 18)
+                .addComponent(newplayer)
+                .addGap(18, 18, 18)
+                .addComponent(live)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        ActionBarLayout.setVerticalGroup(
+            ActionBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ActionBarLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(ActionBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(selectplayer)
+                    .addComponent(newplayer)
+                    .addComponent(live))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        jTabbedPane1.addTab("Experiment1", jPanel1);
-
-        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 488, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 293, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("Experiment2", jPanel3);
-
-        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 488, Short.MAX_VALUE)
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 293, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("Experiment3", jPanel4);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTabbedPane1))
+            .addComponent(ActionBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(ActionBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jTabbedPane1)))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    private DataListnerHandler dataListenerHandler;
+    
     private void startActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startActionPerformed
         // TODO add your handling code here:
-        Thread t = new ServerHandler();
-        t.start();       
+            /*
+            Thread t = new ServerHandler();
+            t.start();
+            */
+            
+            Thread t = new WebSocketHandler();
+            t.start();
+        
     }//GEN-LAST:event_startActionPerformed
 
     private void stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopActionPerformed
         // TODO add your handling code here:
+        /*
         if(testServer!=null){
             testServer.exitProgram();
         }
+        */
+        //if(dataListenerHandler==null)System.out.println("null object");
+        //dataListenerHandler.closeConnection();
     }//GEN-LAST:event_stopActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    
+    private void exp1_okActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp1_okActionPerformed
         // TODO add your handling code here:
         switch(jTabbedPane1.getSelectedIndex()){
             case 0: tableName = "exp1_"+playerID; break;
@@ -367,8 +674,96 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
                 ex.printStackTrace();
             }
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_exp1_okActionPerformed
 
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void exp2_lc_startActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp2_lc_startActionPerformed
+        // TODO add your handling code here:
+        
+        graphHandler = new GraphHandler(fileName_exp2_lc, playerID, tableName);
+    }//GEN-LAST:event_exp2_lc_startActionPerformed
+
+    private void exp2_lc_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp2_lc_stopActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_exp2_lc_stopActionPerformed
+
+    private void exp2_emg_startActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp2_emg_startActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_exp2_emg_startActionPerformed
+
+    private void exp2_emg_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp2_emg_stopActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_exp2_emg_stopActionPerformed
+
+    private void exp2_history_menuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp2_history_menuActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_exp2_history_menuActionPerformed
+
+    private void exp2_okActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp2_okActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_exp2_okActionPerformed
+
+    private void exp3_fp_startActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp3_fp_startActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_exp3_fp_startActionPerformed
+
+    private void exp3_fp_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp3_fp_stopActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_exp3_fp_stopActionPerformed
+
+    private void exp3_emg_startActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp3_emg_startActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_exp3_emg_startActionPerformed
+
+    private void exp3_emg_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp3_emg_stopActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_exp3_emg_stopActionPerformed
+
+    private void exp3_history_menuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp3_history_menuActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_exp3_history_menuActionPerformed
+
+    private void exp3_okActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp3_okActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_exp3_okActionPerformed
+
+    private void selectplayerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selectplayerMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_selectplayerMouseClicked
+
+    private void newplayerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newplayerMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_newplayerMouseClicked
+
+    private String expNo;
+    
+    class WebSocketHandler extends Thread {
+        
+        @Override
+        public void run(){
+            try {
+            switch(jTabbedPane1.getSelectedIndex()){
+            case 0: tableName = "exp1_"+playerInfo.getString("playerid");
+            expNo = "exp1";
+            break;
+            case 1: tableName = "exp2_"+playerInfo.getString("playerid"); 
+            expNo = "exp2"; break;
+            case 2: tableName = "exp3_"+playerInfo.getString("playerid");
+            expNo = "exp3"; break;
+        }
+            dataListenerHandler = new DataListnerHandler(exp1_lc_URI,
+                    playerInfo.getString("playerid"), tableName, expNo);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }   catch (Exception ex) {  
+                Logger.getLogger(PlayerDashboardUI.class.getName()).log(Level.SEVERE, null, ex);
+            }  
+        }
+    }
+    
     //for exp1
     public void showExp1RawSensorHistory() throws SQLException{
         exp1Sensordb = new Exp1Sensordb(tableName);
@@ -415,7 +810,8 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
         new ReadCsvFile(fileName);
         
     } 
-    
+  
+    /*
     TestServer testServer ;
     
     class ServerHandler extends Thread {
@@ -432,6 +828,8 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
             } 
         }
     }
+    */
+    
     /**
      * @param args the command line arguments
      */
@@ -480,25 +878,46 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel ActionBar;
     private javax.swing.JLabel exp1_info_age;
     private javax.swing.JLabel exp1_info_height;
     private javax.swing.JLabel exp1_info_name;
     private javax.swing.JLabel exp1_info_playerID;
     private javax.swing.JLabel exp1_info_sex;
     private javax.swing.JLabel exp1_info_weight;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton exp1_ok;
+    private javax.swing.JButton exp2_emg_start;
+    private javax.swing.JButton exp2_emg_stop;
+    private javax.swing.JComboBox<String> exp2_history_menu;
+    private javax.swing.JButton exp2_lc_start;
+    private javax.swing.JButton exp2_lc_stop;
+    private javax.swing.JButton exp2_ok;
+    private javax.swing.JButton exp3_emg_start;
+    private javax.swing.JButton exp3_emg_stop;
+    private javax.swing.JButton exp3_fp_start;
+    private javax.swing.JButton exp3_fp_stop;
+    private javax.swing.JComboBox<String> exp3_history_menu;
+    private javax.swing.JButton exp3_ok;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JDialog jDialog;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JLabel live;
+    private javax.swing.JLabel newplayer;
+    private javax.swing.JLabel selectplayer;
     private javax.swing.JButton start;
     private javax.swing.JButton stop;
     // End of variables declaration//GEN-END:variables

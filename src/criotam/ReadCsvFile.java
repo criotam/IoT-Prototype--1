@@ -5,6 +5,7 @@
  */
 package criotam;
 
+import criotam.graph.Exp1Graph;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
