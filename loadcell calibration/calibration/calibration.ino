@@ -5,7 +5,7 @@
 
 HX711 scale(DOUT, CLK);
 
-float calibration_factor = -3150; //-7050 worked for my 440lb max scale setup
+float calibration_factor = -3150; //Change this factor according to calibration
 
 void setup() {
   Serial.begin(9600);
@@ -19,7 +19,7 @@ void setup() {
   scale.tare();  //Reset the scale to 0
 
   long zero_factor = scale.read_average(); //Get a baseline reading
-  Serial.print("Zero factor: "); //This can be used to remove the need to tare the scale. Useful in permanent scale projects.
+  Serial.print("Zero factor: "); //Useful in permanent scale projects.
   Serial.println(zero_factor);
 }
 
@@ -29,7 +29,7 @@ void loop() {
 
   Serial.print("Reading: ");
   Serial.print(scale.get_units(), 1);
-  Serial.print(" lbs"); //Change this to kg and re-adjust the calibration factor if you follow SI units like a sane person
+  Serial.print(" lbs"); //Change  to kg and re-adjust the calibration factor
   Serial.print(" calibration_factor: ");
   Serial.print(calibration_factor);
   Serial.println();
