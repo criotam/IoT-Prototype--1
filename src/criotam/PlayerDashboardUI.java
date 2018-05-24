@@ -5,17 +5,25 @@
  */
 package criotam;
 
-import criotam.websocketclient.DataListnerHandler;
-import criotam.database.Exp1Sensordb;
+import criotam.actionbarfiles.CriotamUI;
+import criotam.actionbarfiles.PlayerSearchUI;
+import criotam.database.Sensordb;
 import criotam.graph.GraphHandler;
+import criotam.graph.GraphHandler1;
+import criotam.graph.GraphHandler2;
+import criotam.graph.GraphHandler3;
+import criotam.graph.GraphHandler4;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -35,11 +43,20 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
     
     public String[] resultID;
     
-    public Exp1Sensordb exp1Sensordb;
+    public Sensordb exp1Sensordb;
     
     public String tableName;
     
+    
     public GraphHandler graphHandler;
+    
+    public GraphHandler1 graphHandler1;
+    
+    public GraphHandler2 graphHandler2;
+    
+    public GraphHandler3 graphHandler3;
+    
+    public GraphHandler4 graphHandler4;
     
     
     public String exp1_lc_URI = "ws://localhost:8080/WebServer/loadCellStreaming";
@@ -53,15 +70,15 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
     public String exp3_emg_URI = "ws://localhost:8080/WebServer/exp3emglistener";
     
     
-    public String fileName_exp1_lc = "C://Users/AVINASH/Desktop/criotam/csv/exp1/LoadCell/";
+    public String fileName_exp1_lc = "/criotam/csv/exp1/LoadCell/";
     
-    public String fileName_exp2_lc = "C://Users/AVINASH/Desktop/criotam/csv/exp2/LoadCell/";
+    public String fileName_exp2_lc = "/criotam/csv/exp2/LoadCell/";
     
-    public String fileName_exp2_emg = "C://Users/AVINASH/Desktop/criotam/csv/exp2/emg/";
+    public String fileName_exp2_emg = "/criotam/csv/exp2/emg/";
     
-    public String fileName_exp3_fp = "C://Users/AVINASH/Desktop/criotam/csv/exp3/ForcePlate/";
+    public String fileName_exp3_fp = "/criotam/csv/exp3/ForcePlate/";
     
-    public String fileName_exp3_emg = "C://Users/AVINASH/Desktop/criotam/csv/exp3/emg/";
+    public String fileName_exp3_emg = "/criotam/csv/exp3/emg/";
     
     
     /**
@@ -77,6 +94,8 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         setPlayerInfo();
+        
+        getMyDocumentsDirectory();
     }
 
     public void setPlayerInfo() throws SQLException{
@@ -95,6 +114,21 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
             System.out.println("null resultset");
         }
     }
+    
+    public void getMyDocumentsDirectory(){
+        
+        String myDocuments = new JFileChooser().getFileSystemView().getDefaultDirectory().toString();
+        System.out.println(myDocuments);
+         
+        fileName_exp1_lc = myDocuments + fileName_exp1_lc;
+        fileName_exp2_lc = myDocuments + fileName_exp2_lc;
+        fileName_exp2_emg = myDocuments + fileName_exp2_emg;
+        fileName_exp3_fp = myDocuments + fileName_exp3_fp;
+        fileName_exp3_emg = myDocuments + fileName_exp3_emg;
+        
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -104,6 +138,7 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        fileChooser = new javax.swing.JFileChooser();
         jPanel2 = new javax.swing.JPanel();
         jDialog = new javax.swing.JDialog();
         jTabbedPane1 = new javax.swing.JTabbedPane();
@@ -633,47 +668,44 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     
-    private DataListnerHandler dataListenerHandler;
-    
     private void startActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startActionPerformed
         // TODO add your handling code here:
-            /*
-            Thread t = new ServerHandler();
-            t.start();
-            */
-            
-            Thread t = new WebSocketHandler();
-            t.start();
-        
+        {
+          tableName = "exp1_"+playerID+"_lc";
+          graphHandler = new GraphHandler(fileName_exp1_lc, playerID, tableName, exp1_lc_URI);
+          graphHandler.start();
+        }
     }//GEN-LAST:event_startActionPerformed
 
     private void stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopActionPerformed
         // TODO add your handling code here:
-        /*
-        if(testServer!=null){
-            testServer.exitProgram();
-        }
-        */
-        //if(dataListenerHandler==null)System.out.println("null object");
-        //dataListenerHandler.closeConnection();
+        graphHandler.close();
     }//GEN-LAST:event_stopActionPerformed
 
     
     private void exp1_okActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp1_okActionPerformed
-        // TODO add your handling code here:
-        switch(jTabbedPane1.getSelectedIndex()){
-            case 0: tableName = "exp1_"+playerID; break;
-            case 1: tableName = "exp2_"+playerID; break;
-            case 2: tableName = "exp3_"+playerID; break;
-        }
+       //jComboBox1.getSelectedIndex()==4
+        fileChooser.setCurrentDirectory(new File(fileName_exp1_lc));
         
-        if(jComboBox1.getSelectedIndex()==4){
-            try {
-                showExp1RawSensorHistory();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
+        int returnVal = fileChooser.showOpenDialog(this);
+        
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+ 
+            File file = fileChooser.getSelectedFile();
+            {
+                try {
+                    System.out.println(file.getAbsolutePath()+"");
+                    
+                    displayGraph(file.getAbsolutePath()+"");
+                    
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            } 
+        } else{
+            System.out.println("File access cancelled by user.");
         }
+    
     }//GEN-LAST:event_exp1_okActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
@@ -682,20 +714,30 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
 
     private void exp2_lc_startActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp2_lc_startActionPerformed
         // TODO add your handling code here:
-        
-        graphHandler = new GraphHandler(fileName_exp2_lc, playerID, tableName);
+        {
+            tableName = "exp2_"+playerID+"_lc";
+            graphHandler1 = new GraphHandler1(fileName_exp2_lc, playerID, tableName, exp2_lc_URI);
+            graphHandler1.start();
+        }
     }//GEN-LAST:event_exp2_lc_startActionPerformed
 
     private void exp2_lc_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp2_lc_stopActionPerformed
         // TODO add your handling code here:
+        graphHandler1.close();
     }//GEN-LAST:event_exp2_lc_stopActionPerformed
 
     private void exp2_emg_startActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp2_emg_startActionPerformed
         // TODO add your handling code here:
+        {
+            tableName = "exp2_"+playerID+"_emg";
+            graphHandler2 = new GraphHandler2(fileName_exp2_emg, playerID, tableName, exp2_emg_URI);
+            graphHandler2.start();
+        }
     }//GEN-LAST:event_exp2_emg_startActionPerformed
 
     private void exp2_emg_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp2_emg_stopActionPerformed
         // TODO add your handling code here:
+        graphHandler2.close();
     }//GEN-LAST:event_exp2_emg_stopActionPerformed
 
     private void exp2_history_menuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp2_history_menuActionPerformed
@@ -704,22 +746,55 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
 
     private void exp2_okActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp2_okActionPerformed
         // TODO add your handling code here:
+        fileChooser.setCurrentDirectory(new File(fileName_exp2_lc));
+        
+        int returnVal = fileChooser.showOpenDialog(this);
+        
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+ 
+            File file = fileChooser.getSelectedFile();
+            {
+                try {
+                    System.out.println(file.getAbsolutePath()+"");
+                    
+                    displayGraph(file.getAbsolutePath()+"");
+                    
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            } 
+        } else{
+            System.out.println("File access cancelled by user.");
+        }
+
     }//GEN-LAST:event_exp2_okActionPerformed
 
     private void exp3_fp_startActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp3_fp_startActionPerformed
         // TODO add your handling code here:
+        {
+            tableName = "exp3_"+playerID+"_fp";
+            graphHandler3 = new GraphHandler3(fileName_exp3_fp, playerID, tableName, exp3_fp_URI);
+            graphHandler3.start();
+        }
     }//GEN-LAST:event_exp3_fp_startActionPerformed
 
     private void exp3_fp_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp3_fp_stopActionPerformed
         // TODO add your handling code here:
+        graphHandler3.close();
     }//GEN-LAST:event_exp3_fp_stopActionPerformed
 
     private void exp3_emg_startActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp3_emg_startActionPerformed
         // TODO add your handling code here:
+        {
+            tableName = "exp3_"+playerID+"_emg";
+            graphHandler4 = new GraphHandler4(fileName_exp3_emg, playerID, tableName, exp3_emg_URI);
+            graphHandler4.start();
+        }  
     }//GEN-LAST:event_exp3_emg_startActionPerformed
 
     private void exp3_emg_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp3_emg_stopActionPerformed
         // TODO add your handling code here:
+        graphHandler4.close();
     }//GEN-LAST:event_exp3_emg_stopActionPerformed
 
     private void exp3_history_menuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp3_history_menuActionPerformed
@@ -728,45 +803,42 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
 
     private void exp3_okActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp3_okActionPerformed
         // TODO add your handling code here:
+        fileChooser.setCurrentDirectory(new File(fileName_exp3_fp));
+        
+        int returnVal = fileChooser.showOpenDialog(this);
+        
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+ 
+            File file = fileChooser.getSelectedFile();
+            {
+                try {
+                    System.out.println(file.getAbsolutePath()+"");
+                    
+                    displayGraph(file.getAbsolutePath()+"");
+                    
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            } 
+        } else{
+            System.out.println("File access cancelled by user.");
+        }
+
     }//GEN-LAST:event_exp3_okActionPerformed
 
     private void selectplayerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selectplayerMouseClicked
         // TODO add your handling code here:
+        new PlayerSearchUI().setVisible(true);
     }//GEN-LAST:event_selectplayerMouseClicked
 
     private void newplayerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newplayerMouseClicked
         // TODO add your handling code here:
+        new CriotamUI().setVisible(true);
     }//GEN-LAST:event_newplayerMouseClicked
 
-    private String expNo;
-    
-    class WebSocketHandler extends Thread {
-        
-        @Override
-        public void run(){
-            try {
-            switch(jTabbedPane1.getSelectedIndex()){
-            case 0: tableName = "exp1_"+playerInfo.getString("playerid");
-            expNo = "exp1";
-            break;
-            case 1: tableName = "exp2_"+playerInfo.getString("playerid"); 
-            expNo = "exp2"; break;
-            case 2: tableName = "exp3_"+playerInfo.getString("playerid");
-            expNo = "exp3"; break;
-        }
-            dataListenerHandler = new DataListnerHandler(exp1_lc_URI,
-                    playerInfo.getString("playerid"), tableName, expNo);
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }   catch (Exception ex) {  
-                Logger.getLogger(PlayerDashboardUI.class.getName()).log(Level.SEVERE, null, ex);
-            }  
-        }
-    }
-    
     //for exp1
     public void showExp1RawSensorHistory() throws SQLException{
-        exp1Sensordb = new Exp1Sensordb(tableName);
+        exp1Sensordb = new Sensordb(tableName);
         ResultSet rs = exp1Sensordb.getRawSensorFileNames(tableName);
         if(rs == null){
             infoBox("No History Data available!");
@@ -898,6 +970,7 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
     private javax.swing.JButton exp3_fp_stop;
     private javax.swing.JComboBox<String> exp3_history_menu;
     private javax.swing.JButton exp3_ok;
+    private javax.swing.JFileChooser fileChooser;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JDialog jDialog;
     private javax.swing.JLabel jLabel1;

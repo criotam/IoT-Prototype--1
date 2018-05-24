@@ -15,7 +15,7 @@ import java.sql.Statement;
  *
  * @author AVINASH
  */
-public class Exp1Sensordb {
+public class Sensordb {
     
     String url = "jdbc:mysql://localhost/criotamdb";
     String USER = "root";
@@ -23,7 +23,7 @@ public class Exp1Sensordb {
 
    public Connection con;
    
-   public Exp1Sensordb(String tableName){
+   public Sensordb(String tableName){
        
        try{
 		        	
@@ -73,14 +73,14 @@ public class Exp1Sensordb {
     	
     }
    
-   public void insertData(String tableName, String loadCellFileName){
+   public void insertData(String tableName, String fileName){
        
        int x = 0;
 
 		try{
 			PreparedStatement ps = con.prepareStatement("insert into "
                                 + tableName +"(fileName) values(?)");
-			ps.setString(1, loadCellFileName);
+			ps.setString(1, fileName);
 					            
 			x = ps.executeUpdate();
 

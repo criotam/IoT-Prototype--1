@@ -19,16 +19,39 @@ import javax.websocket.WebSocketContainer;
  *
  * @author AVINASH
  */
-public class DataListnerHandler {
+public class DataListnerHandler_test {
     
-    final static CountDownLatch messageLatch = new CountDownLatch(1);
-    final public WebSocketContainer container;
+    final CountDownLatch messageLatch = new CountDownLatch(1);
     
-    private LoadCellListener loadCellListner;
+    public WebSocketContainer container;
     
-    public DataListnerHandler(String url, String playerID, String tableName, String expNo) {
+    private LoadCellListener_test loadCellListner;
+    
+    private String fileName;
+    
+    private String playerID;
+    
+    private String tableName;
+    
+    private String url;
+    
+    
+    public DataListnerHandler_test(String url, String playerID, String tableName, String fileName) {
+        
+        this.fileName = fileName;
+        
+        this.playerID = playerID;
+        
+        this.tableName = tableName;
+        
+        this.url = url;
+        
+    }
+    
+    public void startConnection(){
+        
         container = ContainerProvider.getWebSocketContainer();
-        loadCellListner = new LoadCellListener(playerID, tableName, expNo);
+        loadCellListner = new LoadCellListener_test(playerID, tableName, fileName);
         
         try {
             String uri = url;
@@ -38,6 +61,7 @@ public class DataListnerHandler {
         } catch (DeploymentException | InterruptedException | IOException ex) {
             ex.printStackTrace();
         }
+        
     }
     
     public void closeConnection() {
@@ -47,4 +71,9 @@ public class DataListnerHandler {
             ex.printStackTrace();
         }
     }
+    
+    public boolean isClosed(){
+        return loadCellListner.getSession().isOpen();
+    }
+    
 }

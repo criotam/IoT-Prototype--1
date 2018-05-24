@@ -12,7 +12,7 @@ import criotam.websocketclient.DataListnerHandler_test;
  * @author AVINASH
  */
 
-public class GraphHandler {
+public class GraphHandler4 {
     
     private DataListnerHandler_test dataListenerHandler;
     
@@ -25,7 +25,7 @@ public class GraphHandler {
     private String uri;
     
     
-    public GraphHandler(String fileName, String playerID, String tableName, String uri){
+    public GraphHandler4(String fileName, String playerID, String tableName, String uri){
         
         this.fileName = fileName;
         
@@ -57,10 +57,10 @@ public class GraphHandler {
         
         dataListenerHandler.closeConnection();
         
-    }
+    }    
     
     public boolean isClosed(){
         return dataListenerHandler.isClosed();
     }
-     
+    
 }

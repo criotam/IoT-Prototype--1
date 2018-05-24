@@ -6,13 +6,15 @@
 package criotam.websocketclient;
 
 import criotam.graph.Exp1Graph;
-import criotam.database.Exp1Sensordb;
+import criotam.database.Sensordb;
 import static criotam.TestServer.playerID;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.websocket.ClientEndpoint;
@@ -32,10 +34,10 @@ import javax.websocket.server.PathParam;
  */
 
 @ClientEndpoint
-public class LoadCellListener {
+public class LoadCellListener_test {
     
     
-    private static Session currentSession = null;
+    private Session currentSession = null;
    
     public StringBuilder builder;
     
@@ -47,17 +49,17 @@ public class LoadCellListener {
     
     public Exp1Graph exp1Graph;
     
-    public Exp1Sensordb exp1Sensordb;
+    public Sensordb exp1Sensordb;
     
-    private String fileName = "C://Users/AVINASH/Desktop/criotam/csv/";
+    private String fileName ;
     
-    private String expNo = "";
+    //private String expNo = "";
     
     private String tableName = "";
     
     private String playerID = "";
     
-    public LoadCellListener(String playerID, String tableName, String expNo){
+    public LoadCellListener_test(String playerID, String tableName, String fileName){
        
         builder = new StringBuilder();
         
@@ -73,18 +75,16 @@ public class LoadCellListener {
            ex.printStackTrace();
         }
         
-        this.expNo = expNo;
-        
         this.tableName = tableName;
         
         this.playerID = playerID;
         
-        this.fileName = "C://Users/AVINASH/Desktop/criotam/csv/"+expNo+"/";
+        this.fileName = fileName;
         
-        exp1Sensordb = new Exp1Sensordb(this.tableName);
+        exp1Sensordb = new Sensordb(this.tableName);
     }
     
-    public LoadCellListener(){
+    public LoadCellListener_test(){
         
     }
     
@@ -141,6 +141,7 @@ public class LoadCellListener {
     }
    
     private int index = 1;
+    
     public void saveinFile() {
         System.out.println("Saving file......");
                     
@@ -150,25 +151,37 @@ public class LoadCellListener {
       
                         index = 1;
                         
-                        while(true){
-                            //file.mkdir(); //to make directory if it does not exist
-                            fileName += expNo +"_"+playerID+"_trial"+index+".csv";
+                        Date date = new Date();
+                            String DATE = new SimpleDateFormat("dd-MM-yyyy")
+                                    .format(date);
+                            
+                            String TIME = new SimpleDateFormat("hh mm ss aa")
+                                    .format(date);
+                                    
+                            fileName += DATE+"/";
+                            
+                            file = new File(fileName);
+                            //new Timestamp(date.getTime()) //convert to epoch format
+                            
+                            if(!file.exists()){
+                                file.mkdirs();
+                            }
+                        
+                            fileName += playerID+"("+ TIME +")"+".csv";
+                            
                             file = new File(fileName);
                             
-                            if(file.exists() && !file.isDirectory()) {
-                                fileName = "C://Users/AVINASH/Desktop/criotam/csv/"+expNo+"/";
-                            }else{
                                 System.out.println(fileName+"");
                                 PrintWriter pw;
                                 try {
                                    
                                     pw = new PrintWriter(file);
                                 
-                                    
                                     pw.write(builder.toString());
                                
                                     pw.close();
                                 
+                                 
                                 exp1Sensordb.insertData(tableName, fileName);
                                 
                                 exp1Sensordb.closeConn();
@@ -179,10 +192,8 @@ public class LoadCellListener {
                              
                                 
                                 //TODO: store filename
-                                break;
-                            }
-                            index++;
-                        }
+                                
+                        
                     }
                     builder = null;
     }

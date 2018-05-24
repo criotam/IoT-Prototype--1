@@ -10,7 +10,7 @@ package criotam;
  * @author AVINASH
  */
 import criotam.graph.Exp1Graph;
-import criotam.database.Exp1Sensordb;
+import criotam.database.Sensordb;
 import static criotam.TestServer.builder;
 import static criotam.TestServer.fileName;
 import static criotam.TestServer.playerID;
@@ -111,7 +111,7 @@ public class TestServer
     
     public void exitProgram() {
         
-        Exp1Sensordb exp1Sensordb = new Exp1Sensordb(tableName);
+        Sensordb exp1Sensordb = new Sensordb(tableName);
         
         try {
             
@@ -174,7 +174,7 @@ class ClientHandler extends Thread
     
     public int index = 1;
     
-    public Exp1Sensordb exp1Sensordb;
+    public Sensordb exp1Sensordb;
     
     public Exp1Graph exp1Graph;
     
@@ -197,7 +197,7 @@ class ClientHandler extends Thread
         builder = new StringBuilder(); 
         TestServer.builder = this.builder;
         this.tableName = "Exp1_" + TestServer.playerID;
-        exp1Sensordb = new Exp1Sensordb(this.tableName);
+        exp1Sensordb = new Sensordb(this.tableName);
         TestServer.threadFlag = true;
         this.exp1Graph = new Exp1Graph();
         

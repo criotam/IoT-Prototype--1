@@ -5,14 +5,19 @@
  */
 package criotam.graph;
 
+import criotam.PlayerDashboardUI;
 import criotam.websocketclient.DataListnerHandler_test;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author AVINASH
  */
 
-public class GraphHandler {
+public class GraphHandler1 {
+    
     
     private DataListnerHandler_test dataListenerHandler;
     
@@ -25,7 +30,7 @@ public class GraphHandler {
     private String uri;
     
     
-    public GraphHandler(String fileName, String playerID, String tableName, String uri){
+    public GraphHandler1(String fileName, String playerID, String tableName, String uri){
         
         this.fileName = fileName;
         
@@ -62,5 +67,5 @@ public class GraphHandler {
     public boolean isClosed(){
         return dataListenerHandler.isClosed();
     }
-     
+    
 }
