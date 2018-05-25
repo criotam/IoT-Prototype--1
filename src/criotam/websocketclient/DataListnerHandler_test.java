@@ -73,7 +73,8 @@ public class DataListnerHandler_test {
     }
     
     public boolean isClosed(){
-        return loadCellListner.getSession().isOpen();
+        if(loadCellListner.getSession() == null)return true;
+        return !loadCellListner.getSession().isOpen();
     }
     
 }

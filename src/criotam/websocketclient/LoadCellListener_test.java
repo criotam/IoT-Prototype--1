@@ -105,7 +105,7 @@ public class LoadCellListener_test {
     public void processMessage(String message) {
         System.out.println("Received message in client: " + message);
         //Save it in csv file
-        
+        //TODO: processing here based on experiment
         if(message.toString().trim().split(":")[2]!=null&&builder!=null){
             
             xAxis.add(time);

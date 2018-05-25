@@ -670,10 +670,16 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
     
     private void startActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startActionPerformed
         // TODO add your handling code here:
-        {
+        if(graphHandler == null){//TODO: check for existing opened window
           tableName = "exp1_"+playerID+"_lc";
           graphHandler = new GraphHandler(fileName_exp1_lc, playerID, tableName, exp1_lc_URI);
           graphHandler.start();
+        }else if(graphHandler.isClosed()){
+          tableName = "exp1_"+playerID+"_lc";
+          graphHandler = new GraphHandler(fileName_exp1_lc, playerID, tableName, exp1_lc_URI);
+          graphHandler.start();
+        }else{
+            infoBox("Recording already started!");
         }
     }//GEN-LAST:event_startActionPerformed
 
@@ -714,10 +720,16 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
 
     private void exp2_lc_startActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp2_lc_startActionPerformed
         // TODO add your handling code here:
-        {
+        if(graphHandler1 == null){
             tableName = "exp2_"+playerID+"_lc";
             graphHandler1 = new GraphHandler1(fileName_exp2_lc, playerID, tableName, exp2_lc_URI);
             graphHandler1.start();
+        }else if(graphHandler1.isClosed()){
+            tableName = "exp2_"+playerID+"_lc";
+            graphHandler1 = new GraphHandler1(fileName_exp2_lc, playerID, tableName, exp2_lc_URI);
+            graphHandler1.start();
+        }else{
+            infoBox("Recording already started!");
         }
     }//GEN-LAST:event_exp2_lc_startActionPerformed
 
@@ -728,10 +740,16 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
 
     private void exp2_emg_startActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp2_emg_startActionPerformed
         // TODO add your handling code here:
-        {
+        if(graphHandler2 == null){
             tableName = "exp2_"+playerID+"_emg";
             graphHandler2 = new GraphHandler2(fileName_exp2_emg, playerID, tableName, exp2_emg_URI);
             graphHandler2.start();
+        }else if(graphHandler2.isClosed()){
+            tableName = "exp2_"+playerID+"_emg";
+            graphHandler2 = new GraphHandler2(fileName_exp2_emg, playerID, tableName, exp2_emg_URI);
+            graphHandler2.start();
+        }else{
+            infoBox("Recording already started!");
         }
     }//GEN-LAST:event_exp2_emg_startActionPerformed
 
@@ -771,10 +789,16 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
 
     private void exp3_fp_startActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp3_fp_startActionPerformed
         // TODO add your handling code here:
-        {
+        if(graphHandler3 == null){
             tableName = "exp3_"+playerID+"_fp";
             graphHandler3 = new GraphHandler3(fileName_exp3_fp, playerID, tableName, exp3_fp_URI);
             graphHandler3.start();
+        }else if(graphHandler3.isClosed()){
+            tableName = "exp3_"+playerID+"_fp";
+            graphHandler3 = new GraphHandler3(fileName_exp3_fp, playerID, tableName, exp3_fp_URI);
+            graphHandler3.start();
+        }else{
+            infoBox("Recording already started!");
         }
     }//GEN-LAST:event_exp3_fp_startActionPerformed
 
@@ -785,10 +809,16 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
 
     private void exp3_emg_startActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp3_emg_startActionPerformed
         // TODO add your handling code here:
-        {
+        if(graphHandler4 == null){
             tableName = "exp3_"+playerID+"_emg";
             graphHandler4 = new GraphHandler4(fileName_exp3_emg, playerID, tableName, exp3_emg_URI);
             graphHandler4.start();
+        }else if(graphHandler4.isClosed()){
+            tableName = "exp3_"+playerID+"_emg";
+            graphHandler4 = new GraphHandler4(fileName_exp3_emg, playerID, tableName, exp3_emg_URI);
+            graphHandler4.start();
+        }else{
+            infoBox("Recording already started!");
         }  
     }//GEN-LAST:event_exp3_emg_startActionPerformed
 
