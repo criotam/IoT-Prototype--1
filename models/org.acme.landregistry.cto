@@ -1,0 +1,109 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Write your model definitions here
+ */
+
+ /**
+ * Business network model
+ */
+namespace org.acme.landregistry
+
+participant PrivateIndividual identified by id{
+  o String id
+  o String name
+  o String address
+  o Double balance default = 0.0
+}
+
+participant Bank identified by id {
+  o String id
+  o String name
+  o Double balance default = 0.0
+}
+
+participant InsuranceCompany identified by id {
+  o String id
+  o String name
+  o Double balance default = 0.0
+}
+
+participant Notary identified by id {
+  o String id
+  o String name
+  o String address
+  o Double balance default = 0.0
+}
+
+participant RealEstateAgent identified by id {
+  o String id
+  o String name
+  o Double balance default = 0.0
+  o Double feeRate
+}
+
+
+
+asset RealEstate identified by id{
+  o String id
+  o String address
+  o Double squareMeters
+  o Double price
+  --> PrivateIndividual owner
+}
+
+asset Loan identified by id{
+  o String id
+  o Double amount
+  o Double interestRate
+  --> PrivateIndividual debtor
+  --> Bank bank
+  --> RealEstate realEstate
+  o Integer durationInMonths
+}
+
+asset Insurance identified by id {
+  o String id
+  --> RealEstate realEstate
+  --> PrivateIndividual insured
+  --> InsuranceCompany insuranceCompany
+  o Double monthlyCost
+  o Integer durationInMonths
+}
+
+transaction BuyingRealEstate {
+  --> PrivateIndividual buyer
+  --> PrivateIndividual seller
+  --> RealEstate realEstate
+  --> Loan loan
+  --> RealEstateAgent RealEstateAgent
+  --> Notary notary
+  --> Insurance insurance
+}
+
+transaction ContractingInsurance {
+  --> PrivateIndividual insured
+  --> InsuranceCompany insuranceCompany
+  --> RealEstate realEstate
+  o Double monthlyCost
+  o Integer durationInMonths
+}
+
+transaction ContractingLoan {
+  --> PrivateIndividual debtor
+  --> Bank bank
+  o Double interestRate
+  o Integer durationInMonths
+}
