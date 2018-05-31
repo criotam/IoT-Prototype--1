@@ -9,6 +9,7 @@ import java.util.TimerTask;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
+import javax.websocket.Session;
 
 public class BroadCastListener extends HttpServlet{
 
@@ -23,6 +24,8 @@ public class BroadCastListener extends HttpServlet{
 	public static Arduino_Listener_Handler gateway3_handler_fp = null;
 	
 	public static Arduino_Listener_Handler gateway3_handler_emg = null;
+	
+	public static String status1="disconnected", status2="disconnected", status3="disconnected", status4="disconnected", status5="disconnected"; 
 	
 	public void init() throws ServletException {
 	    try {
@@ -59,7 +62,30 @@ public class BroadCastListener extends HttpServlet{
 
 	         	        ip = packet.getAddress().getHostName();
 	         	        
-	         	        establishWebSocketConnection();
+	         	        if(!status1.equalsIgnoreCase("connecting")) {
+	         	        	new EstablishWebSocketConnection1().start();
+	         	        	status1 = "connecting";
+	         	        }
+	         	        
+	         	        if(!status2.equalsIgnoreCase("connecting")) {
+	         	        	new EstablishWebSocketConnection2().start();
+	         	        	status2 = "connecting";
+	         	        }
+	         	       
+	         	        if(!status3.equalsIgnoreCase("connecting")) {
+	         	        	new EstablishWebSocketConnection3().start();
+	         	        	status3 = "connecting";
+	         	        }
+	         	      
+	         	        if(!status4.equalsIgnoreCase("connecting")) {
+	         	        	new EstablishWebSocketConnection4().start();
+	         	        	status4 = "connecting";
+	         	        }
+	         	     
+	         	        if(!status5.equalsIgnoreCase("connecting")) {
+	         	        	new EstablishWebSocketConnection5().start();
+	         	        	status5 = "connecting";
+	         	        }
 	         	        
 	         	        // Reset the length of the packet before reusing it.
 	         	        packet.setLength(buffer.length);
@@ -70,6 +96,7 @@ public class BroadCastListener extends HttpServlet{
 	                     ex.printStackTrace();
 	                 }
 	             }
+	             
 	         }, 0, 2000);
 	         
 	    } catch (Exception e) {
@@ -77,76 +104,331 @@ public class BroadCastListener extends HttpServlet{
 	    }
 	  }
 	
-	public void establishWebSocketConnection() {
-		
-		//gateway1
-		if(gateway1_handler_lc!=null) {
-			if(gateway1_handler_lc.isClosed()) {
-				gateway1_handler_lc = new Arduino_Listener_Handler("ws://"+
-	        			ip.toString().trim()+":8080/WebServer/loadCellStreaming");
-				gateway1_handler_lc.startConnection();
-				
-			}
-		}else {
-			gateway1_handler_lc = new Arduino_Listener_Handler("ws://"+
-        			ip.toString().trim()+":8080/WebServer/loadCellStreaming");
-			gateway1_handler_lc.startConnection();
-		}
-		
-		
-		//gateway2--------------------------------------------------------
-		if(gateway2_handler_lc!=null) {
-			if(gateway2_handler_lc.isClosed()) {
-				gateway2_handler_lc = new Arduino_Listener_Handler("ws://"+
-	        			ip.toString().trim()+":8080/WebServer/exp2loadcelllistener");
-				gateway2_handler_lc.startConnection();
-			}
-		}else {
-			gateway2_handler_lc = new Arduino_Listener_Handler("ws://"+
-        			ip.toString().trim()+":8080/WebServer/exp2loadcelllistener");
-			gateway2_handler_lc.startConnection();
-		}
-		
-		
-		//gateway2--------------------------------------------------------
-		if(gateway2_handler_emg!=null) {
-			if(gateway2_handler_emg.isClosed()) {
-				gateway2_handler_emg = new Arduino_Listener_Handler("ws://"+
-	        			ip.toString().trim()+":8080/WebServer/exp2emglistener");
-				gateway2_handler_emg.startConnection();
-			}
-		}else {
-			gateway2_handler_emg = new Arduino_Listener_Handler("ws://"+
-        			ip.toString().trim()+":8080/WebServer/exp2emglistener");
-			gateway2_handler_emg.startConnection();
-		}
-		
-		
-		//gateway3------------------------------------------------------------
-		if(gateway3_handler_fp!=null) {
-			if(gateway3_handler_fp.isClosed()) {
+	
+
+	class EstablishWebSocketConnection1 extends Thread {
+        
+        @Override
+        public void run(){
+        	//gateway1
+    		if(gateway1_handler_lc!=null) {
+    			if(gateway1_handler_lc.isClosed()) {
+    				gateway1_handler_lc = new Arduino_Listener_Handler("ws://"+
+    	        			ip.toString().trim()+":8080/WebServer/loadCellStreaming",new Arduino_Listener_Handler.EventListenerHandler() {
+		        	            @Override
+		        	            public void onOpen(Session session) {
+		        	                System.out.println("onOpen:: BroadCastListener g1");
+		        	            }
+
+		        	            @Override
+		        	            public void onClose(Session session) {
+		        	            	status1 = "closed";
+		        	            }
+
+		        	            @Override
+		        	            public void onMessage(String message, Session session) {
+		        	            	
+		        	            }
+
+		        	            @Override
+		        	            public void onError(Throwable t) {
+		        	            	if(gateway1_handler_lc.isClosed())
+		        	            		status1 = "closed";
+		        	            }
+		        	        });
+    				gateway1_handler_lc.startConnection();
+    				
+    			}
+    		}else {
+    			gateway1_handler_lc = new Arduino_Listener_Handler("ws://"+
+            			ip.toString().trim()+":8080/WebServer/loadCellStreaming",new Arduino_Listener_Handler.EventListenerHandler() {
+	        	            @Override
+	        	            public void onOpen(Session session) {
+	        	            	System.out.println("onOpen:: BroadCastListener g1");
+	        	            }
+
+	        	            @Override
+	        	            public void onClose(Session session) {
+	        	            	status1 = "closed";
+	        	            }
+
+	        	            @Override
+	        	            public void onMessage(String message, Session session) {
+	        	            	
+	        	            }
+
+	        	            @Override
+	        	            public void onError(Throwable t) {
+	        	            	
+	        	            	if(gateway1_handler_lc.isClosed())
+	        	            		status1 = "closed";
+	        	            	
+	        	            }
+	        	        });
+    			gateway1_handler_lc.startConnection();
+    		}
+    		   
+        }
+    }
+	
+
+	class EstablishWebSocketConnection2 extends Thread {
+        
+        @Override
+        public void run(){
+        	//gateway2--------------------------------------------------------
+    		if(gateway2_handler_lc!=null) {
+    			if(gateway2_handler_lc.isClosed()) {
+    				gateway2_handler_lc = new Arduino_Listener_Handler("ws://"+
+    	        			ip.toString().trim()+":8080/WebServer/exp2loadcelllistener",new Arduino_Listener_Handler.EventListenerHandler() {
+		        	            @Override
+		        	            public void onOpen(Session session) {
+		        	            	System.out.println("onOpen:: BroadCastListener g2");
+		        	            }
+
+		        	            @Override
+		        	            public void onClose(Session session) {
+		        	            	status2 = "closed";
+		        	            }
+
+		        	            @Override
+		        	            public void onMessage(String message, Session session) {
+		        	            	
+		        	            }
+
+		        	            @Override
+		        	            public void onError(Throwable t) {
+		        	            	if(gateway2_handler_lc.isClosed())
+		        	            		status2 = "closed";
+		        	            }
+		        	        });
+    				gateway2_handler_lc.startConnection();
+    			}
+    			
+    		}else {
+    			gateway2_handler_lc = new Arduino_Listener_Handler("ws://"+
+            			ip.toString().trim()+":8080/WebServer/exp2loadcelllistener",new Arduino_Listener_Handler.EventListenerHandler() {
+	        	            @Override
+	        	            public void onOpen(Session session) {
+	        	            	System.out.println("onOpen:: BroadCastListener g2");
+	        	            }
+
+	        	            @Override
+	        	            public void onClose(Session session) {
+	        	            	status2 = "closed";
+	        	            }
+
+	        	            @Override
+	        	            public void onMessage(String message, Session session) {
+	        	            	
+	        	            }
+
+	        	            @Override
+	        	            public void onError(Throwable t) {
+	        	            	
+	        	            	if(gateway2_handler_lc.isClosed())
+	        	            		status2 = "closed";
+	        	            	
+	        	            }
+	        	        });
+    			gateway2_handler_lc.startConnection();
+    		} 
+        }
+    }
+
+
+	class EstablishWebSocketConnection3 extends Thread {
+        
+        @Override
+        public void run(){
+        	//gateway2--------------------------------------------------------
+    		if(gateway2_handler_emg!=null) {
+    			if(gateway2_handler_emg.isClosed()) {
+    				gateway2_handler_emg = new Arduino_Listener_Handler("ws://"+
+    	        			ip.toString().trim()+":8080/WebServer/exp2emglistener",new Arduino_Listener_Handler.EventListenerHandler() {
+		        	            @Override
+		        	            public void onOpen(Session session) {
+		        	            	System.out.println("onOpen:: BroadCastListener g2");
+		        	            }
+
+		        	            @Override
+		        	            public void onClose(Session session) {
+		        	            	status3 = "closed";
+		        	            }
+
+		        	            @Override
+		        	            public void onMessage(String message, Session session) {
+		        	            	
+		        	            }
+
+		        	            @Override
+		        	            public void onError(Throwable t) {
+		        	            	if(gateway2_handler_emg.isClosed())
+		        	            		status3 = "closed";
+		        	            }
+		        	        });
+    				gateway2_handler_emg.startConnection();
+    			}
+    		}else {
+    			gateway2_handler_emg = new Arduino_Listener_Handler("ws://"+
+            			ip.toString().trim()+":8080/WebServer/exp2emglistener",new Arduino_Listener_Handler.EventListenerHandler() {
+	        	            @Override
+	        	            public void onOpen(Session session) {
+	        	            	System.out.println("onOpen:: BroadCastListener g2");
+	        	            }
+
+	        	            @Override
+	        	            public void onClose(Session session) {
+	        	            	status3 = "closed";
+	        	            }
+
+	        	            @Override
+	        	            public void onMessage(String message, Session session) {
+	        	            	
+	        	            }
+
+	        	            @Override
+	        	            public void onError(Throwable t) {
+	        	            	
+	        	            	if(gateway2_handler_emg.isClosed())
+	        	            		status3 = "closed";
+	        	            	
+	        	            }
+	        	        });
+    			gateway2_handler_emg.startConnection();
+    		} 
+        }
+    }
+
+
+	class EstablishWebSocketConnection4 extends Thread {
+    
+	    @Override
+	    public void run(){
+	    	//gateway3------------------------------------------------------------
+			if(gateway3_handler_fp!=null) {
+				if(gateway3_handler_fp.isClosed()) {
+					gateway3_handler_fp = new Arduino_Listener_Handler("ws://"+
+		        			ip.toString().trim()+":8080/WebServer/exp3forceplatelistener",new Arduino_Listener_Handler.EventListenerHandler() {
+		        	            @Override
+		        	            public void onOpen(Session session) {
+		        	            	System.out.println("onOpen:: BroadCastListener g3");
+		        	            }
+
+		        	            @Override
+		        	            public void onClose(Session session) {
+		        	            	status4 = "closed";
+		        	            }
+
+		        	            @Override
+		        	            public void onMessage(String message, Session session) {
+		        	            	
+		        	            }
+
+		        	            @Override
+		        	            public void onError(Throwable t) {
+		        	            	if(gateway3_handler_fp.isClosed())
+		        	            		status4 = "closed";
+		        	            }
+		        	        });
+					gateway3_handler_fp.startConnection();
+				}
+			}else {
 				gateway3_handler_fp = new Arduino_Listener_Handler("ws://"+
-	        			ip.toString().trim()+":8080/WebServer/exp3forceplatelistener");
+	        			ip.toString().trim()+":8080/WebServer/exp3forceplatelistener",new Arduino_Listener_Handler.EventListenerHandler() {
+	        	            @Override
+	        	            public void onOpen(Session session) {
+	        	            	System.out.println("onOpen:: BroadCastListener g3");
+	        	            }
+
+	        	            @Override
+	        	            public void onClose(Session session) {
+	        	            	status4 = "closed";
+	        	            }
+
+	        	            @Override
+	        	            public void onMessage(String message, Session session) {
+	        	            	
+	        	            }
+
+	        	            @Override
+	        	            public void onError(Throwable t) {
+	        	            	
+	        	            	if(gateway3_handler_fp.isClosed())
+	        	            		status4 = "closed";
+	        	            	
+	        	            }
+	        	        });
 				gateway3_handler_fp.startConnection();
-			}
-		}else {
-			gateway3_handler_fp = new Arduino_Listener_Handler("ws://"+
-        			ip.toString().trim()+":8080/WebServer/exp3forceplatelistener");
-			gateway3_handler_fp.startConnection();
-		}
-		
-		//gateway3------------------------------------------------------------
-		if(gateway3_handler_emg!=null) {
-			if(gateway3_handler_emg.isClosed()) {
-				gateway3_handler_emg = new Arduino_Listener_Handler("ws://"+
-	        			ip.toString().trim()+":8080/WebServer/exp3emglistener");
-				gateway3_handler_emg.startConnection();
-			}
-		}else {
-			gateway3_handler_emg = new Arduino_Listener_Handler("ws://"+
-        			ip.toString().trim()+":8080/WebServer/exp3emglistener");
-			gateway3_handler_emg.startConnection();
-		}
+			} 
+	    }
+
 	}
+
+
+	class EstablishWebSocketConnection5 extends Thread {
+    
+	    @Override
+	    public void run(){
+	    	//gateway3------------------------------------------------------------
+			if(gateway3_handler_emg!=null) {
+				if(gateway3_handler_emg.isClosed()) {
+					gateway3_handler_emg = new Arduino_Listener_Handler("ws://"+
+		        			ip.toString().trim()+":8080/WebServer/exp3emglistener",new Arduino_Listener_Handler.EventListenerHandler() {
+		        	            @Override
+		        	            public void onOpen(Session session) {
+		        	            	System.out.println("onOpen:: BroadCastListener g3");
+		        	            }
+
+		        	            @Override
+		        	            public void onClose(Session session) {
+		        	            	status5 = "closed";
+		        	            }
+
+		        	            @Override
+		        	            public void onMessage(String message, Session session) {
+		        	            	
+		        	            }
+
+		        	            @Override
+		        	            public void onError(Throwable t) {
+		        	            	if(gateway3_handler_emg.isClosed())
+		        	            		status5 = "closed";
+		        	            }
+		        	        });
+					gateway3_handler_emg.startConnection();
+				}
+			}else {
+				gateway3_handler_emg = new Arduino_Listener_Handler("ws://"+
+	        			ip.toString().trim()+":8080/WebServer/exp3emglistener",new Arduino_Listener_Handler.EventListenerHandler() {
+	        	            @Override
+	        	            public void onOpen(Session session) {
+	        	            	System.out.println("onOpen:: BroadCastListener g3");
+	        	            }
+
+	        	            @Override
+	        	            public void onClose(Session session) {
+	        	            	status5 = "closed";
+	        	            }
+
+	        	            @Override
+	        	            public void onMessage(String message, Session session) {
+	        	            	
+	        	            }
+
+	        	            @Override
+	        	            public void onError(Throwable t) {
+	        	            	
+	        	            	if(gateway3_handler_emg.isClosed())
+	        	            		status5 = "closed";
+	        	            	
+	        	            }
+	        	        });
+				gateway3_handler_emg.startConnection();
+			} 
+	    }
+
+	}
+
 	
 }

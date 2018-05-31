@@ -7,7 +7,10 @@ import java.util.concurrent.TimeUnit;
 
 import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
+import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
+
+import raspberrypi.ArduinoData_Listener.EventHandler;
 
 public class Arduino_Listener_Handler {
 
@@ -19,14 +22,52 @@ public class Arduino_Listener_Handler {
 	
 	final CountDownLatch messageLatch = new CountDownLatch(1);
 	
-	public Arduino_Listener_Handler(String url) {
+
+	public interface EventListenerHandler {
+		
+		public void onOpen(Session session);
+		
+		public void onClose(Session session);
+		
+		public void onMessage(String message, Session session);
+		
+		public void onError(Throwable t);
+		
+	}
+	
+	EventListenerHandler handler;
+	
+	public Arduino_Listener_Handler(String url, EventListenerHandler handler) {
 		this.url = url;
+		this.handler = handler;
 	}
 	
     public void startConnection(){
         
         container = ContainerProvider.getWebSocketContainer();
-        arduinoClient = new ArduinoData_Listener();
+        
+        arduinoClient = new ArduinoData_Listener(new ArduinoData_Listener.EventHandler() {
+            @Override
+            public void onOpen(Session session) {
+                handler.onOpen(session);
+            }
+
+            @Override
+            public void onClose(Session session) {
+            	handler.onClose(session);
+            }
+
+            @Override
+            public void onMessage(String message, Session session) {
+            	handler.onMessage(message, session);
+            }
+
+            @Override
+            public void onError(Throwable t) {
+            	handler.onError(t);
+            }
+        });
+        
         
         try {
             String uri = url;
@@ -35,6 +76,7 @@ public class Arduino_Listener_Handler {
             messageLatch.await(100, TimeUnit.SECONDS);
         } catch (DeploymentException | InterruptedException | IOException ex) {
             ex.printStackTrace();
+            handler.onError(ex);
         }
         
     }
@@ -44,6 +86,7 @@ public class Arduino_Listener_Handler {
         	arduinoClient.getSession().close();
         } catch (IOException ex) {
             ex.printStackTrace();
+            handler.onError(ex);
         }
     }
     
@@ -58,6 +101,7 @@ public class Arduino_Listener_Handler {
         	arduinoClient.getSession().getBasicRemote().sendText(message);;
         } catch (IOException ex) {
             ex.printStackTrace();
+            handler.onError(ex);
         }
     }
 
