@@ -1,6 +1,9 @@
 package raspberrypi;
 
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -27,7 +30,25 @@ public class GatewayController{
     public String network(@FormParam("ssid") String ssid, @FormParam("password") String password)
     {
         //connect to wifi
+		connectToWifi(ssid, password);
         return("ok");
     }
+	
+	public void connectToWifi(String ssid, String password) {
+		String s;
+        Process p;
+        try {
+            p = Runtime.getRuntime().exec("sudo ./wifi_connect.sh "+ssid+" "+password);
+            BufferedReader br = new BufferedReader(
+                new InputStreamReader(p.getInputStream()));
+            while ((s = br.readLine()) != null)
+                System.out.println("line: " + s);
+            p.waitFor();
+            System.out.println ("exit: " + p.exitValue());
+            p.destroy();
+        } catch (Exception e) {
+        	e.printStackTrace();
+        }
+	}
 
 }

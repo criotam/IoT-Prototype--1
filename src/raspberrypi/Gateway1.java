@@ -50,6 +50,7 @@ public class Gateway1 {
 			}
         }else {
         
+        	//case exp1lc gwh1, exp2lc gwh2, exp2emg gwh3....
         	BroadCastListener.gateway1_handler_lc.sendMessage(message);
         	if(message.contains("STREAMING")) {
         		//add actual code here
