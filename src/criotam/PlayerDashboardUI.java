@@ -672,11 +672,13 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(graphHandler == null){//TODO: check for existing opened window
           tableName = "exp1_"+playerID+"_lc";
-          graphHandler = new GraphHandler(fileName_exp1_lc, playerID, tableName, exp1_lc_URI);
+          graphHandler = new GraphHandler(fileName_exp1_lc, playerID, 
+                  tableName, exp1_lc_URI, 4, "identifier_exp1lc");
           graphHandler.start();
         }else if(graphHandler.isClosed()){
           tableName = "exp1_"+playerID+"_lc";
-          graphHandler = new GraphHandler(fileName_exp1_lc, playerID, tableName, exp1_lc_URI);
+          graphHandler = new GraphHandler(fileName_exp1_lc, playerID, 
+                  tableName, exp1_lc_URI, 4, "identifier_exp1lc");
           graphHandler.start();
         }else{
             infoBox("Recording already started!");
@@ -722,11 +724,13 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(graphHandler1 == null){
             tableName = "exp2_"+playerID+"_lc";
-            graphHandler1 = new GraphHandler1(fileName_exp2_lc, playerID, tableName, exp2_lc_URI);
+            graphHandler1 = new GraphHandler1(fileName_exp2_lc, playerID, 
+                    tableName, exp2_lc_URI, 4, "identifier_exp2lc");
             graphHandler1.start();
         }else if(graphHandler1.isClosed()){
             tableName = "exp2_"+playerID+"_lc";
-            graphHandler1 = new GraphHandler1(fileName_exp2_lc, playerID, tableName, exp2_lc_URI);
+            graphHandler1 = new GraphHandler1(fileName_exp2_lc, playerID, 
+                    tableName, exp2_lc_URI, 4, "identifier_exp2lc");
             graphHandler1.start();
         }else{
             infoBox("Recording already started!");
@@ -742,11 +746,13 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(graphHandler2 == null){
             tableName = "exp2_"+playerID+"_emg";
-            graphHandler2 = new GraphHandler2(fileName_exp2_emg, playerID, tableName, exp2_emg_URI);
+            graphHandler2 = new GraphHandler2(fileName_exp2_emg, playerID,
+                    tableName, exp2_emg_URI, 1, "identifier_exp2emg");
             graphHandler2.start();
         }else if(graphHandler2.isClosed()){
             tableName = "exp2_"+playerID+"_emg";
-            graphHandler2 = new GraphHandler2(fileName_exp2_emg, playerID, tableName, exp2_emg_URI);
+            graphHandler2 = new GraphHandler2(fileName_exp2_emg, playerID, 
+                    tableName, exp2_emg_URI, 1, "identifier_exp2emg");
             graphHandler2.start();
         }else{
             infoBox("Recording already started!");
@@ -764,7 +770,7 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
 
     private void exp2_okActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp2_okActionPerformed
         // TODO add your handling code here:
-        fileChooser.setCurrentDirectory(new File(fileName_exp2_lc));
+        fileChooser.setCurrentDirectory(new File(fileName_exp2_emg));
         
         int returnVal = fileChooser.showOpenDialog(this);
         
@@ -791,11 +797,13 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(graphHandler3 == null){
             tableName = "exp3_"+playerID+"_fp";
-            graphHandler3 = new GraphHandler3(fileName_exp3_fp, playerID, tableName, exp3_fp_URI);
+            graphHandler3 = new GraphHandler3(fileName_exp3_fp, playerID, 
+                    tableName, exp3_fp_URI, 3, "identifier_exp3fp");
             graphHandler3.start();
         }else if(graphHandler3.isClosed()){
             tableName = "exp3_"+playerID+"_fp";
-            graphHandler3 = new GraphHandler3(fileName_exp3_fp, playerID, tableName, exp3_fp_URI);
+            graphHandler3 = new GraphHandler3(fileName_exp3_fp, playerID, 
+                    tableName, exp3_fp_URI, 3, "identifier_exp3fp");
             graphHandler3.start();
         }else{
             infoBox("Recording already started!");
@@ -811,11 +819,13 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(graphHandler4 == null){
             tableName = "exp3_"+playerID+"_emg";
-            graphHandler4 = new GraphHandler4(fileName_exp3_emg, playerID, tableName, exp3_emg_URI);
+            graphHandler4 = new GraphHandler4(fileName_exp3_emg, playerID,
+                    tableName, exp3_emg_URI, 1, "identifier_exp3emg");
             graphHandler4.start();
         }else if(graphHandler4.isClosed()){
             tableName = "exp3_"+playerID+"_emg";
-            graphHandler4 = new GraphHandler4(fileName_exp3_emg, playerID, tableName, exp3_emg_URI);
+            graphHandler4 = new GraphHandler4(fileName_exp3_emg, playerID,
+                    tableName, exp3_emg_URI, 1, "identifier_exp3emg");
             graphHandler4.start();
         }else{
             infoBox("Recording already started!");
@@ -966,16 +976,6 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
             }
         });
         
-      /*  addWindowListener(new WindowAdapter()
-        {
-            @Override
-            public void windowClosing(WindowEvent e)
-            {
-                System.out.println("Closed");
-                e.getWindow().dispose();
-            }
-        });
-   */     
     }
     
 

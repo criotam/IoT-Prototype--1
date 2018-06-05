@@ -5,7 +5,7 @@
  */
 package criotam;
 
-import criotam.graph.Exp1Graph;
+import criotam.graph.GraphPlotterUtil;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -19,23 +19,19 @@ import java.util.logging.Logger;
  */
 public class ReadCsvFile {
     
-    public ArrayList<Double> y_axisSensor1;
+    public ArrayList<Double> y_axisExp2EmgSensor;
     
-    public ArrayList<Double> y_axisSensor2;
+    public ArrayList<Double> x_axis_time;
     
-    public ArrayList<Double> y_axisSensor3;
-    
-    public ArrayList<Integer> x_axis;
+    public String line;
             
     public ReadCsvFile(String fileName) throws Exception{
         
-        y_axisSensor1 = new ArrayList();
+        y_axisExp2EmgSensor = new ArrayList();
+            
+        x_axis_time = new ArrayList();
         
-        y_axisSensor2 = new ArrayList();
-        
-        y_axisSensor3 = new ArrayList();
-        
-        x_axis = new ArrayList();
+        line = "";
         
         try {
             
@@ -46,29 +42,37 @@ public class ReadCsvFile {
             
             while (scanner.hasNextLine()) {
                 //System.out.println("reading csv...");
-			dataScanner = new Scanner(scanner.nextLine());
+                
+                line = scanner.nextLine().toString().trim();
+                
+                if(line.split(":")[0].equalsIgnoreCase("identifier_exp2emg")){
+			
+                        dataScanner = new Scanner(line);
 			dataScanner.useDelimiter(":");
-                        x_axis.add(time_index);
                         
                         while (dataScanner.hasNext()) {
 				String data = dataScanner.next();
-                                //System.out.println(data+"");
                                 
-				if (index == 0)
-					y_axisSensor1.add(Double.parseDouble(data));
-				else if (index == 1)
-					y_axisSensor2.add(Double.parseDouble(data));
-				else if (index == 2)
-					y_axisSensor3.add(Double.parseDouble(data));
+				if (index == 0){
+					
+                                }
+				else if (index == 1){
+				    y_axisExp2EmgSensor.add(Double.parseDouble(data));
+                                }
+				else if (index == 2){
+                                    x_axis_time.add(Double.parseDouble(data));
+                                }	
 				else
 					System.out.println("invalid data:" + data);
 				index++;
 			}
 			index = 0;
+            
                         time_index++;
+                }
             }
             
-            showPlot(x_axis, y_axisSensor1);
+            showPlot(x_axis_time, y_axisExp2EmgSensor);
                     
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
@@ -76,10 +80,10 @@ public class ReadCsvFile {
 		
     }
     
-    public void showPlot(ArrayList<Integer> time, ArrayList<Double> val) throws Exception{
+    public void showPlot(ArrayList<Double> time, ArrayList<Double> val) throws Exception{
         
-        Exp1Graph exp1 = new Exp1Graph();
-        exp1.plotData(time, val);
+        //GraphPlotterUtil exp1 = new GraphPlotterUtil();
+        //exp1.plotData(time, val);
         
     }
     

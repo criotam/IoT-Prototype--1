@@ -5,7 +5,7 @@
  */
 package criotam.graph;
 
-import criotam.websocketclient.DataListnerHandler_test;
+import criotam.websocketclient.DataListnerHandler;
 
 /**
  *
@@ -14,7 +14,7 @@ import criotam.websocketclient.DataListnerHandler_test;
 
 public class GraphHandler {
     
-    private DataListnerHandler_test dataListenerHandler;
+    private DataListnerHandler dataListenerHandler;
     
     private String fileName;
     
@@ -24,8 +24,10 @@ public class GraphHandler {
     
     private String uri;
     
+    private int tab_count;
     
-    public GraphHandler(String fileName, String playerID, String tableName, String uri){
+    public GraphHandler(String fileName, String playerID, String tableName,
+            String uri, int tab_count, String identifier){
         
         this.fileName = fileName;
         
@@ -35,8 +37,10 @@ public class GraphHandler {
         
         this.uri = uri;
         
-        dataListenerHandler = new DataListnerHandler_test(uri,
-                    playerID, tableName, fileName);
+        this.tab_count = tab_count;
+        
+        dataListenerHandler = new DataListnerHandler(uri,
+                    playerID, tableName, fileName, tab_count, identifier);
     }
     
     public void start(){

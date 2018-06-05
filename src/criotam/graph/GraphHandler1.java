@@ -6,7 +6,7 @@
 package criotam.graph;
 
 import criotam.PlayerDashboardUI;
-import criotam.websocketclient.DataListnerHandler_test;
+import criotam.websocketclient.DataListnerHandler;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 public class GraphHandler1 {
     
     
-    private DataListnerHandler_test dataListenerHandler;
+    private DataListnerHandler dataListenerHandler;
     
     private String fileName;
     
@@ -29,8 +29,10 @@ public class GraphHandler1 {
     
     private String uri;
     
+    private int tab_count;
     
-    public GraphHandler1(String fileName, String playerID, String tableName, String uri){
+    public GraphHandler1(String fileName, String playerID,
+            String tableName, String uri,int tab_count, String identifier){
         
         this.fileName = fileName;
         
@@ -40,8 +42,10 @@ public class GraphHandler1 {
         
         this.uri = uri;
         
-        dataListenerHandler = new DataListnerHandler_test(uri,
-                    playerID, tableName, fileName);
+        this.tab_count = tab_count;
+        
+        dataListenerHandler = new DataListnerHandler(uri,
+                    playerID, tableName, fileName, tab_count, identifier);
     }
     
     public void start(){

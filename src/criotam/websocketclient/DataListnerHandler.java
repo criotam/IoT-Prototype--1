@@ -7,6 +7,7 @@ package criotam.websocketclient;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.LinkedList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -19,13 +20,13 @@ import javax.websocket.WebSocketContainer;
  *
  * @author AVINASH
  */
-public class DataListnerHandler_test {
+public class DataListnerHandler {
     
     final CountDownLatch messageLatch = new CountDownLatch(1);
     
     public WebSocketContainer container;
     
-    private LoadCellListener_test loadCellListner;
+    private DataListener loadCellListner;
     
     private String fileName;
     
@@ -35,8 +36,12 @@ public class DataListnerHandler_test {
     
     private String url;
     
+    private int tab_count;
     
-    public DataListnerHandler_test(String url, String playerID, String tableName, String fileName) {
+    private String identifier;
+    
+    public DataListnerHandler(String url, String playerID, 
+            String tableName, String fileName, int tab_count, String identifier) {
         
         this.fileName = fileName;
         
@@ -46,12 +51,17 @@ public class DataListnerHandler_test {
         
         this.url = url;
         
+        this.tab_count = tab_count;
+        
+        this.identifier = identifier;
+        
     }
     
     public void startConnection(){
         
         container = ContainerProvider.getWebSocketContainer();
-        loadCellListner = new LoadCellListener_test(playerID, tableName, fileName);
+        loadCellListner = new DataListener(playerID, tableName, fileName,
+                tab_count, new LinkedList<>(), identifier);
         
         try {
             String uri = url;

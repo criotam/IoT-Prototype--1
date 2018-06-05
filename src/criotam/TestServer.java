@@ -9,7 +9,7 @@ package criotam;
  *
  * @author AVINASH
  */
-import criotam.graph.Exp1Graph;
+import criotam.graph.GraphPlotterUtil;
 import criotam.database.Sensordb;
 import static criotam.TestServer.builder;
 import static criotam.TestServer.fileName;
@@ -176,7 +176,7 @@ class ClientHandler extends Thread
     
     public Sensordb exp1Sensordb;
     
-    public Exp1Graph exp1Graph;
+    public GraphPlotterUtil exp1Graph;
     
     public int time = 0;
       
@@ -199,7 +199,7 @@ class ClientHandler extends Thread
         this.tableName = "Exp1_" + TestServer.playerID;
         exp1Sensordb = new Sensordb(this.tableName);
         TestServer.threadFlag = true;
-        this.exp1Graph = new Exp1Graph();
+        //this.exp1Graph = new GraphPlotterUtil();
         
     }
  
@@ -268,7 +268,7 @@ class ClientHandler extends Thread
                 
                 time++;
                 
-                this.exp1Graph.plotData(xAxis, yAxis);
+                //this.exp1Graph.plotData(xAxis, yAxis);
 
                 //TODO: plot graph
                 builder.append(received+"\n");

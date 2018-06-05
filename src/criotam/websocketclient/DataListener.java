@@ -5,7 +5,7 @@
  */
 package criotam.websocketclient;
 
-import criotam.graph.Exp1Graph;
+import criotam.graph.GraphPlotterUtil;
 import criotam.database.Sensordb;
 import static criotam.TestServer.playerID;
 import java.io.File;
@@ -15,6 +15,8 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.websocket.ClientEndpoint;
@@ -34,43 +36,40 @@ import javax.websocket.server.PathParam;
  */
 
 @ClientEndpoint
-public class LoadCellListener_test {
+public class DataListener {
     
+    public String identifier;
     
     private Session currentSession = null;
    
     public StringBuilder builder;
     
-    public int time = 0;
-      
-    ArrayList<Double> yAxis;
-    
-    ArrayList<Integer> xAxis;
-    
-    public Exp1Graph exp1Graph;
+    public GraphPlotterUtil graphPlotUtil;
     
     public Sensordb exp1Sensordb;
     
     private String fileName ;
     
-    //private String expNo = "";
-    
     private String tableName = "";
     
     private String playerID = "";
     
-    public LoadCellListener_test(String playerID, String tableName, String fileName){
+    private int tab_count;
+    
+    private Queue<String> data_buffer;
+    
+    private boolean flag = true;
+    
+    
+    public DataListener(String playerID, String tableName, 
+            String fileName, int tab_count, Queue<String> data_buffer, String identifier){
        
         builder = new StringBuilder();
         
-        this.time = 0;
-        
-        xAxis = new ArrayList();
-        
-        yAxis = new ArrayList();
+        this.tab_count = tab_count;
         
         try {
-            exp1Graph = new Exp1Graph();
+            graphPlotUtil = new GraphPlotterUtil(tab_count, identifier);
         } catch (Exception ex) {
            ex.printStackTrace();
         }
@@ -82,9 +81,14 @@ public class LoadCellListener_test {
         this.fileName = fileName;
         
         exp1Sensordb = new Sensordb(this.tableName);
+        
+        this.data_buffer = data_buffer;
+        
+        this.flag = true;
+        
     }
     
-    public LoadCellListener_test(){
+    public DataListener(){
         
     }
     
@@ -103,37 +107,47 @@ public class LoadCellListener_test {
 
     @OnMessage
     public void processMessage(String message) {
-        System.out.println("Received message in client: " + message);
-        //Save it in csv file
-        //TODO: processing here based on experiment
-        if(message.toString().trim().split(":")[2]!=null&&builder!=null){
-            
-            xAxis.add(time);
-                
-            yAxis.add(Double.parseDouble(message.split(":")[0]+""));
-                
-            time++;
-                
-            builder.append(message+"\n");
-            
-            this.exp1Graph.plotData(xAxis, yAxis);
-        }
+        
+        //System.out.println("Received message in client: " + message);
+  
+        flag =true;
+        
+        if(message.contains(":"))
+            data_buffer.add(message);
+        
+        plotData();
+        
+        //System.out.println("queue size:"+ data_buffer.size());
+        
     }
 
     @OnError
     public void processError(Throwable t) throws FileNotFoundException {
         t.printStackTrace();
+        if(!this.currentSession.isOpen()){
         if(builder!=null)
-            if(builder.length()!=0)
+            if(builder.length()!=0){
+                while(!data_buffer.isEmpty()){
+                    //wait
+                }
+                flag = false;
                 saveinFile();
+            }
+        }
     }
     
     @OnClose
     public void onClose(Session session, CloseReason reason, @PathParam("token") String token) throws FileNotFoundException{
         System.out.println("Connection Closed ");
         if(builder!=null)
-            if(builder.length()!=0)
+            if(builder.length()!=0){
+                while(!data_buffer.isEmpty()){
+                    //wait
+                }
+                flag = false;
                 saveinFile();
+            }
+                
     }
     
     public Session getSession(){
@@ -189,13 +203,25 @@ public class LoadCellListener_test {
                                 } catch (FileNotFoundException ex) {
                                     ex.printStackTrace();
                                 }
-                             
-                                
-                                //TODO: store filename
-                                
                         
                     }
                     builder = null;
+    }
+    
+    public void plotData(){
+        
+        while(!data_buffer.isEmpty()){
+                    
+                    //System.out.println("Received message in client: " + data_buffer.peek());
+           
+                    builder.append(data_buffer.peek()+"\n");
+                   
+                    graphPlotUtil.plotGraph(data_buffer.peek().toString());
+                    
+                    data_buffer.remove();
+            
+                }
+        
     }
     
 }
