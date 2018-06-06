@@ -16,27 +16,18 @@
  * Write your model definitions here
  */
 
-namespace test
+namespace org.criotam.prototype.sensor.cto
 
-participant SampleParticipant identified by participantId {
-  o String participantId
-  o String firstName
-  o String lastName
+asset Experiment identified by expId {
+  o String expId
+  o Integer num_sensors
+  o Integer num_trials
+  o DateTime 
 }
 
-asset SampleAsset identified by assetId {
-  o String assetId
-  --> SampleParticipant owner
-  o String value
-}
+asset Sensor identified by sensorId {
+  o String sensorId
+  --> Sports_Authority owner
+  o double sensor_value
 
-transaction SampleTransaction {
-  --> SampleAsset asset
-  o String newValue
-}
-
-event SampleEvent {
-  --> SampleAsset asset
-  o String oldValue
-  o String newValue
 }
