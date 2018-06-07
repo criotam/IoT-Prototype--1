@@ -1,26 +1,32 @@
-namespace org.criotam.prototype_1.participant
-
+namespace org.criotam.prototype.participant
+import org.criotam.prototype.experiment.Experiment
 abstract participant criotamParticipant identified by participantKey {
   o String    participantKey
-  o Contact   contact
 }
 
 concept Contact {
   o String    fName
   o String    lName
-  o String    Email
+  o String    Email regex= /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/
   o String    Username
   o Integer   contact_number
 }
 
 participant criotamNetworkAdmin extends criotamParticipant{
+  o Contact   contact
 
 }
-
+participant Player extends criotamParticipant{
+  --> Experiment experiment
+  o Contact   contact
+}
 participant criotamPersonnel extends criotamParticipant{
-  o String department
+  o Contact   contact
+
 }
 
 participant B2BPartner extends criotamParticipant{
+--> Player player
+
 
 }
