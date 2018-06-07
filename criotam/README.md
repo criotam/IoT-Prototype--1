@@ -2,6 +2,7 @@
 
 prototype-1
 
-
-Assets - Experiment, Sensor,
-Transactions - 
+Concept - Contact
+Assets - Experiment, Sensor,Player, Trial
+Transactions - Create Scientist, SensorReading
+Events - Scientist created, sensor read
