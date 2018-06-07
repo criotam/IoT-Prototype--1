@@ -4,12 +4,13 @@ import org.criotam.prototype.sensor.Sensor
 
 asset Experiment identified by expID {
   o String                   expID
-  o Trials                   trials
-  --> Sensor                 sensor 
+  o Trial[]                   trials
+  o Integer num_trials
 }
 
 
-abstract asset Trials {
+ asset Trial identified by trialID{
+  o String trialID
   o DateTime             schedule
-  o Integer              num_trials
+  --> Sensor[] sensor
 }
