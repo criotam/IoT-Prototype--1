@@ -1,0 +1,7 @@
+namespace org.criotam.prototype.sensor
+
+asset Sensor identified by sensorId {
+  o String sensorId
+  o Integer[] sensor_value
+
+}

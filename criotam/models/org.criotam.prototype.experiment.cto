@@ -1,0 +1,15 @@
+namespace org.criotam.prototype.experiment
+
+import org.criotam.prototype.sensor.Sensor
+
+asset Experiment identified by expID {
+  o String                   expID
+  o Trials                   trials
+  --> Sensor                 sensor 
+}
+
+
+abstract asset Trials {
+  o DateTime             schedule
+  o Integer              num_trials
+}

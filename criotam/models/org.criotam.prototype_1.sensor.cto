@@ -1,8 +1,0 @@
-namespace org.criotam.prototype.sensor.cto
-
-asset Sensor identified by sensorId {
-  o String sensorId
-  --> Sports_Authority owner
-  o double[] sensor_value
-
-}
