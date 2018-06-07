@@ -1,7 +1,44 @@
 namespace org.criotam.prototype.sensor
-
+import org.criotam.prototype.participant.Scientist
+import org.criotam.prototype.experiment.*
 asset Sensor identified by sensorId {
-  o String sensorId
-  o Integer[] sensor_value
+  o String sensorId regex = /^P\d{2}\.\w\d{2}/
+  o Double sensor_value optional
+  o Double Force
+  o Double Moment
+  o Double Velocity
+  o Double Acceleration
+  o DateTime date optional
+  o DateTime time optional
+  o Integer eventCode optional
+  --> Scientist scientist optional
+}
+
+transaction SensorReading {
+  o String sensorID regex = /^P\d{2}\.\w\d{2}/
+  --> Scientist scientist optional
+  o DateTime date optional
+  o DateTime time optional
 
 }
+transaction CreateScientist {
+
+}
+event SensorRead {
+
+}
+
+event ScientistCreated {
+
+}
+/*
+"$class": "org.criotam.prototype.sensor.Sensor",
+"sensorID": "P01.S01",
+"sensor_value": [123,323,1233]
+}
+*/
+
+
+/*"sensor": "resource:org.criotam.prototype.sensor.Sensor#P01.S01"*/
+
+

@@ -1,16 +1,23 @@
 namespace org.criotam.prototype.experiment
-
 import org.criotam.prototype.sensor.Sensor
 
 asset Experiment identified by expID {
-  o String                   expID
-  o Trial[]                   trials
-  o Integer num_trials
+  o String                    expID 
+  o String                    expNum
+  --> Trial trial
 }
 
+asset Player identified by playerId{
+  o String playerId
+  o Double Height_in
+  o Double Weight_lbs
+  o Double Shoe_size_cm
+  --> Experiment experiment
+}
 
- asset Trial identified by trialID{
-  o String trialID
+asset Trial identified by trialID{
+  o String trialID       regex=/^EX\d{3}\-\d{2}\-\d{2}\-\d{4}/
   o DateTime             schedule
+  o Integer trial_num
   --> Sensor[] sensor
 }

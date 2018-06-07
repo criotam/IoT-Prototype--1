@@ -1,5 +1,8 @@
 namespace org.criotam.prototype.participant
 import org.criotam.prototype.experiment.Experiment
+import org.criotam.prototype.experiment.Player
+
+
 abstract participant criotamParticipant identified by participantKey {
   o String    participantKey
 }
@@ -16,17 +19,15 @@ participant criotamNetworkAdmin extends criotamParticipant{
   o Contact   contact
 
 }
-participant Player extends criotamParticipant{
-  --> Experiment experiment
-  o Contact   contact
-}
+
 participant criotamPersonnel extends criotamParticipant{
   o Contact   contact
 
 }
-
-participant B2BPartner extends criotamParticipant{
---> Player player
-
-
+participant Scientist extends criotamParticipant{
+  o String Username
+  o String EmailID
+  o String Password
+  o Contact Scientist_contact
+  --> Player player
 }

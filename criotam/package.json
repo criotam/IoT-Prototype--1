@@ -3,7 +3,7 @@
     "composer": "^0.19.7"
   },
   "name": "criotam",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "prototype-1",
   "scripts": {
     "prepublish": "mkdirp ./dist && composer archive create --sourceType dir --sourceName . -a ./dist/criotam.bna",
