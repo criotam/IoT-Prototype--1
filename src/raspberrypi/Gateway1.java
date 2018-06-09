@@ -1,6 +1,8 @@
 package raspberrypi;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
@@ -12,6 +14,7 @@ import javax.websocket.server.ServerEndpoint;
 @ServerEndpoint("/gateway1")
 public class Gateway1 {
 	
+	private static Queue<String> data_buffer = new LinkedList<>();
 	
 	@OnOpen
     public void onOpen(Session session) {
@@ -33,29 +36,9 @@ public class Gateway1 {
     @OnMessage
     public void onMessage(String message, Session session) {
         System.out.println("onMessage::From=" + session.getId() + " Message=" + message);
-        
-        if(BroadCastListener.gateway1_handler_lc==null) {
-        	try {
-				session.getBasicRemote().sendText("Unreachable local server-:(");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        }else if(BroadCastListener.gateway1_handler_lc.isClosed()) {
-        	try {
-				session.getBasicRemote().sendText("Unreachable local server-:(");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        }else {
-        
-        	//case exp1lc gwh1, exp2lc gwh2, exp2emg gwh3....
-        	BroadCastListener.gateway1_handler_lc.sendMessage(message);
-        	if(message.contains("STREAMING")) {
-        		//add actual code here
-        	}
-        }
+       
+    	data_buffer.add(message);
+    	sendData(session);
         
     }
     
@@ -65,4 +48,36 @@ public class Gateway1 {
         
     }
 
+    public static void sendData(Session session) {
+    	
+    	while(!data_buffer.isEmpty()) {
+    		
+    		if(BroadCastListener.gateway1_handler_lc==null) {
+            	try {
+    				session.getBasicRemote().sendText("Unreachable local server-:(");
+    			} catch (IOException e) {
+    				// TODO Auto-generated catch block
+    				e.printStackTrace();
+    			}
+            }else if(BroadCastListener.gateway1_handler_lc.isClosed()) {
+            	try {
+    				session.getBasicRemote().sendText("Unreachable local server-:(");
+    			} catch (IOException e) {
+    				// TODO Auto-generated catch block
+    				e.printStackTrace();
+    			}
+            }else {
+            
+            	//case exp1lc gwh1, exp2lc gwh2, exp2emg gwh3....
+            	if(data_buffer.peek().toString().contains("identifier_exp1lc")) {
+            		//add actual code here
+            		BroadCastListener.gateway1_handler_lc.sendMessage(data_buffer.peek().toString());
+            	}
+            }
+    		
+    		data_buffer.remove();
+    		
+    	}
+    }
+    
 }
