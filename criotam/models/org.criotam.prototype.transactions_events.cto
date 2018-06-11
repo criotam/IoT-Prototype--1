@@ -1,0 +1,68 @@
+namespace org.criotam.prototype.transactions_events
+import org.criotam.prototype.participants.*
+import org.criotam.prototype.experiment.*
+
+//Defining TRANSACTIONS
+//taking the SensorReading
+
+
+transaction SensorReading {
+  o String sensorID regex = /^P\d{2}\.\w\d{2}/
+  --> Scientist scientist optional
+  o DateTime date optional
+  o DateTime time optional
+// creating a scientist
+// scientist can create a player participant type
+}
+transaction CreateScientist {
+o String Username 
+o String EmailID
+o String Password
+}
+
+//Create a player asset, created by scientist
+
+transaction addPlayer {
+  o String playerId
+  o String Name
+  o String age
+  o Gender sex
+  o Double Height_in
+  o Double Weight_lbs
+}
+// Assigning experiment to the player
+transaction assignExperimentToPlayer {
+  o String experimentId
+  o String playerId 
+}
+//Defining EVENTS
+// Player has been created
+event PlayerCreated {
+  o String playerId
+}
+// Sensor value has been read
+event SensorRead {
+ o String sensorID
+}
+// Scientist has been created
+event ScientistCreated {
+  o String EmailID
+
+}
+// Experiment has been assigned to player
+event experimentAssignedToPlayer {
+  o String experimentId
+  o String playerId
+}
+
+/*
+"$class": "org.criotam.prototype.sensor.Sensor",
+"sensorID": "P01.S01",
+"sensor_value": [123,323,1233]
+}
+*/
+
+
+/*"sensor": "resource:org.criotam.prototype.sensor.Sensor#P01.S01"*/
+
+

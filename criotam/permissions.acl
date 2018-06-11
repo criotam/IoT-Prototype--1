@@ -1,9 +1,19 @@
-rule Name-of-Rule {
-  description: "Provide desc in quotes"
-  resource: "Fully qualified resource specification"
-  participant: "Fully qualified participant specification"
-  operation: ALL *or* Comma seperated CRUD
-  operation: ALL *or* Comma sepsrated CRUD
-  action: ALLOW *or* DENY
+// Admin is responsible for managing the application for ex: deployment, update
+// nework admin will need ot have access to the system resources
+// network admin will be responsible for identity management for ex: issuing and revoking identities
+rule NetworkControlPermission {
+  
+  description: "give admin ALL access to system resources"
+  participant: "org.hyperledger.composer.system.NetworkAdmin"
+  operation: ALL
+  resource: "org.hyperledger.composer.system.*"
+  action: ALLOW
 }
 
+rule ParticipantRegistryControlPermission {
+  description: "give admin ALL access to criotam participant types"
+  participant: "org.hyperledger.composer.system.NetworkAdmin"
+  operation: ALL
+  resource: "org.criotam.prototype.participant.*"
+  action: ALLOW
+}
