@@ -16,12 +16,12 @@ concept Contact {
 }
 
 participant criotamNetworkAdmin extends criotamParticipant{
-  o Contact   contact
+  o Contact   networkAdminContact
 
 }
 
 participant criotamPersonnel extends criotamParticipant{
-  o Contact   contact
+  o Contact   personnelContact
 
 }
 participant Scientist extends criotamParticipant{

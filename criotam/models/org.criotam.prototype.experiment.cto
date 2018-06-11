@@ -9,10 +9,17 @@ asset Experiment identified by expID {
 
 asset Player identified by playerId{
   o String playerId
+  o String Name
+  o String age
+  o Gender sex
   o Double Height_in
   o Double Weight_lbs
-  o Double Shoe_size_cm
   --> Experiment experiment
+}
+
+enum Gender {
+  o  Male
+  o  Felmale
 }
 
 asset Trial identified by trialID{
