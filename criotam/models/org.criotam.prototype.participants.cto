@@ -1,18 +1,16 @@
-namespace org.criotam.prototype.participant
-import org.criotam.prototype.experiment.Experiment
-import org.criotam.prototype.experiment.Player
-
-
-abstract participant criotamParticipant identified by participantKey {
-  o String    participantKey
-}
+namespace org.criotam.prototype.participants
+import org.criotam.prototype.experiment.*
 
 concept Contact {
-  o String    fName
-  o String    lName
+  o String    fName 
+  o String    lName 
   o String    Email regex= /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/
   o String    Username
   o Integer   contact_number
+}
+
+abstract participant criotamParticipant identified by participantKey {
+  o String    participantKey
 }
 
 participant criotamNetworkAdmin extends criotamParticipant{

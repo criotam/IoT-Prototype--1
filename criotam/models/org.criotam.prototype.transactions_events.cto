@@ -20,7 +20,7 @@ o String EmailID
 o String Password
 }
 
-//Create a player asset, created by scientist
+//Creates a player asset, created by scientist
 
 transaction addPlayer {
   o String playerId
