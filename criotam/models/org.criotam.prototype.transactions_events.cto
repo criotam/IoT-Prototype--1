@@ -15,9 +15,10 @@ transaction SensorReading {
 // scientist can create a player participant type
 }
 transaction CreateScientist {
-o String Username 
+o String Username
 o String EmailID
 o String Password
+--> Scientist new_scientist
 }
 
 //Creates a player asset, created by scientist
@@ -33,8 +34,20 @@ transaction addPlayer {
 // Assigning experiment to the player
 transaction assignExperimentToPlayer {
   o String experimentId
-  o String playerId 
+  o String playerId
 }
+
+
+transaction selectLiveStream {
+
+}
+
+
+transaction selectHistoryLogData {
+
+}
+
+
 //Defining EVENTS
 // Player has been created
 event PlayerCreated {
