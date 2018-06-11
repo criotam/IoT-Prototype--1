@@ -24,6 +24,15 @@ transaction SensorReading {
 transaction CreateScientist {
 
 }
+
+transaction AddPlayer {
+
+}
+
+event PlayerCreated {
+
+}
+
 event SensorRead {
 
 }
@@ -31,6 +40,8 @@ event SensorRead {
 event ScientistCreated {
 
 }
+
+
 /*
 "$class": "org.criotam.prototype.sensor.Sensor",
 "sensorID": "P01.S01",
