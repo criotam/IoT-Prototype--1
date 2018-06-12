@@ -3,12 +3,12 @@
 // network admin will be responsible for identity management for ex: issuing and revoking identities
 
 //#1 Rules for NetworkAdmin
-rule NetworkControlPermission {
+/*rule NetworkControlPermission {
   
   description: "give admin ALL access to system resources"
   participant: "org.hyperledger.composer.system.NetworkAdmin"
   operation: ALL
-  resource: "org.hyperledger.composer.system.*"
+  resource: "org.hyperledger.composer.system.**"
   action: ALLOW
 }
 //#2 Rules for 
@@ -32,7 +32,7 @@ rule CriotamParticipantPermissionHistorian {
 // Only employees @ Criotam can execute this transaction
 rule CriotamPersonnelPermission {
   description: "only criotam personnel can create a new scientist"
-  participant: "org.criotam.prototype.participants.criotamPersonnel"
+  participant: "org.criotam.prototype.participants.criotamPersonnel#AG1001"
   operation: CREATE, READ
   resource: "**"
   transaction: "org.criotam.prototype.transactions_events.CreateScientist"
@@ -42,8 +42,18 @@ rule CriotamPersonnelPermission {
 //#4.1 Needed to add new players by scientists
 rule scientistPermissions {
   description: "Granting scientists the permission to create new players"
-  participant: "org.criotam.prototype.participants.Scientist"
+  participant: "org.criotam.prototype.participants.Scientist#SC1001"
   operation: CREATE, READ
   resource: "org.criotam.prototype.experiment.Player"
   action: ALLOW
 }
+rule ScientistREADpermission {
+  
+  description: "give scientist READ access to system resources"
+  participant: "org.criotam.prototype.participants.Scientist#SC1001"
+  operation: ALL
+  resource: "org.hyperledger.composer.system.Network#criotam\@0.0.5"
+  action: ALLOW
+}
+
+*/
