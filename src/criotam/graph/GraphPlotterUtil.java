@@ -43,17 +43,25 @@ import org.knowm.xchart.style.markers.SeriesMarkers;
 public class GraphPlotterUtil {
     
   
-    public JPanel panel1, panel2, panel3, panel4, panel5, panel6, panel7, panel8;
+    public JPanel panel1, panel2, panel3, panel4, panel5, panel6, panel7, panel8, panel9, panel10, panel11, panel12;
     
     public JPanel[] panel = {panel1, panel2, panel3, panel4};
     
     public JPanel[] force_panel = {panel5, panel6, panel7, panel8};
     
-    public XYChart chart1, chart2, chart3, chart4, chart5, chart6, chart7, chart8;
+    public JPanel[] moment_panel = {panel9, panel10, panel11, panel12};
+    
+    
+    
+    public XYChart chart1, chart2, chart3, chart4, chart5, chart6, chart7, chart8, chart9, chart10, chart11, chart12;
     
     public XYChart[] chart = {chart1, chart2, chart3, chart4};
     
     public XYChart[] force_chart = {chart5, chart6, chart7, chart8};
+    
+    public XYChart[] moment_chart = {chart9, chart10, chart11, chart12};
+    
+    
     
     public SwingWrapper<XYChart> sw;
    
@@ -102,6 +110,8 @@ public class GraphPlotterUtil {
     public void setUpPlotArea(int tab_count, String identifier){
         
         JFrame frame = new JFrame("");
+        frame.getContentPane().setBackground(Color.WHITE);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         frame.setLayout(new BorderLayout());
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -112,64 +122,59 @@ public class GraphPlotterUtil {
             
             frame.setTitle("Exp1");
             
-            tabbedPane.add("Load Cell",setUpChartPannel(4, 2, 2));
+            tabbedPane.add("Load Cell   ",setUpChartPannel(4, 2, 2, chart, panel));
+            
+            tabbedPane.add("Force   ",setUpChartPannel(4, 2, 2, force_chart, force_panel));
+            
+            tabbedPane.add("Moment   ",setUpChartPannel(4, 2, 2, moment_chart, moment_panel));
+            
+            //add more tabs
             
         }else if(identifier.equalsIgnoreCase("identifier_exp2lc")){
             
             frame.setTitle("Exp2");
             
-            tabbedPane.add("Load Cell",setUpChartPannel(4, 2, 2));
+            tabbedPane.add("Load Cell   ",setUpChartPannel(4, 2, 2, chart, panel));
+            
+            tabbedPane.add("Force   ",setUpChartPannel(4, 2, 2, force_chart, force_panel));
+            
+            tabbedPane.add("Moment   ",setUpChartPannel(4, 2, 2, moment_chart, moment_panel));
+            
             
         }else if(identifier.equalsIgnoreCase("identifier_exp2emg")){
             
             frame.setTitle("Exp2");
             
-            tabbedPane.add("EMG",setUpChartPannel(1, 1, 1));
+            tabbedPane.add("EMG   ",setUpChartPannel(1, 1, 1, chart, panel));
             
         }else if(identifier.equalsIgnoreCase("identifier_exp3fp")){
             
             frame.setTitle("Exp3");
             
-            tabbedPane.add("Load Cell",setUpChartPannel(4, 2, 2));
+            tabbedPane.add("Load Cell   ",setUpChartPannel(3, 2, 2, chart, panel));
+            
+            tabbedPane.add("Load Cell   ",setUpChartPannel(3, 2, 2, force_chart, force_panel));
+            
+            tabbedPane.add("Load Cell   ",setUpChartPannel(3, 2, 2, moment_chart, moment_panel));
             
         }else if(identifier.equalsIgnoreCase("identifier_exp3emg")){
             
             frame.setTitle("Exp3");
             
-            tabbedPane.add("EMG",setUpChartPannel(1, 1, 1));
+            tabbedPane.add("EMG   ",setUpChartPannel(1, 1, 1, chart, panel));
             
         }
         
         
         frame.add(tabbedPane, BorderLayout.CENTER);
-            
-        //JLabel label = new JLabel("Raw sensor data", SwingConstants.CENTER);
-        //frame.add(label, BorderLayout.SOUTH);
-
+      
         frame.pack();
         frame.setVisible(true);
         
-        /*
-        
-            JScrollPane scrollPane = new JScrollPane(panel[index-1]);
-
-            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-            scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-
-            //tabbedPane.addTab("Sensor"+index,scrollPane);
-           
-            
-            
-            //frame.add(tabbedPane, BorderLayout.CENTER);
-            tabbedPane.addTab("View All", jpanel);
-            
-        }
-        
-        */
             
     }
     
-    public JPanel setUpChartPannel(int matrix_element, int rows, int coloumns){
+    public JPanel setUpChartPannel(int matrix_element, int rows, int coloumns, XYChart[] chart, JPanel[] panel){
         
         JPanel jpanel;
         
@@ -177,9 +182,9 @@ public class GraphPlotterUtil {
         
         while(index <= matrix_element){
             
-            chart[index-1] = new XYChartBuilder().title("Raw Sensor Data"+index).xAxisTitle("X").yAxisTitle("Y").build();
+            chart[index-1] = new XYChartBuilder().title("Raw Sensor Data"+index).xAxisTitle("time").yAxisTitle("Sensor Reading").build();
             chart[index-1].getStyler().setMarkerSize(2);//radius of the marker
-
+            
             ArrayList<Integer> xinit = new ArrayList();
             ArrayList<Double> yinit = new ArrayList();
             xinit.add(0);
@@ -189,23 +194,36 @@ public class GraphPlotterUtil {
 
             panel[index-1] = new XChartPanel<XYChart>(chart[index-1]);
 
+            panel[index-1].setBackground(Color.WHITE);
+            
             panel[index-1].addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
 
-                    displayPopUpChart((JPanel)e.getComponent(),
-                            (JPanel)((JPanel)e.getComponent()).getParent());
+                    if(e.getClickCount()==1){
+                        
+                        int i = 0;
+                        while(((JPanel)e.getComponent())!=panel[i]){
+                            i++;
+                            if(i==matrix_element)break;
+                        }
+
+                        displayPopUpChart((JPanel)e.getComponent(),
+                                (JPanel)((JPanel)e.getComponent()).getParent(),
+                                 i);
+                    
+                    }
 
                 }});
 
             index++;
         }
         
-        return setUpGridLayout(tab_count, rows, coloumns);
+        return setUpGridLayout(matrix_element, rows, coloumns, chart, panel);
 
     }
     
-    public JPanel setUpGridLayout(int tab_count, int rows, int coloumns){
+    public JPanel setUpGridLayout(int matrix_element, int rows, int coloumns, XYChart[] chart, JPanel[] panel){
         
         int index = 0;
         
@@ -214,8 +232,10 @@ public class GraphPlotterUtil {
         JPanel jpanel = new JPanel();
         jpanel.setLayout(new GridLayout(rows, coloumns));
             
-        while(index < tab_count){
+        while(index < matrix_element){
                 
+            jpanel.setBackground(chart[index].getStyler().getChartBackgroundColor());
+            //panel[index].setBackground(Color.red);
             jpanel.add(panel[index]);
                 
             index++;
@@ -228,35 +248,27 @@ public class GraphPlotterUtil {
         
     }
     
-    public void displayPopUpChart(JPanel jpanel, JPanel rootPanel){
-        
-        JFrame frame = new JFrame("");
-        //frame.setLayout(new BorderLayout());
-        //frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-        //JPanel panel = new JPanel();
-        //panel.add(jpanel);
-        
-        //frame.add(panel, BorderLayout.CENTER);
+    public void displayPopUpChart(JPanel jpanel, JPanel rootPanel, int index){
         
         rootPanel.setVisible(false);
-        ((JPanel)rootPanel.getParent()).add(jpanel);
-        JLabel label = new JLabel("<<Back", SwingConstants.LEFT);
+        (((JPanel)rootPanel).getParent()).add(jpanel);
+        JLabel label = new JLabel("<<Back");
+        //label.setAlignmentX(0);
+        //jpanel.setAlignmentX(JPanel.LEFT_ALIGNMENT);
+        jpanel.add(label, "cell 0 0,alignx left");
         
-              
-        jpanel.add(label);
-        //jpanel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-        //frame.pack();
-        //frame.setVisible(true);
+        System.out.println("index selected"+index);
         
-        frame.addWindowListener( new WindowAdapter(){
-    
-            public void windowClosing(WindowEvent e){
-                rootPanel.add(jpanel);
-                rootPanel.setVisible(true);
-            }
-        });
-                
+        label.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    
+                    jpanel.remove(label);
+                    rootPanel.add(jpanel, index);
+                    rootPanel.setVisible(true);
+                    
+                }});
+         
        }
     
     public void plotData(ArrayList<Double> time, ArrayList<Double> val, int index){
@@ -322,6 +334,18 @@ public class GraphPlotterUtil {
             }
         
     }
+    
+    
+    public void plotHistoryGraph(ArrayList<String> message){
+        
+        for(String ele: message){
+            
+            plotGraph(ele);
+            
+        }
+        
+    }
+    
     
     public void drawLine(double xpoint, int index){
         

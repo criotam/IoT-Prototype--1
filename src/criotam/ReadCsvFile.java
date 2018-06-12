@@ -19,18 +19,14 @@ import java.util.logging.Logger;
  */
 public class ReadCsvFile {
     
-    public ArrayList<Double> y_axisExp2EmgSensor;
-    
-    public ArrayList<Double> x_axis_time;
+    public ArrayList<String> message;
     
     public String line;
             
     public ReadCsvFile(String fileName) throws Exception{
         
-        y_axisExp2EmgSensor = new ArrayList();
+        message = new ArrayList();
             
-        x_axis_time = new ArrayList();
-        
         line = "";
         
         try {
@@ -45,11 +41,14 @@ public class ReadCsvFile {
                 
                 line = scanner.nextLine().toString().trim();
                 
+                message.add(line);
+                
                 if(line.split(":")[0].equalsIgnoreCase("identifier_exp2emg")){
 			
-                        dataScanner = new Scanner(line);
-			dataScanner.useDelimiter(":");
+                        //dataScanner = new Scanner(line);
+			//dataScanner.useDelimiter(":");
                         
+                        /*
                         while (dataScanner.hasNext()) {
 				String data = dataScanner.next();
                                 
@@ -67,12 +66,12 @@ public class ReadCsvFile {
 				index++;
 			}
 			index = 0;
-            
+            */
                         time_index++;
                 }
             }
             
-            showPlot(x_axis_time, y_axisExp2EmgSensor);
+            showPlot(message);
                     
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
@@ -80,10 +79,10 @@ public class ReadCsvFile {
 		
     }
     
-    public void showPlot(ArrayList<Double> time, ArrayList<Double> val) throws Exception{
+    public void showPlot(ArrayList<String> message) throws Exception{
         
-        //GraphPlotterUtil exp1 = new GraphPlotterUtil();
-        //exp1.plotData(time, val);
+        GraphPlotterUtil exp1 = new GraphPlotterUtil(4, message.get(0).split(":")[0]);
+        exp1.plotHistoryGraph(message);
         
     }
     

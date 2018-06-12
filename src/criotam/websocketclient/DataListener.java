@@ -112,7 +112,7 @@ public class DataListener {
   
         flag =true;
         
-        if(message.contains(":"))
+        if(message.contains("identifier"))
             data_buffer.add(message);
         
         plotData();
