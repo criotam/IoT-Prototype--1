@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
+public class welcome extends AppCompatActivity {
     private Button login;
     private Button signup;
     @Override

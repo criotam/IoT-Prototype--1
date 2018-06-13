@@ -6,24 +6,24 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class signup extends AppCompatActivity {
-    private Button signup;
-
+public class players extends AppCompatActivity {
+    private Button player;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup);
-        signup = (Button)findViewById(R.id.btnSignup);
-        signup.setOnClickListener(new View.OnClickListener() {
+        setContentView(R.layout.activity_players);
+        player=(Button)findViewById(R.id.btnplay);
+        player.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openplayers();
+                openexperiment();
             }
         });
     }
-    public void openplayers(){
-        Intent intent = new Intent(this,players.class);
+    public void openexperiment(){
+        Intent intent = Intent(this,experiment.class);
         startActivity(intent);
+
     }
 
 }

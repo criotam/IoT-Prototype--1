@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".MainActivity"
+    tools:context=".welcome"
     android:background="@drawable/backgroundwelcome_1080x1920">
 
     <LinearLayout
@@ -111,23 +111,23 @@
             android:orientation="horizontal"
             >
             <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
                 android:background="@drawable/circles_selected"
-                android:layout_marginLeft="4dp"
+                android:layout_marginLeft="6dp"
                 />
 
             <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
                 android:background="@drawable/circle"
-                android:layout_marginLeft="4dp"/>
+                android:layout_marginLeft="6dp"/>
 
             <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
                 android:background="@drawable/circle"
-                android:layout_marginLeft="4dp"/>
+                android:layout_marginLeft="6dp"/>
         </LinearLayout>
     </LinearLayout>
 
