@@ -2,11 +2,13 @@
 
 prototype-1
 
-Concept - Contact
+enum - gender,
+
+Concept - Contact, DOB
 
 Assets - Experiment, Sensor,Player, Trial
 
-Transactions - Create Scientist, SensorReading
+Transactions - Create Scientist, SensorReading, 
 
 Events - Scientist created, sensor read
 

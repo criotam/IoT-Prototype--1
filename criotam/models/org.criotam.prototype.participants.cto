@@ -18,10 +18,13 @@ participant criotamNetworkAdmin extends criotamParticipant{
 
 }
 
+
 participant criotamPersonnel extends criotamParticipant{
   o Contact   personnelContact
 
 }
+
+
 participant Scientist extends criotamParticipant{
   o String Username
   o String EmailID

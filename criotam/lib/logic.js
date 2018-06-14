@@ -1,9 +1,9 @@
 /**
  * Create Scientist Transaction
- * @param {org.criotam.prototype.experiment.Experiment}
+ *
  */
 
-/* const BusinessNetworkConnection = require('composer-client').BusinessNetworkConnection;
+const BusinessNetworkConnection = require('composer-client').BusinessNetworkConnection;
 
 this.bizNetworkConnection = new BusinessNetworkConnection();
 this.cardName = config.get('cardName');
@@ -24,4 +24,3 @@ let factory = this.businessNetworkDefinition.getFactory();
 owner = factory.newResource('net.biz.digitalPropertyNetwork', 'Person', 'PID:1234567890');
 owner.firstName = 'Fred';
 owner.lastName = 'Bloggs';
-*/

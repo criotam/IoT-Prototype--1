@@ -2,10 +2,9 @@ namespace org.criotam.prototype.experiment
 import org.criotam.prototype.participants.*
 
 //defining a Sensor asset
-
 asset Sensor identified by sensorId {
   o String sensorId regex = /^P\d{2}\.\w\d{2}/
-  o Double sensor_value optional
+  o String sensor_value optional
   o Double Force optional
   o Double Moment optional
   o Double Velocity optional
@@ -27,8 +26,8 @@ enum Gender {
 
 asset Experiment identified by experimentId{
   o String experimentId 
-  o String experimantName
-  o DateTime experimentTimestamp
+  o String experimantName optional
+  o DateTime experimentTimestamp optional
   o Trial[] trials optional
 }
 
@@ -37,7 +36,7 @@ asset Player identified by playerId{
   o String Name optional
   o String age optional
   o Gender sex
-  o DOB playerDOB
+  o DOB playerDOB optional
   o Double Height_in optional
   o Double Weight_lbs optional
   o Experiment[] experiment optional
@@ -45,8 +44,8 @@ asset Player identified by playerId{
 
 asset Trial identified by trialNumber{
   o String       trialNumber      regex=/^EX\d{3}\-\d{2}\-\d{2}\-\d{4}/
-  o DateTime     schedule
-  o Integer      trial_num
-  o Experiment   experiment
-  o Sensor[]   sensor
+  o DateTime     schedule  optional
+  o Integer      trial_num optional
+  o Experiment   experiment optional
+  o Sensor[]   sensor  optional
 }

@@ -1,0 +1,53 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Write your model definitions here
+ */
+
+namespace org.criotam.prototype.sensor
+
+participant Scientist identified by scientist_Id {
+  o String scientist_Id
+
+}
+
+asset Player identified by player_id {
+  o String player_id 
+  o String player_name 
+  o String player_age optional
+  o String player_weight optional
+  o String player_height optional
+  o String player_sex optional
+  --> Scientist experimenter optional
+}
+
+asset Sensor identified by sensorId {
+  o String sensorId 
+  o String sensorMAC
+  --> Scientist owner optional
+  --> Player player optional
+  o String[] value
+}
+
+transaction readSensor {
+  --> Sensor sensor
+  o String newValue
+}
+
+event sensorRead {
+  --> Sensor sensor
+  o String[] oldValue
+  o String[] newValue
+}
