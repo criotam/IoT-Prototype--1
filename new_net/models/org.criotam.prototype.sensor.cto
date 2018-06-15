@@ -19,12 +19,12 @@
 namespace org.criotam.prototype.sensor
 
 participant Scientist identified by scientist_Id {
-  o String scientist_Id
+  o String scientist_Id regex = /^SC[0-9]{2}/
 
 }
 
 asset Player identified by player_id {
-  o String player_id 
+  o String player_id regex= /^P[0-9]{2}/
   o String player_name 
   o String player_age optional
   o String player_weight optional
@@ -34,8 +34,8 @@ asset Player identified by player_id {
 }
 
 asset Sensor identified by sensorId {
-  o String sensorId 
-  o String sensorMAC
+  o String sensorId regex = /^S[0-9]{2}/
+  o String sensorMAC regex = /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/
   --> Scientist owner optional
   --> Player player optional
   o String[] value
@@ -43,11 +43,25 @@ asset Sensor identified by sensorId {
 
 transaction readSensor {
   --> Sensor sensor
-  o String newValue
+  o String[] newValue
 }
 
 event sensorRead {
   --> Sensor sensor
   o String[] oldValue
   o String[] newValue
+}
+
+transaction addPlayer {
+  --> Player player
+  o String player_id regex = /^P[0-9]{2}/
+  o String player_name 
+  o String player_age optional
+  o String player_weight optional
+  o String player_height optional
+  o String player_sex optional
+}
+
+event addedPlayer {
+  --> Player player
 }

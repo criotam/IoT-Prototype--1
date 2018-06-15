@@ -3,7 +3,7 @@
     "composer": "^0.19.7"
   },
   "name": "new_net",
-  "version": "0.1.4",
+  "version": "0.2.2",
   "description": "this is to retrieve sensor data from client application",
   "scripts": {
     "prepublish": "mkdirp ./dist && composer archive create --sourceType dir --sourceName . -a ./dist/new_net.bna",
