@@ -18,14 +18,16 @@
 
 namespace org.criotam.prototype.sensor
 
-participant Scientist identified by scientist_Id {
-  o String scientist_Id regex = /^SC[0-9]{2}/
-
+participant Scientist identified by scientistId {
+  o String scientistId //regex = /^SC[0-9]{2}/
+  o String userName optional
+  o String Email optional
+  o String Password optional
 }
 
 asset Player identified by player_id {
-  o String player_id regex= /^P[0-9]{2}/
-  o String player_name 
+  o String player_id // regex= /^P[0-9]{2}/
+  o String player_name optional
   o String player_age optional
   o String player_weight optional
   o String player_height optional
@@ -34,27 +36,57 @@ asset Player identified by player_id {
 }
 
 asset Sensor identified by sensorId {
-  o String sensorId regex = /^S[0-9]{2}/
-  o String sensorMAC regex = /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/
+  o String sensorId //regex = /^S[0-9]{2}/
+  o String sensorMAC optional //regex = /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/
+  o String Raw_value optional
+  o String Fx_value optional
+  o String Fy_value optional
+  o String Fz_value optional
+  o String Mx_value optional
+  o String My_value optional
+  o String Mz_value optional
   --> Scientist owner optional
   --> Player player optional
-  o String[] value
 }
 
 transaction readSensor {
   --> Sensor sensor
-  o String[] newValue
+  o String Raw_oldValue optional
+  o String Raw_newValue optional
+  o String Fx_oldValue optional
+  o String Fx_newValue optional
+  o String Fy_oldValue optional
+  o String Fy_newValue optional
+  o String Fz_oldValue optional
+  o String Fz_newValue optional
+  o String Mx_oldValue optional
+  o String Mx_newValue optional
+  o String My_oldValue optional
+  o String My_newvalue optional
+  o String Mz_oldValue optional
+  o String Mz_newValue optional
 }
 
 event sensorRead {
   --> Sensor sensor
-  o String[] oldValue
-  o String[] newValue
+  o String Raw_oldValue optional
+  o String Raw_newValue optional
+  o String Fx_oldValue optional
+  o String Fx_newValue optional
+  o String Fy_oldValue optional
+  o String Fy_newValue optional
+  o String Fz_oldValue optional
+  o String Fz_newValue optional
+  o String Mx_oldValue optional
+  o String Mx_newValue optional
+  o String My_oldValue optional
+  o String My_newvalue optional
+  o String Mz_oldValue optional
+  o String Mz_newValue optional
 }
 
 transaction addPlayer {
-  --> Player player
-  o String player_id regex = /^P[0-9]{2}/
+  o String player_id //regex = /^P[0-9]{2}/
   o String player_name 
   o String player_age optional
   o String player_weight optional
@@ -63,5 +95,28 @@ transaction addPlayer {
 }
 
 event addedPlayer {
-  --> Player player
+  o String player_id
+}
+
+transaction addSensor {
+  o String sensorId //regex = /^S[0-9]{2}/
+  o String sensorMAC optional //regex = /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/
+  o String[] value optional
+  --> Scientist owner optional
+  --> Player player optional
+}
+
+event addedSensor {
+  o String sensorId //regex = /^S[0-9]{2}/
+}
+
+transaction addScientist {
+  o String scientistId
+  o String userName optional
+  o String Email optional
+  o String Password optional
+}
+
+event addedScientist {
+  o String scientistId
 }
