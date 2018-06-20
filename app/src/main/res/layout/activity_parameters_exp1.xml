@@ -4,90 +4,89 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".parameters"
+    tools:context=".ParametersActivity"
     android:gravity="center"
     android:orientation="vertical"
     android:background="@drawable/backgroundpage7">
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:alwaysDrawnWithCache="true"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <Button
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="-200dp"
-            android:layout_marginRight="250dp"
-            android:background="@drawable/mailicon" />
-
-        <Button
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginRight="-200dp"
-            android:background="@drawable/close" />
-
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="470dp"
+        android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical">
+
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-50dp"
+            android:alpha="0.5"
             android:text="PARAMETERS"
             android:textAlignment="center"
-            android:textSize="40sp"
-            android:textStyle="bold"
             android:textColor="#fff"
-            android:alpha="0.5"/>
+            android:textSize="35sp"
+            android:textStyle="bold" />
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:layout_marginTop="30dp"
             android:gravity="center"
             android:orientation="horizontal">
+
             <Button
+                android:id="@+id/load_cell"
                 android:layout_width="200dp"
                 android:layout_height="150dp"
                 android:alpha="0.5"
+                android:gravity="center"
+                android:text="Load Cell"
+                android:textColor="#000"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/force"
+                android:layout_width="200dp"
+                android:layout_height="150dp"
+                android:alpha="0.5"
+                android:gravity="center"
                 android:text="Force"
                 android:textColor="#000"
-                android:textSize="20sp"/>
-            <Button
-                android:layout_width="200dp"
-                android:layout_height="150dp"
-                android:alpha="0.5"
-                android:text="Moment"
-                android:textColor="#000"
-                android:textSize="20sp"/>
+                android:textSize="20sp" />
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="150dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:gravity="center"
             android:orientation="horizontal">
+
             <Button
+                android:id="@+id/moment"
                 android:layout_width="200dp"
                 android:layout_height="150dp"
                 android:alpha="0.5"
-                android:text="Velocity"
+                android:gravity="center"
+                android:text="Moment"
                 android:textColor="#000"
-                android:textSize="20sp"/>
+                android:textSize="20sp" />
+
             <Button
+                android:id="@+id/emg"
                 android:layout_width="200dp"
                 android:layout_height="150dp"
                 android:alpha="0.5"
                 android:text="Acceleration"
                 android:textColor="#000"
-                android:textSize="20sp"/>
+                android:textSize="20sp"
+                android:visibility="invisible" />
 
         </LinearLayout>
-        
+
     </LinearLayout>
 
 </LinearLayout>

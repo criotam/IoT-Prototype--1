@@ -4,85 +4,72 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".live_and_history"
+    tools:context=".GraphPlotActivity"
     android:gravity="center"
     android:orientation="vertical"
     android:background="@drawable/backgroundwelcome_1080x1920">
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:alwaysDrawnWithCache="true"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <Button
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="-200dp"
-            android:layout_marginRight="250dp"
-            android:background="@drawable/mailicon" />
-
-        <Button
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginRight="-200dp"
-            android:background="@drawable/close" />
-
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="480dp"
+        android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/live_streaming"
             android:layout_width="270dp"
             android:layout_height="170dp"
-            android:background="@drawable/livestreamingbutton"
             android:alpha="0.8"
+            android:background="@drawable/livestreamingbutton"
             android:gravity="center"
             android:orientation="vertical">
+
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="35dp"
-                android:background="@drawable/livestreamiIcon2"
-                android:layout_marginBottom="10dp"/>
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/livestreamicon2" />
+
             <TextView
                 android:layout_width="200dp"
                 android:layout_height="40dp"
                 android:text="LIVE"
-                android:textStyle="bold"
+                android:textAlignment="center"
                 android:textSize="20sp"
-                android:textAlignment="center"/>
+                android:textStyle="bold" />
+
             <TextView
-            android:layout_width="200dp"
-            android:layout_height="40dp"
-            android:text="STREAMING"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:textAlignment="center"/>
+                android:layout_width="200dp"
+                android:layout_height="40dp"
+                android:text="STREAMING"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:textStyle="bold" />
         </LinearLayout>
+
         <LinearLayout
+            android:id="@+id/history_data"
             android:layout_width="270dp"
             android:layout_height="170dp"
-            android:background="@drawable/historybutton"
+            android:layout_marginTop="40dp"
             android:alpha="0.8"
+            android:background="@drawable/historybutton"
             android:gravity="center"
-            android:orientation="vertical"
-            android:layout_marginTop="40dp">
+            android:orientation="vertical">
+
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="35dp"
-                android:background="@drawable/historyicon2"
-                android:layout_marginBottom="10dp"/>
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/historyicon2" />
+
             <TextView
                 android:layout_width="200dp"
                 android:layout_height="40dp"
                 android:text="HISTORY"
-                android:textStyle="bold"
+                android:textAlignment="center"
                 android:textSize="20sp"
-                android:textAlignment="center"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
     </LinearLayout>

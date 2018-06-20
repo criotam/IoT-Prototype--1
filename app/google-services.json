@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "698699792633",
+    "firebase_url": "https://criotam-bec9b.firebaseio.com",
+    "project_id": "criotam-bec9b",
+    "storage_bucket": "criotam-bec9b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:698699792633:android:e3be26dc295b2aa8",
+        "android_client_info": {
+          "package_name": "com.logui.arghasen.criotam"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "698699792633-psr7r34sn95ron9ro7ec5lk1n33l6qiu.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "698699792633-psr7r34sn95ron9ro7ec5lk1n33l6qiu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZjBRIUR-egz_7lNUdpn5BuJ2xMHHaKws"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

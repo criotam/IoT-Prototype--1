@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.logui.arghasen.criotam">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -16,13 +19,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".login" />
-        <activity android:name=".signup" />
-        <activity android:name=".players" />
-        <activity android:name=".experiment" />
-        <activity android:name=".live_and_history" />
-        <activity android:name=".parameters" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".SignupActivity" />
+        <activity android:name=".PlayersActivity" />
+        <activity android:name=".ExperimentActivity" />
+        <activity android:name=".GraphPlotActivity" />
+        <activity android:name=".ParametersActivity" />
+        <activity android:name=".LiveStreamingActivity"
+            android:screenOrientation="landscape"/>
         <activity android:name=".output"></activity>
+        <activity android:name=".FetchFiles"></activity>
+        <activity android:name=".ListFiles"></activity>
+        <activity android:name=".ReadCsvFile"
+            android:screenOrientation="landscape" />
+
     </application>
 
 </manifest>

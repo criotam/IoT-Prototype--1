@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parent_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".signup"
+    android:background="@drawable/background_page2"
     android:gravity="center"
     android:orientation="vertical"
-    android:background="@drawable/background_page2">
+    tools:context=".SignupActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="464dp"
+        android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="-90dp"
             android:alpha="0.6"
             android:background="@drawable/logo" />
 
@@ -30,8 +32,8 @@
             android:textStyle="bold" />
 
         <LinearLayout
-            android:layout_width="200dp"
-            android:layout_height="40dp"
+            android:layout_width="220dp"
+            android:layout_height="45dp"
             android:layout_marginTop="20dp"
             android:alpha="0.7"
             android:background="#414028"
@@ -41,7 +43,7 @@
             <ImageView
                 android:layout_width="15dp"
                 android:layout_height="15dp"
-                android:layout_marginLeft="2dp"
+                android:layout_marginLeft="15dp"
                 android:alpha="0.8"
                 android:background="@drawable/usericon" />
 
@@ -53,19 +55,23 @@
                 android:background="#fff" />
 
             <EditText
-                android:layout_width="160dp"
-                android:layout_height="40dp"
+                android:id="@+id/username"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
                 android:alpha="0.8"
                 android:background="@null"
                 android:gravity="center"
                 android:hint="USERNAME"
+                android:inputType="text"
+                android:singleLine="true"
+                android:textColor="#fff"
                 android:textColorHint="#fff"
                 android:textSize="15sp" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="200dp"
-            android:layout_height="40dp"
+            android:layout_width="220dp"
+            android:layout_height="45dp"
             android:layout_marginTop="20dp"
             android:alpha="0.7"
             android:background="#414028"
@@ -75,7 +81,7 @@
             <ImageView
                 android:layout_width="15dp"
                 android:layout_height="15dp"
-                android:layout_marginLeft="2dp"
+                android:layout_marginLeft="15dp"
                 android:alpha="0.8"
                 android:background="@drawable/mailicon" />
 
@@ -87,19 +93,23 @@
                 android:background="#fff" />
 
             <EditText
-                android:layout_width="160dp"
-                android:layout_height="40dp"
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
                 android:alpha="0.8"
                 android:background="@null"
                 android:gravity="center"
                 android:hint="Email ID"
+                android:inputType="textEmailAddress"
+                android:singleLine="true"
+                android:textColor="#fff"
                 android:textColorHint="#fff"
                 android:textSize="15sp" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="200dp"
-            android:layout_height="40dp"
+            android:layout_width="220dp"
+            android:layout_height="45dp"
             android:layout_marginTop="20dp"
             android:alpha="0.7"
             android:background="#414028"
@@ -109,7 +119,7 @@
             <ImageView
                 android:layout_width="15dp"
                 android:layout_height="15dp"
-                android:layout_marginLeft="2dp"
+                android:layout_marginLeft="15dp"
                 android:alpha="0.8"
                 android:background="@drawable/passwdicon" />
 
@@ -121,22 +131,26 @@
                 android:background="#fff" />
 
             <EditText
-                android:layout_width="160dp"
-                android:layout_height="40dp"
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
                 android:alpha="0.8"
                 android:background="@null"
                 android:gravity="center"
                 android:hint="PASSWORD"
+                android:inputType="textPassword"
+                android:singleLine="true"
+                android:textColor="#fff"
                 android:textColorHint="#fff"
                 android:textSize="15sp" />
         </LinearLayout>
 
         <Button
-            android:id="@+id/btnsgnup"
-            android:layout_width="210dp"
+            android:id="@+id/signup"
+            android:layout_width="230dp"
             android:layout_height="50dp"
             android:layout_marginTop="20dp"
-            android:background="#ccff00"
+            android:background="@color/colorAccent"
             android:elevation="2dp"
             android:text="SIGN UP"
             android:textColor="#ffffff"
@@ -157,6 +171,7 @@
                 android:textColor="#fff" />
 
             <TextView
+                android:id="@+id/login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="  Login"
@@ -170,14 +185,22 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
         android:gravity="center"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|center"
             android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginLeft="6dp"
+                android:background="@drawable/circle" />
 
             <ImageView
                 android:layout_width="10dp"
@@ -191,13 +214,7 @@
                 android:layout_marginLeft="6dp"
                 android:background="@drawable/circle" />
 
-            <ImageView
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_marginLeft="6dp"
-                android:background="@drawable/circle" />
-
         </LinearLayout>
 
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

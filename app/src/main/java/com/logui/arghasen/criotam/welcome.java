@@ -29,11 +29,11 @@ public class welcome extends AppCompatActivity {
         });
     }
     public void openlogin(){
-        Intent intent = new Intent(this , login.class);
+        Intent intent = new Intent(this , LoginActivity.class);
         startActivity(intent);
     }
     public void opensignup(){
-        Intent intent = new Intent(this,signup.class);
+        Intent intent = new Intent(this,SignupActivity.class);
         startActivity(intent);
     }
 
