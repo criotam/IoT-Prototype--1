@@ -1,0 +1,21 @@
+namespace org.criotam.prototype.abstracts
+
+import org.criotam.prototype.participants.*
+
+abstract asset ExperimentData identified by experimentId {
+  o String experimentId
+  o String Raw_value optional
+  --> Scientist experimenter optional
+  --> Player player optional
+}
+
+abstract transaction experimentADDTx {
+  o String experimentId optional
+  o String Raw_value optional
+  --> Scientist experimenter optional
+  --> Player player optional
+}
+
+abstract transaction experimentREADTx {
+  o String Raw_value optional
+}

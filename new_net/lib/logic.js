@@ -19,14 +19,14 @@
 
 /**
  * addPlayer
- * @param {org.criotam.prototype.sensor.addPlayer} addPlayer
+ * @param {org.criotam.prototype.managementTransactions.addPlayer} addPlayer
  * @transaction
  */
 async function addPlayer(playerData) {
-    var NS = 'org.criotam.prototype.sensor';
-
+    var NS1 = 'org.criotam.prototype.participants';
+    var NS2 = 'org.criotam.prototype.managementTransactions'
     let factory = getFactory();
-    let Player = factory.newResource(NS, "Player", playerData.player_id);
+    let Player = factory.newResource(NS1, "Player", playerData.player_id);
     Player.player_id = playerData.player_id;
     Player.player_name = playerData.player_name;
     Player.player_age = playerData.player_age;
@@ -34,31 +34,32 @@ async function addPlayer(playerData) {
     Player.player_height = playerData.player_height;
     Player.player_sex = playerData.player_sex;
 
-    const assetRegistry = await getAssetRegistry('org.criotam.prototype.sensor.Player');
+    const assetRegistry = await getParticipantRegistry('org.criotam.prototype.participants.Player');
     await assetRegistry.add(Player);
 
-    let event = factory.newEvent(NS, 'addedPlayer');
+    let event = factory.newEvent(NS2, 'addedPlayer');
     event.player_id = playerData.player_id;
     emit(event);
 }
 
  /**
  * addScientist
- * @param {org.criotam.prototype.sensor.addScientist} addScientist
+ * @param {org.criotam.prototype.managementTransactions.addScientist} addScientist
  * @transaction
  */
  async function addScientist(scientistData) {
-    var NS = 'org.criotam.prototype.sensor';
+    var NS1 = 'org.criotam.prototype.participants';
+    var NS2 = 'org.criotam.prototype.managementTransactions'
     let factory = getFactory();
-    let Scientist = factory.newResource(NS,"Scientist",scientistData.scientistId);
+    let Scientist = factory.newResource(NS1,"Scientist",scientistData.scientistId);
     Scientist.scientistId = scientistData.scientistId;
     Scientist.userName = scientistData.userName;
     Scientist.Email = scientistData.Email;
     Scientist.Password = scientistData.Password;
-    const participantRegistry = await getParticipantRegistry('org.criotam.prototype.sensor.Scientist');
+    const participantRegistry = await getParticipantRegistry('org.criotam.prototype.participants.Scientist');
     await participantRegistry.add(Scientist);
 
-    let event = factory.newEvent(NS, 'addedScientist');
+    let event = factory.newEvent(NS2, 'addedScientist');
     event.scientistId = scientistData.scientistId;
     emit(event);
 
@@ -66,23 +67,23 @@ async function addPlayer(playerData) {
 
  /**
  * ReadSensor
- * @param {org.criotam.prototype.sensor.readexperiment1lcData} readexperiment1lcData
+ * @param {org.criotam.prototype.iotTransactions.readexperiment1lcData} readexperiment1lcData
  * @transaction
  */
 async function readexperiment1lcData(experiment1lcData) {
-    var NS = 'org.criotam.prototype.sensor';
+    var NS = 'org.criotam.prototype.iotTransactions';
     let Raw_value = experiment1lcData.Raw_value;
   	let lc1_Raw_value = experiment1lcData.lc1_Raw_value;
   	let lc2_Raw_value = experiment1lcData.lc2_Raw_value;
     let expId = getExperimentId(Raw_value);
     let factory = getFactory();
   	lc1_Raw_value = getExplc(Raw_value);
-  lc2_Raw_value = getExplc(Raw_value);
+    lc2_Raw_value = getExplc(Raw_value);
     experiment1lcData.experiment1.lc1_Raw_value = lc1_Raw_value[0];
     experiment1lcData.experiment1.lc2_Raw_value = lc2_Raw_value[1];
     experiment1lcData.experiment1.experimentId = expId;
     experiment1lcData.experiment1.Raw_value = Raw_value;
-    const assetRegistry = await getAssetRegistry('org.criotam.prototype.sensor.Experiment1lc');
+    const assetRegistry = await getAssetRegistry('org.criotam.prototype.iotAssets.experiment1lcData');
     await assetRegistry.update(experiment1lcData.experiment1);
    /* await assetRegistry.update(experiment1lcData.experiment1.lc2_Raw_value);
     await assetRegistry.update(experiment1lcData.experiment1.Raw_value);*/
@@ -95,14 +96,15 @@ async function readexperiment1lcData(experiment1lcData) {
 
  /**
  * addExperiment
- * @param {org.criotam.prototype.sensor.experiment1lcDataAdd} experiment1lcDataAdd
+ * @param {org.criotam.prototype.iotTransactions.experiment1lcDataAdd} experiment1lcDataAdd
  * @transaction
  */
 
 async function experiment1lcDataAdd(experiment1lcData) {
-    var NS = 'org.criotam.prototype.sensor';
+    const NS1 = 'org.criotam.prototype.iotAssets';
+    const NS2 = 'org.criotam.prototype.iotTransactions'
     let factory = getFactory();
-    let Experiment = factory.newResource(NS, "Experiment1lc", experiment1lcData.experimentId);
+    let Experiment = factory.newResource(NS1, "experiment1lcData", experiment1lcData.experimentId);
     Experiment.experimentId = experiment1lcData.experimentId;
     Experiment.Raw_value = experiment1lcData.Raw_value
     Experiment.lc1_Raw_value = experiment1lcData.lc1_Raw_value ;
@@ -110,10 +112,10 @@ async function experiment1lcDataAdd(experiment1lcData) {
     Experiment.experimenter = experiment1lcData.experimenter  ;
     Experiment.player = experiment1lcData.player;
      
-    const assetRegistry = await getAssetRegistry('org.criotam.prototype.sensor.Experiment1lc');
+    const assetRegistry = await getAssetRegistry('org.criotam.prototype.iotAssets.experiment1lcData');
     await assetRegistry.add(Experiment);
 
-    let event = factory.newEvent(NS,'experiment1lcDataAdded');
+    let event = factory.newEvent(NS2,'experiment1lcDataAdded');
     event.experimentId = experiment1lcData.experimentId;
     emit(event);
  }

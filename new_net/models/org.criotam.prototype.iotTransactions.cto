@@ -1,0 +1,23 @@
+namespace org.criotam.prototype.iotTransactions
+
+import org.criotam.prototype.abstracts.*
+import org.criotam.prototype.iotAssets.*
+
+transaction experiment1lcDataAdd extends experimentADDTx{
+  o String[] lc1_Raw_value optional
+  o String[] lc2_Raw_value optional
+}
+
+event experiment1lcDataAdded {
+  o String experimentId
+}
+
+transaction readexperiment1lcData extends experimentREADTx{
+  --> experiment1lcData experiment1
+  o String[] lc1_Raw_value optional
+  o String[] lc2_Raw_value optional
+}
+
+event experiment1lcDataread {
+  o String experimentId 
+}

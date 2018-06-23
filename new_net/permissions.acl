@@ -17,33 +17,33 @@
  */
 rule EverybodyCanReadEverything {
     description: "Allow all participants read access to all resources"
-    participant: "org.criotam.prototype.sensor.Scientist"
+    participant: "org.criotam.prototype.participants.Scientist"
     operation: READ
-    resource: "org.criotam.prototype.sensor.*"
+    resource: "org.criotam.prototype.iotAssets.*"
     action: ALLOW
 }
 
 rule EverybodyCanSubmitTransactions1 {
     description: "Allow all participants to submit transactions"
-    participant: "org.criotam.prototype.sensor.Scientist"
+    participant: "org.criotam.prototype.participants.Scientist"
     operation: CREATE
-    resource: "org.criotam.prototype.sensor.experiment1lcDataAdd"
+    resource: "org.criotam.prototype.iotTransactions.experiment1lcDataAdd"
     action: ALLOW
 }
 
 rule EverybodyCanSubmitTransactions2 {
     description: "Allow all participants to submit transactions"
-    participant: "org.criotam.prototype.sensor.Scientist"
+    participant: "org.criotam.prototype.participants.Scientist"
     operation: CREATE
-    resource: "org.criotam.prototype.sensor.readexperiment1lcData"
+    resource: "org.criotam.prototype.iotTransactions.readexperiment1lcData"
     action: ALLOW
 }
 
 rule OwnerHasFullAccessToTheirAssets1 {
     description: "Allow all participants full access to their assets"
-    participant(p): "org.criotam.prototype.sensor.Scientist"
+    participant(p): "org.criotam.prototype.participants.Scientist"
     operation: ALL
-    resource(r): "org.criotam.prototype.sensor.Experiment1lc"
+    resource(r): "org.criotam.prototype.iotAssets.experiment1lcData"
     condition: (r.experimenter.getIdentifier() === p.getIdentifier())
     action: ALLOW
 }

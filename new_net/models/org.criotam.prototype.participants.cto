@@ -1,0 +1,19 @@
+namespace org.criotam.prototype.participants
+
+
+participant Scientist identified by scientistId {
+  o String scientistId //regex = /^SC[0-9]{2}/
+  o String userName optional
+  o String Email optional
+  o String Password optional
+}
+
+participant Player identified by player_id {
+  o String player_id // regex= /^P[0-9]{2}/
+  o String player_name optional
+  o String player_age optional
+  o String player_weight optional
+  o String player_height optional
+  o String player_sex optional
+  --> Scientist experimenter optional
+}

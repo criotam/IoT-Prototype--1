@@ -1,0 +1,15 @@
+namespace org.criotam.prototype.iotAssets
+
+import org.criotam.prototype.abstracts.ExperimentData
+
+//experiment1lc 
+//experiment2lc
+//experiment2emg
+//experiment3fp
+//experiment3emg
+
+
+asset experiment1lcData extends ExperimentData{
+  o String[] lc1_Raw_value optional
+  o String[] lc2_Raw_value optional
+}
