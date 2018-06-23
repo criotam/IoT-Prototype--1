@@ -8,6 +8,7 @@ package criotam.database;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Statement;
 
 /**
@@ -35,7 +36,8 @@ public class PlayerDatabase {
                                         + "	age text NOT NULL,\n"
                                         + "	weight text NOT NULL,\n"
                                         + "	height text NOT NULL,\n"
-                                        + "	sex text NOT NULL\n"
+                                        + "	sex text NOT NULL,\n"
+                                        +"      isStored text NOT NULL\n"
                                         + ");";
 
                     Statement stmt = con.createStatement();
@@ -76,13 +78,14 @@ public class PlayerDatabase {
     	int x = 0;
 
 		try{
-			PreparedStatement ps = con.prepareStatement("insert into player(playerid, playername, age, weight, height, sex) values(?,?,?,?,?,?)");
+			PreparedStatement ps = con.prepareStatement("insert into player(playerid, playername, age, weight, height, sex, isStored) values(?,?,?,?,?,?,?)");
 			ps.setString(1, playerInfo.split(":")[0]);
 			ps.setString(2, playerInfo.split(":")[1]);
 			ps.setString(3, playerInfo.split(":")[2]);
                         ps.setString(4, playerInfo.split(":")[3]);
 			ps.setString(5, playerInfo.split(":")[4]);
 			ps.setString(6, playerInfo.split(":")[5]);
+                        ps.setString(7, playerInfo.split(":")[6]);
 					            
 			x = ps.executeUpdate();
 
@@ -99,6 +102,32 @@ public class PlayerDatabase {
 				            
     }
 
+    public boolean isStored(String playerID){
+        
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection(url, USER, PASS);
+            
+            PreparedStatement ps = con.prepareStatement("select* from player WHERE playerid = "+playerID);
+            
+            ResultSet rs = ps.executeQuery();
+            
+            if(rs.next()){
+                if(rs.getString("isStored").toString().contains("true")){
+                    con.close();
+                    return true;
+                }
+            }
+            
+            con.close();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+       
+       return false;
+    }
+    
     public void closeConn(){
 
     	try{

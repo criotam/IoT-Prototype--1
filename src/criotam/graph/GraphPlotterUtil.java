@@ -12,6 +12,7 @@ import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -19,6 +20,7 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.control.ScrollPane;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -114,7 +116,7 @@ public class GraphPlotterUtil {
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         frame.setLayout(new BorderLayout());
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
+        
         //Setting tabbed pane
         JTabbedPane tabbedPane = new JTabbedPane();
         
@@ -122,11 +124,11 @@ public class GraphPlotterUtil {
             
             frame.setTitle("Exp1");
             
-            tabbedPane.add("Load Cell   ",setUpChartPannel(4, 2, 2, chart, panel));
+            tabbedPane.add("Load Cell   ",setUpChartPannel(4, 2, 2, chart, panel, sensor_flag));
             
-            tabbedPane.add("Force   ",setUpChartPannel(4, 2, 2, force_chart, force_panel));
+            tabbedPane.add("Force   ",setUpChartPannel(4, 2, 2, force_chart, force_panel, force_flag));
             
-            tabbedPane.add("Moment   ",setUpChartPannel(4, 2, 2, moment_chart, moment_panel));
+            tabbedPane.add("Moment   ",setUpChartPannel(4, 2, 2, moment_chart, moment_panel, moment_flag));
             
             //add more tabs
             
@@ -134,34 +136,34 @@ public class GraphPlotterUtil {
             
             frame.setTitle("Exp2");
             
-            tabbedPane.add("Load Cell   ",setUpChartPannel(4, 2, 2, chart, panel));
+            tabbedPane.add("Load Cell   ",setUpChartPannel(4, 2, 2, chart, panel, sensor_flag));
             
-            tabbedPane.add("Force   ",setUpChartPannel(4, 2, 2, force_chart, force_panel));
+            tabbedPane.add("Force   ",setUpChartPannel(4, 2, 2, force_chart, force_panel, force_flag));
             
-            tabbedPane.add("Moment   ",setUpChartPannel(4, 2, 2, moment_chart, moment_panel));
+            tabbedPane.add("Moment   ",setUpChartPannel(4, 2, 2, moment_chart, moment_panel, moment_flag));
             
             
         }else if(identifier.equalsIgnoreCase("identifier_exp2emg")){
             
             frame.setTitle("Exp2");
             
-            tabbedPane.add("EMG   ",setUpChartPannel(1, 1, 1, chart, panel));
+            tabbedPane.add("EMG   ",setUpChartPannel(1, 1, 1, chart, panel, sensor_flag));
             
         }else if(identifier.equalsIgnoreCase("identifier_exp3fp")){
             
             frame.setTitle("Exp3");
             
-            tabbedPane.add("Load Cell   ",setUpChartPannel(3, 2, 2, chart, panel));
+            tabbedPane.add("Load Cell   ",setUpChartPannel(3, 2, 2, chart, panel, sensor_flag));
             
-            tabbedPane.add("Load Cell   ",setUpChartPannel(3, 2, 2, force_chart, force_panel));
+            tabbedPane.add("Force   ",setUpChartPannel(3, 2, 2, force_chart, force_panel, force_flag));
             
-            tabbedPane.add("Load Cell   ",setUpChartPannel(3, 2, 2, moment_chart, moment_panel));
+            tabbedPane.add("Moment   ",setUpChartPannel(3, 2, 2, moment_chart, moment_panel, moment_flag));
             
         }else if(identifier.equalsIgnoreCase("identifier_exp3emg")){
             
             frame.setTitle("Exp3");
             
-            tabbedPane.add("EMG   ",setUpChartPannel(1, 1, 1, chart, panel));
+            tabbedPane.add("EMG   ",setUpChartPannel(1, 1, 1, chart, panel, sensor_flag));
             
         }
         
@@ -174,9 +176,8 @@ public class GraphPlotterUtil {
             
     }
     
-    public JPanel setUpChartPannel(int matrix_element, int rows, int coloumns, XYChart[] chart, JPanel[] panel){
-        
-        JPanel jpanel;
+    public JPanel setUpChartPannel(int matrix_element, int rows, int coloumns, 
+            XYChart[] chart, JPanel[] panel, boolean[] flag){
         
         int index = 1;
         
@@ -200,7 +201,7 @@ public class GraphPlotterUtil {
                 @Override
                 public void mouseClicked(MouseEvent e) {
 
-                    if(e.getClickCount()==1){
+                    if(e.getClickCount()==2){
                         
                         int i = 0;
                         while(((JPanel)e.getComponent())!=panel[i]){
@@ -208,9 +209,11 @@ public class GraphPlotterUtil {
                             if(i==matrix_element)break;
                         }
 
-                        displayPopUpChart((JPanel)e.getComponent(),
+                        System.out.println("index selected"+i);
+                        
+                            displayPopUpChart((JPanel)e.getComponent(),
                                 (JPanel)((JPanel)e.getComponent()).getParent(),
-                                 i);
+                                 i, matrix_element, flag);
                     
                     }
 
@@ -248,28 +251,49 @@ public class GraphPlotterUtil {
         
     }
     
-    public void displayPopUpChart(JPanel jpanel, JPanel rootPanel, int index){
+    boolean[] sensor_flag = {true, true, true, true};
+    
+    boolean[] force_flag = {true, true, true, true};
+    
+    boolean[] moment_flag = {true, true, true, true};
+    
+    public void displayPopUpChart(JPanel jpanel, JPanel rootPanel, int index, int matrix_element, boolean[] flag){
         
         rootPanel.setVisible(false);
         (((JPanel)rootPanel).getParent()).add(jpanel);
-        JLabel label = new JLabel("<<Back");
-        //label.setAlignmentX(0);
-        //jpanel.setAlignmentX(JPanel.LEFT_ALIGNMENT);
-        jpanel.add(label, "cell 0 0,alignx left");
         
-        System.out.println("index selected"+index);
+        //System.out.println("index selected"+index);
         
-        label.addMouseListener(new MouseAdapter() {
+        jpanel.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     
-                    jpanel.remove(label);
-                    rootPanel.add(jpanel, index);
-                    rootPanel.setVisible(true);
+                    if(e.getClickCount()==2)
+                    if(flag[index]){
+                        flag[index] = false;
+                        rootPanel.add(jpanel, index);
+                        rootPanel.setVisible(true);
+                    }else{
+                        flag[0] = true;
+                        int i = 0;
+                        while(((JPanel)e.getComponent())!=panel[i]){
+                            i++;
+                            if(i==matrix_element)break;
+                        }
+
+                        System.out.println("index selected"+i);
+                        
+                            displayPopUpChart((JPanel)e.getComponent(),
+                                (JPanel)((JPanel)e.getComponent()).getParent(),
+                                 i, matrix_element,flag);
+                            
+                    }
                     
                 }});
+
          
        }
+    
     
     public void plotData(ArrayList<Double> time, ArrayList<Double> val, int index){
         

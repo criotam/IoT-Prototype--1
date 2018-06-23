@@ -5,6 +5,7 @@
  */
 package criotam.websocketclient;
 
+import criotam.websocketclient.DataListener.connectionListener;
 import java.io.IOException;
 import java.net.URI;
 import java.util.LinkedList;
@@ -12,6 +13,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JPanel;
 import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
 import javax.websocket.WebSocketContainer;
@@ -40,8 +42,17 @@ public class DataListnerHandler {
     
     private String identifier;
     
+    JPanel panel;
+    
+    
+    public interface Conn_Listener{
+        public void onConnectionClosed(String fileName);
+    }
+    
+    private Conn_Listener conn_manager;
+     
     public DataListnerHandler(String url, String playerID, 
-            String tableName, String fileName, int tab_count, String identifier) {
+            String tableName, String fileName, int tab_count, String identifier,Conn_Listener conn ) {
         
         this.fileName = fileName;
         
@@ -55,13 +66,20 @@ public class DataListnerHandler {
         
         this.identifier = identifier;
         
+        this.conn_manager = conn;
+        
     }
     
     public void startConnection(){
         
         container = ContainerProvider.getWebSocketContainer();
         loadCellListner = new DataListener(playerID, tableName, fileName,
-                tab_count, new LinkedList<>(), identifier);
+                tab_count, new LinkedList<>(), identifier, new connectionListener() {
+            @Override
+            public void onClosed(String fileName) {
+                conn_manager.onConnectionClosed(fileName);
+            }
+        });
         
         try {
             String uri = url;
@@ -76,6 +94,8 @@ public class DataListnerHandler {
     
     public void closeConnection() {
         try {
+            if(loadCellListner!=null)
+            if(loadCellListner.getSession()!=null)
             loadCellListner.getSession().close();
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -83,8 +103,13 @@ public class DataListnerHandler {
     }
     
     public boolean isClosed(){
+        if(loadCellListner==null)return true;
         if(loadCellListner.getSession() == null)return true;
         return !loadCellListner.getSession().isOpen();
+    }
+    
+    public void reOpenPlot(){
+        loadCellListner.reOpenGraphPlot();
     }
     
 }

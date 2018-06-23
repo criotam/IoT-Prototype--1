@@ -5,10 +5,18 @@
  */
 package criotam;
 
+import criotam.graph.GraphPlotterActivity;
 import criotam.graph.GraphPlotterUtil;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,6 +31,8 @@ public class ReadCsvFile {
     
     public String line;
             
+    public String blockChaindata = "";
+
     public ReadCsvFile(String fileName) throws Exception{
         
         message = new ArrayList();
@@ -41,9 +51,11 @@ public class ReadCsvFile {
                 
                 line = scanner.nextLine().toString().trim();
                 
+                //blockChaindata = blockChaindata +line +"$";
+                
                 message.add(line);
                 
-                if(line.split(":")[0].equalsIgnoreCase("identifier_exp2emg")){
+                //if(line.split(":")[0].equalsIgnoreCase("identifier_exp2emg")){
 			
                         //dataScanner = new Scanner(line);
 			//dataScanner.useDelimiter(":");
@@ -68,10 +80,11 @@ public class ReadCsvFile {
 			index = 0;
             */
                         time_index++;
-                }
+                //}
             }
             
             showPlot(message);
+            
                     
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
@@ -81,9 +94,44 @@ public class ReadCsvFile {
     
     public void showPlot(ArrayList<String> message) throws Exception{
         
-        GraphPlotterUtil exp1 = new GraphPlotterUtil(4, message.get(0).split(":")[0]);
-        exp1.plotHistoryGraph(message);
+        GraphPlotterActivity graphPlotActivity = new GraphPlotterActivity(4, message.get(0).split(":")[0]);
+        graphPlotActivity.plotHistoryGraph(message);
         
+        //storeDataOnBlockChain();
+        
+    }
+    
+    Map<String, String> parameters;
+    
+    public void storeDataOnBlockChain() throws MalformedURLException, IOException /*throws MalformedURLException, IOException*/{
+        
+        URL url = new URL("http://192.168.1.6:3000/api/org.criotam.prototype.sensor.readSensor");
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("POST");
+        
+        parameters = new HashMap();
+        parameters.put("experiment", "s01");
+        parameters.put("Raw_newValue", blockChaindata);
+        
+        con.setConnectTimeout(100000);
+        con.setReadTimeout(100000);
+        con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        con.setDoOutput(true);
+        DataOutputStream out = new DataOutputStream(con.getOutputStream());
+        out.writeBytes(ParameterBuilder.getParamsString(parameters));
+        out.flush();
+        out.close();
+        
+        int status = con.getResponseCode();
+        if(status == 200){
+            System.out.println("####################player add successful----------------------------");
+            con.disconnect();
+        }else{
+            System.out.println("disconnect");
+            con.disconnect();
+        }
+        con.disconnect();
+
     }
     
 }

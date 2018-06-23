@@ -5,11 +5,8 @@
  */
 package criotam.graph;
 
-import criotam.PlayerDashboardUI;
 import criotam.websocketclient.DataListnerHandler;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import criotam.websocketclient.DataListnerHandler.Conn_Listener;
 
 /**
  *
@@ -17,7 +14,6 @@ import java.util.logging.Logger;
  */
 
 public class GraphHandler1 {
-    
     
     private DataListnerHandler dataListenerHandler;
     
@@ -31,8 +27,14 @@ public class GraphHandler1 {
     
     private int tab_count;
     
-    public GraphHandler1(String fileName, String playerID,
-            String tableName, String uri,int tab_count, String identifier){
+    public interface Conn_Manager1{
+        public void onConnClosed(String fileName);
+    }
+    
+    private Conn_Manager1 conn_manager;
+    
+    public GraphHandler1(String fileName, String playerID, 
+            String tableName, String uri, int tab_count, String identifier, Conn_Manager1 conn_manager){
         
         this.fileName = fileName;
         
@@ -44,8 +46,16 @@ public class GraphHandler1 {
         
         this.tab_count = tab_count;
         
+        this.conn_manager = conn_manager;
+        
         dataListenerHandler = new DataListnerHandler(uri,
-                    playerID, tableName, fileName, tab_count, identifier);
+                    playerID, tableName, fileName, tab_count, identifier, new Conn_Listener() {
+            @Override
+            public void onConnectionClosed(String fileName) {
+                conn_manager.onConnClosed(fileName); 
+            }
+        });
+        
     }
     
     public void start(){
@@ -66,10 +76,14 @@ public class GraphHandler1 {
         
         dataListenerHandler.closeConnection();
         
-    }
+    }    
     
     public boolean isClosed(){
         return dataListenerHandler.isClosed();
+    }
+    
+    public void reOpenPlot(){
+        dataListenerHandler.reOpenPlot();
     }
     
 }

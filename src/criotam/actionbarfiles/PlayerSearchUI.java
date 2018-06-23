@@ -217,6 +217,7 @@ public class PlayerSearchUI extends javax.swing.JFrame {
        if(!jTextField1.getText().toString().trim().isEmpty()){
            if(searchPlayer(jTextField1.getText().toString().trim())){
                try {
+                   setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
                    new PlayerDashboardUI(rs).setVisible(true);
                    this.dispose();
                } catch (SQLException ex) {

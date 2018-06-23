@@ -10,11 +10,18 @@ import criotam.PlayerDashboardUI;
 import criotam.database.PlayerDatabase;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -33,17 +40,22 @@ public class CriotamUI extends javax.swing.JFrame {
     String USER = "root";
     String PASS = "";
 
+    Map<String, String> parameters;
+    
     /**
      * Creates new form CriotamUI
      */
     public CriotamUI() {
         initComponents();
+     
+        parameters = new HashMap<>();
         this.setLocationRelativeTo(null);
     }
     
     
     public CriotamUI(String flag) {
         exit_initComponents();
+        parameters = new HashMap<>();
         this.setLocationRelativeTo(null);
     }
 
@@ -74,14 +86,13 @@ public class CriotamUI extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-
-        jLabel4.setText("jLabel4");
-
+        
         jTextField3.setText("jTextField3");
 
         jCheckBox1.setText("jCheckBox1");
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        
+        //setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(900, 550));
         getContentPane().setLayout(null);
 
@@ -538,6 +549,8 @@ public class CriotamUI extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
 
+        String isStored = ""+false ;
+        
         if(checkifuserExist(player_id.getText().toString())){
             playerExist_infoBox();
             return;
@@ -545,6 +558,16 @@ public class CriotamUI extends javax.swing.JFrame {
         
         if(check()){
 
+            //loadinggif.setVisible(true);
+            
+            setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        
+            parameters.put("player_id", player_id.getText().toString().trim());
+            parameters.put("player_name", player_name.getText().toString().trim());
+            parameters.put("player_age",player_age.getText().toString().trim());
+            parameters.put("player_weight", player_weight.getText().toString().trim());
+            parameters.put("player_height", player_height.getText().toString().trim());
+            
             String valToInsert = player_id.getText().toString().trim()+":"
             +player_name.getText().toString().trim()+":"
             +player_age.getText().toString().trim()+":"
@@ -552,11 +575,22 @@ public class CriotamUI extends javax.swing.JFrame {
             +player_height.getText().toString().trim()+":";
 
             if(male_radio.isSelected()){
-                valToInsert += "MALE";
+                valToInsert += "MALE:";
+                parameters.put("player_sex", "MALE");
             }else if(female_radio.isSelected()){
-                valToInsert += "FEMALE";
+                valToInsert += "FEMALE:";
+                parameters.put("player_sex", "FEMALE");
             }
-            System.out.println("true");
+            
+            try {
+                isStored = ""+storeDataOnServer();
+                storeDataOnBlockChain();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            
+            valToInsert += isStored;
+            
             PlayerDatabase playerDatabase = new PlayerDatabase();
             playerDatabase.InsertData(valToInsert);
             playerDatabase.closeConn();
@@ -760,6 +794,56 @@ public class CriotamUI extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(null, "Please enter unique player id. This player id already exist!",
                 "InfoBox: " + "Invalid inputs", JOptionPane.INFORMATION_MESSAGE);
         
+    }
+    
+    public boolean storeDataOnServer() throws MalformedURLException, IOException{
+        
+        URL url = new URL("https://us-central1-criotam-bec9b.cloudfunctions.net/addPlayer");
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("POST");
+        
+        con.setConnectTimeout(100000);
+        con.setReadTimeout(100000);
+        con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        con.setDoOutput(true);
+        DataOutputStream out = new DataOutputStream(con.getOutputStream());
+        out.writeBytes(ParameterStringBuilder.getParamsString(parameters));
+        out.flush();
+        out.close();
+        
+        int status = con.getResponseCode();
+        if(status == 200){
+            System.out.println("####################player add successful----------------------------");
+            con.disconnect();
+            return true;
+        }
+        con.disconnect();
+        return false;
+    }
+    
+    public boolean storeDataOnBlockChain() throws MalformedURLException, IOException{
+        
+        URL url = new URL("http://192.168.1.6:3000/api/org.criotam.prototype.sensor.addPlayer");
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("POST");
+        
+        con.setConnectTimeout(100000);
+        con.setReadTimeout(100000);
+        con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        con.setDoOutput(true);
+        DataOutputStream out = new DataOutputStream(con.getOutputStream());
+        out.writeBytes(ParameterStringBuilder.getParamsString(parameters));
+        out.flush();
+        out.close();
+        
+        int status = con.getResponseCode();
+        if(status == 200){
+            System.out.println("####################player add successful----------------------------");
+            con.disconnect();
+            return true;
+        }
+        con.disconnect();
+        return false;
     }
     
     /**

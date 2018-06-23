@@ -513,7 +513,7 @@
                   <Font name="Segoe UI" size="16" style="0"/>
                 </Property>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="new javax.swing.DefaultComboBoxModel&lt;&gt;(new String[] { &quot;Force&quot;, &quot;Moment&quot;, &quot;Acceleration&quot;, &quot;Velocity&quot;, &quot;Raw Sensor Data&quot; })" type="code"/>
+                  <Connection code="new javax.swing.DefaultComboBoxModel&lt;&gt;(new String[] { &quot;Load Cell&quot;, &quot;Force&quot;, &quot;Moment&quot; })" type="code"/>
                 </Property>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
@@ -852,7 +852,7 @@
                   <Font name="Segoe UI" size="16" style="0"/>
                 </Property>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="new javax.swing.DefaultComboBoxModel&lt;&gt;(new String[] { &quot;Force&quot;, &quot;Moment&quot;, &quot;Acceleration&quot;, &quot;Velocity&quot;, &quot;Raw Sensor Data&quot; })" type="code"/>
+                  <Connection code="new javax.swing.DefaultComboBoxModel&lt;&gt;(new String[] { &quot;Load Cell&quot;, &quot;Emg&quot;, &quot;Force&quot;, &quot;Moment&quot; })" type="code"/>
                 </Property>
               </Properties>
               <Events>
@@ -1188,7 +1188,7 @@
                   <Font name="Segoe UI" size="16" style="0"/>
                 </Property>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="new javax.swing.DefaultComboBoxModel&lt;&gt;(new String[] { &quot;Force&quot;, &quot;Moment&quot;, &quot;Acceleration&quot;, &quot;Velocity&quot;, &quot;Raw Sensor Data&quot; })" type="code"/>
+                  <Connection code="new javax.swing.DefaultComboBoxModel&lt;&gt;(new String[] { &quot;Load Cell&quot;, &quot;Emg&quot;, &quot;Force&quot;, &quot;Moment&quot; })" type="code"/>
                 </Property>
               </Properties>
               <Events>

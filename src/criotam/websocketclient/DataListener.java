@@ -5,10 +5,19 @@
  */
 package criotam.websocketclient;
 
+import com.google.auth.oauth2.GoogleCredentials;
+import static com.google.cloud.Identity.serviceAccount;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import criotam.graph.GraphPlotterUtil;
 import criotam.database.Sensordb;
 import static criotam.TestServer.playerID;
+import criotam.graph.GraphPlotterActivity;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -19,6 +28,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JPanel;
 import javax.websocket.ClientEndpoint;
 import javax.websocket.CloseReason;
 import javax.websocket.ContainerProvider;
@@ -44,7 +54,9 @@ public class DataListener {
    
     public StringBuilder builder;
     
-    public GraphPlotterUtil graphPlotUtil;
+    //public GraphPlotterUtil graphPlotUtil;
+    
+    public GraphPlotterActivity graphPlotActivity;
     
     public Sensordb exp1Sensordb;
     
@@ -56,24 +68,37 @@ public class DataListener {
     
     private int tab_count;
     
-    private Queue<String> data_buffer;
+    private Queue<String> data_buffer, msg_buffer;
     
     private boolean flag = true;
     
+    private connectionListener conn_manager;
+    
+    public interface connectionListener{
+       
+        public void onClosed(String fileName);
+        
+    }
     
     public DataListener(String playerID, String tableName, 
-            String fileName, int tab_count, Queue<String> data_buffer, String identifier){
+            String fileName, int tab_count, Queue<String> data_buffer, String identifier, connectionListener conn_manager){
        
         builder = new StringBuilder();
         
         this.tab_count = tab_count;
         
+        
         try {
-            graphPlotUtil = new GraphPlotterUtil(tab_count, identifier);
+            //graphPlotUtil = new GraphPlotterUtil(tab_count, identifier);
+            graphPlotActivity = new GraphPlotterActivity(tab_count, identifier);
+            //graphPlotActivity.setVisible(true);
         } catch (Exception ex) {
-           ex.printStackTrace();
+            ex.printStackTrace();
         }
         
+        //graphPlotActivity = new GraphPlotterActivity(tab_count, identifier);
+        //graphPlotActivity.setVisible(true);
+                
         this.tableName = tableName;
         
         this.playerID = playerID;
@@ -84,7 +109,18 @@ public class DataListener {
         
         this.data_buffer = data_buffer;
         
+        this.msg_buffer = new LinkedList();
+        
         this.flag = true;
+        
+        this.conn_manager = conn_manager;
+        
+        stream_list = new ArrayList();
+        
+        database = FirebaseDatabase.getInstance();
+        ref = database.getReference("live_streaming");
+
+        //initializeFirebase();
         
     }
     
@@ -100,7 +136,7 @@ public class DataListener {
             String msg = "storeMySession";
             System.out.println("Sending message to endpoint: " );
             session.getBasicRemote().sendText(msg);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
@@ -112,10 +148,14 @@ public class DataListener {
   
         flag =true;
         
-        if(message.contains("identifier"))
+        if(message.contains("identifier")){
             data_buffer.add(message);
+            msg_buffer.add(message);
+        }
         
         plotData();
+        
+        startStreaming();
         
         //System.out.println("queue size:"+ data_buffer.size());
         
@@ -146,6 +186,7 @@ public class DataListener {
                 }
                 flag = false;
                 saveinFile();
+                conn_manager.onClosed(fileName);
             }
                 
     }
@@ -216,7 +257,8 @@ public class DataListener {
            
                     builder.append(data_buffer.peek()+"\n");
                    
-                    graphPlotUtil.plotGraph(data_buffer.peek().toString());
+                    //graphPlotUtil.plotGraph(data_buffer.peek().toString());
+                    graphPlotActivity.plotGraph(data_buffer.peek().toString());
                     
                     data_buffer.remove();
             
@@ -224,4 +266,79 @@ public class DataListener {
         
     }
     
+    public void reOpenGraphPlot(){
+        graphPlotActivity.setVisible(true);
+    }
+    
+    
+    ArrayList<String> stream_list;
+    
+    public void startStreaming(){
+    
+        while(!msg_buffer.isEmpty()){
+            
+            if(msg_buffer.peek().toString().split(":")[0].equalsIgnoreCase("identifier_exp1lc")){
+                
+                stream_list.add(msg_buffer.peek().toString());
+                
+                if(stream_list.size()%20==0){
+                  streamData(playerID, "exp1_lc_streaming", stream_list);
+                }
+                
+            }else if(msg_buffer.peek().toString().split(":")[0].equalsIgnoreCase("identifier_exp2lc")){
+                
+                stream_list.add(msg_buffer.peek().toString());
+                
+                if(stream_list.size()%20==0)
+                    streamData(playerID, "exp2_lc_streaming", stream_list);
+                
+            }else if(msg_buffer.peek().toString().split(":")[0].equalsIgnoreCase("identifier_exp2emg")){
+                
+                stream_list.add(msg_buffer.peek().toString());
+                
+                if(stream_list.size()%20==0)
+                    streamData(playerID, "exp2_emg_streaming", stream_list);
+                
+            }else if(msg_buffer.peek().toString().split(":")[0].equalsIgnoreCase("identifier_exp3fp")){
+                
+                stream_list.add(msg_buffer.peek().toString());
+                
+                if(stream_list.size()%20==0)
+                    streamData(playerID, "exp3_fp_streaming", stream_list);
+                
+            }else if(msg_buffer.peek().toString().split(":")[0].equalsIgnoreCase("identifier_exp3emg")){
+                
+                stream_list.add(msg_buffer.peek().toString());
+                
+                if(stream_list.size()%20==0)
+                    streamData(playerID, "exp3_emg_streaming", stream_list);
+                
+            }else{
+                
+            }
+            
+            msg_buffer.remove();
+        }
+        
+    }
+    
+    FirebaseDatabase database;
+    DatabaseReference ref;
+    
+    
+    
+    public void streamData(String player_id, String param, ArrayList<String> data){
+        
+        ref.child(player_id).child(param).setValue(data, new DatabaseReference.CompletionListener() {
+    
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    System.out.println("Data could not be saved " + databaseError.getMessage());
+                } else {
+                    System.out.println("Data saved successfully.");
+                }
+    }
+    });
+    }
 }

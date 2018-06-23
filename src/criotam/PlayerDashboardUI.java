@@ -5,23 +5,40 @@
  */
 package criotam;
 
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.database.FirebaseDatabase;
 import criotam.actionbarfiles.CriotamUI;
 import criotam.actionbarfiles.PlayerSearchUI;
 import criotam.database.Sensordb;
 import criotam.graph.GraphHandler;
+import criotam.graph.GraphHandler.Conn_Manager;
 import criotam.graph.GraphHandler1;
+import criotam.graph.GraphHandler1.Conn_Manager1;
 import criotam.graph.GraphHandler2;
+import criotam.graph.GraphHandler2.Conn_Manager2;
 import criotam.graph.GraphHandler3;
+import criotam.graph.GraphHandler3.Conn_Manager3;
 import criotam.graph.GraphHandler4;
+import criotam.graph.GraphHandler4.Conn_Manager4;
+import criotam.websocketclient.DataListener;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -33,6 +50,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.UnsupportedLookAndFeelException;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  *
@@ -89,12 +112,15 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
      * Creates new form PlayerDashboardUI
      */
     public PlayerDashboardUI() {
+        initializeFirebase();
+
         initComponents();
         getContentPane().setBackground(Color.WHITE);
         this.setLocationRelativeTo(null);
     }
 
     public PlayerDashboardUI(ResultSet playerInfo) throws SQLException {
+        initializeFirebase();
         this.playerInfo = playerInfo;
         initComponents();
         this.setLocationRelativeTo(null);
@@ -402,7 +428,7 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
         });
 
         jComboBox1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Force", "Moment", "Acceleration", "Velocity", "Raw Sensor Data" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Load Cell", "Force", "Moment" }));
         jComboBox1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 153), 1, true));
         jComboBox1.setPreferredSize(new java.awt.Dimension(37, 35));
         jComboBox1.setSelectedIndex(0);
@@ -555,7 +581,7 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
         });
 
         exp2_history_menu.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        exp2_history_menu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Force", "Moment", "Acceleration", "Velocity", "Raw Sensor Data" }));
+        exp2_history_menu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Load Cell", "Emg", "Force", "Moment" }));
         jComboBox1.setSelectedIndex(0);
         exp2_history_menu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -724,7 +750,7 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
         });
 
         exp3_history_menu.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        exp3_history_menu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Force", "Moment", "Acceleration", "Velocity", "Raw Sensor Data" }));
+        exp3_history_menu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Load Cell", "Emg", "Force", "Moment" }));
         jComboBox1.setSelectedIndex(0);
         exp3_history_menu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -924,26 +950,41 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
         if(graphHandler == null){//TODO: check for existing opened window
           tableName = "exp1_"+playerID+"_lc";
           graphHandler = new GraphHandler(fileName_exp1_lc, playerID, 
-                  tableName, exp1_lc_URI, 4, "identifier_exp1lc");
+                  tableName, exp1_lc_URI, 4, "identifier_exp1lc", new Conn_Manager() {
+              @Override
+              public void onConnClosed(String fileName) {
+                  saveFile(Long.parseLong(playerID), "exp1", "raw_sensor_loadcell"
+                          , getTimeStamp(), "exp1/loadCell/"+getTimeStamp()+"/", new File(fileName));
+              }
+          });
           graphHandler.start();
         }else if(graphHandler.isClosed()){
           tableName = "exp1_"+playerID+"_lc";
           graphHandler = new GraphHandler(fileName_exp1_lc, playerID, 
-                  tableName, exp1_lc_URI, 4, "identifier_exp1lc");
+                  tableName, exp1_lc_URI, 4, "identifier_exp1lc", new Conn_Manager() {
+              @Override
+              public void onConnClosed(String fileName) {
+                  saveFile(Long.parseLong(playerID), "exp1", "raw_sensor_loadcell"
+                          , getTimeStamp(), "exp1/loadCell/"+getTimeStamp()+"/", new File(fileName));
+              }
+          });
           graphHandler.start();
         }else{
-            infoBox("Recording already started!");
+            graphHandler.reOpenPlot();
+            //infoBox("Recording already started!");
         }
     }//GEN-LAST:event_startActionPerformed
 
     private void stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopActionPerformed
         // TODO add your handling code here:
+        if(graphHandler!=null)
         graphHandler.close();
     }//GEN-LAST:event_stopActionPerformed
 
     
     private void exp1_okActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp1_okActionPerformed
        //jComboBox1.getSelectedIndex()==4
+       
         fileChooser.setCurrentDirectory(new File(fileName_exp1_lc));
         
         int returnVal = fileChooser.showOpenDialog(this);
@@ -976,25 +1017,41 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
         if(graphHandler1 == null){
             tableName = "exp2_"+playerID+"_lc";
             graphHandler1 = new GraphHandler1(fileName_exp2_lc, playerID, 
-                    tableName, exp2_lc_URI, 4, "identifier_exp2lc");
+                    tableName, exp2_lc_URI, 4, "identifier_exp2lc", new Conn_Manager1() {
+              @Override
+              public void onConnClosed(String fileName) {
+                  saveFile(Long.parseLong(playerID), "exp2", "raw_sensor_loadcell"
+                          , getTimeStamp(), "exp2/loadCell/"+getTimeStamp()+"/", new File(fileName));
+              }
+          });
             graphHandler1.start();
         }else if(graphHandler1.isClosed()){
             tableName = "exp2_"+playerID+"_lc";
             graphHandler1 = new GraphHandler1(fileName_exp2_lc, playerID, 
-                    tableName, exp2_lc_URI, 4, "identifier_exp2lc");
+                    tableName, exp2_lc_URI, 4, "identifier_exp2lc", new Conn_Manager1() {
+              @Override
+              public void onConnClosed(String fileName) {
+                  saveFile(Long.parseLong(playerID), "exp2", "raw_sensor_emg"
+                          , getTimeStamp(), "exp2/emg/"+getTimeStamp()+"/", new File(fileName));
+              }
+          });
             graphHandler1.start();
         }else{
-            infoBox("Recording already started!");
+            graphHandler1.reOpenPlot();
+            //infoBox("Recording already started!");
         }
     }//GEN-LAST:event_exp2_lc_startActionPerformed
 
     private void exp2_lc_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp2_lc_stopActionPerformed
         // TODO add your handling code here:
+        if(graphHandler1!=null)
         graphHandler1.close();
+        //store file
     }//GEN-LAST:event_exp2_lc_stopActionPerformed
 
     private void exp2_emg_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp2_emg_stopActionPerformed
         // TODO add your handling code here:
+        if(graphHandler2!=null)
         graphHandler2.close();
     }//GEN-LAST:event_exp2_emg_stopActionPerformed
 
@@ -1005,6 +1062,11 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
     private void exp2_okActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp2_okActionPerformed
         // TODO add your handling code here:
         fileChooser.setCurrentDirectory(new File(fileName_exp2_emg));
+        
+        switch(exp2_history_menu.getSelectedIndex()){
+            case 1: fileChooser.setCurrentDirectory(new File(fileName_exp2_emg));break;
+            default: fileChooser.setCurrentDirectory(new File(fileName_exp2_lc));break;
+        }
         
         int returnVal = fileChooser.showOpenDialog(this);
         
@@ -1032,20 +1094,34 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
         if(graphHandler3 == null){
             tableName = "exp3_"+playerID+"_fp";
             graphHandler3 = new GraphHandler3(fileName_exp3_fp, playerID, 
-                    tableName, exp3_fp_URI, 3, "identifier_exp3fp");
+                    tableName, exp3_fp_URI, 3, "identifier_exp3fp", new Conn_Manager3() {
+              @Override
+              public void onConnClosed(String fileName) {
+                  saveFile(Long.parseLong(playerID), "exp3", "raw_sensor_forceplate"
+                          , getTimeStamp(), "exp3/forceplate/"+getTimeStamp()+"/", new File(fileName));
+              }
+          });
             graphHandler3.start();
         }else if(graphHandler3.isClosed()){
             tableName = "exp3_"+playerID+"_fp";
             graphHandler3 = new GraphHandler3(fileName_exp3_fp, playerID, 
-                    tableName, exp3_fp_URI, 3, "identifier_exp3fp");
+                    tableName, exp3_fp_URI, 3, "identifier_exp3fp", new Conn_Manager3() {
+              @Override
+              public void onConnClosed(String fileName) {
+                  saveFile(Long.parseLong(playerID), "exp3", "raw_sensor_forceplate"
+                          , getTimeStamp(), "exp3/forceplate/"+getTimeStamp()+"/", new File(fileName));
+              }
+          });
             graphHandler3.start();
         }else{
+            graphHandler3.reOpenPlot();
             infoBox("Recording already started!");
         }
     }//GEN-LAST:event_exp3_fp_startActionPerformed
 
     private void exp3_fp_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp3_fp_stopActionPerformed
         // TODO add your handling code here:
+        if(graphHandler3!=null)
         graphHandler3.close();
     }//GEN-LAST:event_exp3_fp_stopActionPerformed
 
@@ -1054,20 +1130,34 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
         if(graphHandler4 == null){
             tableName = "exp3_"+playerID+"_emg";
             graphHandler4 = new GraphHandler4(fileName_exp3_emg, playerID,
-                    tableName, exp3_emg_URI, 1, "identifier_exp3emg");
+                    tableName, exp3_emg_URI, 1, "identifier_exp3emg", new Conn_Manager4() {
+              @Override
+              public void onConnClosed(String fileName) {
+                  saveFile(Long.parseLong(playerID), "exp3", "raw_sensor_emg"
+                          , getTimeStamp(), "exp3/emg/"+getTimeStamp()+"/", new File(fileName));
+              }
+          });
             graphHandler4.start();
         }else if(graphHandler4.isClosed()){
             tableName = "exp3_"+playerID+"_emg";
             graphHandler4 = new GraphHandler4(fileName_exp3_emg, playerID,
-                    tableName, exp3_emg_URI, 1, "identifier_exp3emg");
+                    tableName, exp3_emg_URI, 1, "identifier_exp3emg", new Conn_Manager4() {
+              @Override
+              public void onConnClosed(String fileName) {
+                  saveFile(Long.parseLong(playerID), "exp3", "raw_sensor_emg"
+                          , getTimeStamp(), "exp3/emg/"+getTimeStamp()+"/", new File(fileName));
+              }
+          });
             graphHandler4.start();
         }else{
+            graphHandler4.reOpenPlot();
             infoBox("Recording already started!");
         }  
     }//GEN-LAST:event_exp3_emg_startActionPerformed
 
     private void exp3_emg_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp3_emg_stopActionPerformed
         // TODO add your handling code here:
+        if(graphHandler4!=null)
         graphHandler4.close();
     }//GEN-LAST:event_exp3_emg_stopActionPerformed
 
@@ -1078,6 +1168,12 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
     private void exp3_okActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp3_okActionPerformed
         // TODO add your handling code here:
         fileChooser.setCurrentDirectory(new File(fileName_exp3_fp));
+        
+        switch(exp3_history_menu.getSelectedIndex()){
+            case 0: fileChooser.setCurrentDirectory(new File(fileName_exp3_fp));break;
+            case 1: fileChooser.setCurrentDirectory(new File(fileName_exp3_emg));break;
+            default: fileChooser.setCurrentDirectory(new File(fileName_exp3_fp));break;
+        }
         
         int returnVal = fileChooser.showOpenDialog(this);
         
@@ -1115,14 +1211,25 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
         if(graphHandler2 == null){
             tableName = "exp2_"+playerID+"_emg";
             graphHandler2 = new GraphHandler2(fileName_exp2_emg, playerID,
-                tableName, exp2_emg_URI, 1, "identifier_exp2emg");
+                tableName, exp2_emg_URI, 1, "identifier_exp2emg", new Conn_Manager2() {
+              @Override
+              public void onConnClosed(String fileName) {
+                  
+              }
+          });
             graphHandler2.start();
         }else if(graphHandler2.isClosed()){
             tableName = "exp2_"+playerID+"_emg";
             graphHandler2 = new GraphHandler2(fileName_exp2_emg, playerID,
-                tableName, exp2_emg_URI, 1, "identifier_exp2emg");
+                tableName, exp2_emg_URI, 1, "identifier_exp2emg", new Conn_Manager2() {
+              @Override
+              public void onConnClosed(String fileName) {
+                  
+              }
+          });
             graphHandler2.start();
         }else{
+            graphHandler2.reOpenPlot();
             infoBox("Recording already started!");
         }
     }//GEN-LAST:event_exp2_emg_startActionPerformed
@@ -1231,7 +1338,87 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
         
     }
     
+    
+    public String getTimeStamp(){
+        
+        long epoch = 0;
+                
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        Date date = new Date(); 
+        System.out.println(dateFormat.format(date));
+        
+        String d = dateFormat.format(date);
+        /*
+        SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+        
+        try {
+            Date dat = df.parse(d);
+            epoch = date.getTime();
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
+        */
+        return d;
+        
+    }
 
+    public void saveFile(long player_id, String exp, String parameter,
+            String date, String destination, File rawFile) {
+        
+        MediaType MEDIA_TYPE_CSV = MediaType.parse("text/csv");
+        
+        OkHttpClient client = new OkHttpClient();
+ 
+        RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                .addFormDataPart("player_id", ""+player_id)
+                .addFormDataPart("exp", exp)
+                .addFormDataPart("parameter", parameter)
+                .addFormDataPart("date", ""+date)
+                .addFormDataPart("destination", destination)
+                .addFormDataPart("rawFile", rawFile.getName(),RequestBody.create(MEDIA_TYPE_CSV, rawFile))
+                .build();
+ 
+        Request request = new Request.Builder().url("https://us-central1-criotam-bec9b.cloudfunctions.net/uploadFile")
+                .post(requestBody).build();
+ 
+        Response response;
+        try {
+            response = client.newCall(request).execute();
+            if (!response.isSuccessful()) {
+            System.out.println("Not Successful response");
+        }else{
+                
+            System.out.println("Successful response 200 Ok"+response.body().string());
+        }
+        } catch (IOException ex) {
+            Logger.getLogger(PlayerDashboardUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+    }
+    
+    
+    public void initializeFirebase(){
+        
+        try {
+            FileInputStream serviceAccount;
+            serviceAccount = new FileInputStream("C://Users/AVINASH/Desktop/CriotamPrototype/criotam-bec9b-firebase-adminsdk-k6t7p-c3740d0a3f.json");
+            
+            FirebaseOptions options = new FirebaseOptions.Builder()                        
+                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                .setDatabaseUrl("https://criotam-bec9b.firebaseio.com/")
+                .build();
+
+            FirebaseApp.initializeApp(options);
+            
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(DataListener.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(DataListener.class.getName()).log(Level.SEVERE, null, ex);
+        }        
+    }
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel ActionBar;
     private javax.swing.JLabel exp1_info_age;
