@@ -18,55 +18,10 @@
  */
 
 /**
- * readSensor
- * @param {org.criotam.prototype.sensor.readSensor} readSensor
- * @transaction
- */
- 
-async function readSensor(sensorData) {
-    var NS = 'org.criotam.prototype.sensor'
-    // Save the old value of the asset.
-    const Raw_oldValue = sensorData.sensor.Raw_oldValue;
-    const Fx_oldValue = sensorData.sensor.Fx_oldValue;
-    const Fy_oldValue = sensorData.sensor.Fy_oldValue;
-    const Fz_oldValue = sensorData.sensor.Fz_oldValue;
-    const Mx_oldValue = sensorData.sensor.Mx_oldValue;
-    const My_oldValue = sensorData.sensor.My_oldValue;
-    const Mz_oldValue = sensorData.sensor.Mz_oldValue;
-    // Update the asset with the new value.
-    sensorData.sensor.Raw_value = sensorData.Raw_newValue;
-    sensorData.sensor.Fx_value = sensorData.Fx_newValue;
-    sensorData.sensor.Fy_value = sensorData.Fy_newValue;
-    sensorData.sensor.Fz_value = sensorData.Fz_newValue;
-    sensorData.sensor.Mx_value = sensorData.Mx_newValue;
-    sensorData.sensor.My_value = sensorData.My_newValue;
-    sensorData.sensor.Mz_value = sensorData.Mz_newValue;
-
-    // Get the asset registry for the asset.
-    const assetRegistry = await getAssetRegistry('org.criotam.prototype.sensor.Sensor');
-    // Update the asset in the asset registry.
-    await assetRegistry.update(sensorData.sensor);
-
-    // Emit an event for the modified asset.
-    let event = getFactory().newEvent(NS, 'sensorRead');
-    event.sensor = sensorData.sensor;
-    event.Raw_oldValue = Raw_oldValue;
-    event.Raw_newValue = sensorData.Raw_newValue;
-    event.Fx_oldValue = sensorData.Fx_oldValue;
-    event.Fy_oldValue = sensorData.Fy_oldValue;
-    event.Fz_oldValue = sensorData.Fz_oldValue;
-    event.Mx_oldValue = sensorData.Mx_oldValue;
-    event.My_oldValue = sensorData.My_oldValue;
-    event.Mz_oldValue = sensorData.My_oldValue;
-    emit(event);
-}
-
-/**
  * addPlayer
  * @param {org.criotam.prototype.sensor.addPlayer} addPlayer
  * @transaction
  */
-
 async function addPlayer(playerData) {
     var NS = 'org.criotam.prototype.sensor';
 
@@ -87,36 +42,11 @@ async function addPlayer(playerData) {
     emit(event);
 }
 
-/**
- * addSensor
- * @param {org.criotam.prototype.sensor.addSensor} addSensor
- * @transaction
- */
-
-
- async function addSensor(sensorData) {
-    var NS = 'org.criotam.prototype.sensor';
-    let factory = getFactory();
-    let Sensor = factory.newResource(NS, "Sensor", sensorData.sensorId);
-    Sensor.sensorId = sensorData.sensorId;
-    Sensor.sensorMAC = sensorData.sensorMAC;
-    Sensor.owner = sensorData.owner;
-    Sensor.player = sensorData.player;
-
-    const assetRegistry = await getAssetRegistry('org.criotam.prototype.sensor.Sensor');
-    await assetRegistry.add(Sensor);
-
-    let event = factory.newEvent(NS,'addedSensor');
-    event.sensorId = sensorData.sensorId;
-    emit(event);
- }
-
  /**
  * addScientist
  * @param {org.criotam.prototype.sensor.addScientist} addScientist
  * @transaction
  */
-
  async function addScientist(scientistData) {
     var NS = 'org.criotam.prototype.sensor';
     let factory = getFactory();
@@ -134,4 +64,122 @@ async function addPlayer(playerData) {
 
  }
 
+ /**
+ * ReadSensor
+ * @param {org.criotam.prototype.sensor.readexperiment1lcData} readexperiment1lcData
+ * @transaction
+ */
+async function readexperiment1lcData(experiment1lcData) {
+    var NS = 'org.criotam.prototype.sensor';
+    let Raw_value = experiment1lcData.Raw_value;
+  	let lc1_Raw_value = experiment1lcData.lc1_Raw_value;
+  	let lc2_Raw_value = experiment1lcData.lc2_Raw_value;
+    let expId = getExperimentId(Raw_value);
+    let factory = getFactory();
+  	lc1_Raw_value = getExplc(Raw_value);
+  lc2_Raw_value = getExplc(Raw_value);
+    experiment1lcData.experiment1.lc1_Raw_value = lc1_Raw_value[0];
+    experiment1lcData.experiment1.lc2_Raw_value = lc2_Raw_value[1];
+    experiment1lcData.experiment1.experimentId = expId;
+    experiment1lcData.experiment1.Raw_value = Raw_value;
+    const assetRegistry = await getAssetRegistry('org.criotam.prototype.sensor.Experiment1lc');
+    await assetRegistry.update(experiment1lcData.experiment1);
+   /* await assetRegistry.update(experiment1lcData.experiment1.lc2_Raw_value);
+    await assetRegistry.update(experiment1lcData.experiment1.Raw_value);*/
 
+    let event = factory.newEvent(NS,'experiment1lcDataread');
+    event.experimentId = experiment1lcData.experiment1.experimentId;
+    emit(event);
+ }
+
+
+ /**
+ * addExperiment
+ * @param {org.criotam.prototype.sensor.experiment1lcDataAdd} experiment1lcDataAdd
+ * @transaction
+ */
+
+async function experiment1lcDataAdd(experiment1lcData) {
+    var NS = 'org.criotam.prototype.sensor';
+    let factory = getFactory();
+    let Experiment = factory.newResource(NS, "Experiment1lc", experiment1lcData.experimentId);
+    Experiment.experimentId = experiment1lcData.experimentId;
+    Experiment.Raw_value = experiment1lcData.Raw_value
+    Experiment.lc1_Raw_value = experiment1lcData.lc1_Raw_value ;
+    Experiment.lc2_Raw_value = experiment1lcData.lc2_Raw_value ;
+    Experiment.experimenter = experiment1lcData.experimenter  ;
+    Experiment.player = experiment1lcData.player;
+     
+    const assetRegistry = await getAssetRegistry('org.criotam.prototype.sensor.Experiment1lc');
+    await assetRegistry.add(Experiment);
+
+    let event = factory.newEvent(NS,'experiment1lcDataAdded');
+    event.experimentId = experiment1lcData.experimentId;
+    emit(event);
+ }
+
+// functions to retrieve relevant data from string recieved
+
+// sample data identifier_exp1lc:-0.01:0.06:498706
+
+ function getExperimentId(data) {
+        let sensorData = data.split("$");
+        console.log(sensorData);
+        let singleDatapoint = sensorData[0].split(":");
+        let experiment_number = singleDatapoint[0].split("_")[1].substr(3,1);
+        let experimentId = "E"+ "0" + experiment_number;
+        return experimentId;
+ }
+
+ function getExperimentNumber(data) {
+    var sensorData = data.split("$");
+    var singleDatapoint = sensorData[0].split(":");
+    var experiment_number = singleDatapoint[0].split("_")[1].substr(3,1);
+    return experiment_number;
+ }
+
+ function getExplc(data) {
+    let lc1_Raw_value = [];
+    let lc2_Raw_value = [];
+   var sensorData = data.split("$");
+   var l = sensorData.length;
+   
+   
+   for(var i = 0; i < l; i++ ) {
+       console.log(i);
+       var singleDatapoint = sensorData[i].split(":"); //identifier_exp1lc:-0.01:0.06:498706
+       lc1_Raw_value.push(singleDatapoint[1]);
+       lc2_Raw_value.push(singleDatapoint[2]);
+       console.log(lc1_Raw_value);
+       console.log(lc2_Raw_value);
+   }
+   return [lc1_Raw_value, lc2_Raw_value];
+ }
+
+ function getExpemg(data) {
+     let emg_Raw_value = [];
+    var sensorData = data.split("$");
+    var l = sensorData.length;
+    for(var i =0; i <l ; i++){
+        var singleDatapoint = sensorData[i].split(":");
+        emg_Raw_value.push(singleDatapoint[1]);
+    }
+    return emg_Raw_value;
+ }
+
+ function getExp3fp(data) {
+     let lc1_Raw_value = [];
+     let lc2_Raw_value = [];
+     let lc3_Raw_value = [];
+    var sensorData = data.split("$");
+    var l = sensorData.length;
+    console.log(sensorData);
+    for(var i =0; i < l; i++ ) {
+        var singleDatapoint = sensorData[i].split(":");
+        lc1_Raw_value.push(singleDatapoint[1]);
+        lc2_Raw_value.push(singleDatapoint[2]);
+        lc3_Raw_value.push(singleDatapoint[3]);
+
+    }
+    return {lc1_Raw_value, lc2_Raw_value, lc3_Raw_value}
+ }

@@ -23,20 +23,28 @@ rule EverybodyCanReadEverything {
     action: ALLOW
 }
 
-rule EverybodyCanSubmitTransactions {
+rule EverybodyCanSubmitTransactions1 {
     description: "Allow all participants to submit transactions"
     participant: "org.criotam.prototype.sensor.Scientist"
     operation: CREATE
-    resource: "org.criotam.prototype.sensor.readSensor"
+    resource: "org.criotam.prototype.sensor.experiment1lcDataAdd"
     action: ALLOW
 }
 
-rule OwnerHasFullAccessToTheirAssets {
+rule EverybodyCanSubmitTransactions2 {
+    description: "Allow all participants to submit transactions"
+    participant: "org.criotam.prototype.sensor.Scientist"
+    operation: CREATE
+    resource: "org.criotam.prototype.sensor.readexperiment1lcData"
+    action: ALLOW
+}
+
+rule OwnerHasFullAccessToTheirAssets1 {
     description: "Allow all participants full access to their assets"
     participant(p): "org.criotam.prototype.sensor.Scientist"
     operation: ALL
-    resource(r): "org.criotam.prototype.sensor.Sensor"
-    condition: (r.owner.getIdentifier() === p.getIdentifier())
+    resource(r): "org.criotam.prototype.sensor.Experiment1lc"
+    condition: (r.experimenter.getIdentifier() === p.getIdentifier())
     action: ALLOW
 }
 
