@@ -116,6 +116,10 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
         this.end_x_point = 0;
         this.race_start_x_point = 0;
         
+        this.flag_end_time = false;
+        this.flag_start_time = false;
+        this.flag_start_race = false;
+        
         yAxis_sensor1 = new ArrayList();
         yAxis_sensor2 = new ArrayList();
         yAxis_sensor3 = new ArrayList();
@@ -510,6 +514,8 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
     
     ArrayList<Double> temp_arrList_val = new ArrayList<>();
     
+    boolean flag_start_race = false, flag_start_time = false, flag_end_time = false;
+    
     
     public void plotGraph(String message){
            
@@ -539,79 +545,81 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
             
                     //xAxis.add(Double.parseDouble(message.toString().split(":")[4]+""));
 
-                    xAxis.add(time);
-                    
-                    yAxis_sensor1.add(Double.parseDouble(message.toString().split(":")[1]+""));
-                    
-                    yAxis_sensor2.add(Double.parseDouble(message.toString().split(":")[2]+""));
-                    
-                    yAxis_sensor3.add(Double.parseDouble(message.toString().split(":")[3]+""));
-                    
-                    
-                    double fx1 = 0;
-                    
-                    double fx2 = Double.parseDouble(message.toString().split(":")[2]+"")*
-                                    Math.sin(Math.toRadians(30))*Math.sin(Math.toRadians(60));; 
-                    
-                    double fx3 = Double.parseDouble(message.toString().split(":")[3]+"")*
-                                    Math.sin(Math.toRadians(30))*Math.sin(Math.toRadians(60));
-                    
-                    double fz1 = Double.parseDouble(message.toString().split(":")[1]+"")*
-                                    Math.cos(Math.toRadians(30));
-                    
-                    double fz2 = Double.parseDouble(message.toString().split(":")[2]+"")*
-                                    Math.cos(Math.toRadians(30));;
-                    
-                    double fz3 = Double.parseDouble(message.toString().split(":")[3]+"")*
-                                    Math.cos(Math.toRadians(30));
-                    
-                    double fy1 = Double.parseDouble(message.toString().split(":")[1]+"")*
-                                    Math.sin(Math.toRadians(30));
-                    
-                    double fy2 = Double.parseDouble(message.toString().split(":")[2]+"")*
-                                    Math.sin(Math.toRadians(30))*Math.sin(Math.toRadians(60));
-                    
-                    double fy3 = Double.parseDouble(message.toString().split(":")[3]+"")*
-                                    Math.sin(Math.toRadians(30))*Math.sin(Math.toRadians(60));;
-                  
-                   
-                    x_force.add(fx2 - fx3);
-                    
-                    y_force.add(fy1 - (fy2 + fy3));
-                    
-                    z_force.add(fz1 + fz2 + fz3);
-                    
-                    x_moment.add((fx2 - fx3)*11);
-                    
-                    y_moment.add((fy1 - (fy2 + fy3))*11);
-                    
-                    z_moment.add( fx2*4*Math.cos(Math.toRadians(60)) - 
-                            fx3*4*Math.cos(Math.toRadians(60)) - fy2*4*Math.sin(Math.toRadians(60))
-                    + fy3*4*Math.sin(Math.toRadians(60)));
-                    
-                    
-                    plotData(xAxis, yAxis_sensor1, 0, "load cell");
-                    
-                    plotData(xAxis, yAxis_sensor2, 1, "load cell");
-                    
-                    plotData(xAxis, yAxis_sensor3, 2, "load cell");
-                    
-                    
-                    plotForce(xAxis, x_force, 0, "Force X");
-                    
-                    plotForce(xAxis, y_force, 1, "Force Y");
-                    
-                    plotForce(xAxis, z_force, 2, "Force Z");
-                    
-                    
-                    plotMoment(xAxis, x_moment, 0, "Moment X");
-                    
-                    plotMoment(xAxis, y_moment, 1, "Moment Y");
-                    
-                    plotMoment(xAxis, z_moment, 2, "Moment Z");
-                    
+                    if(time>=0 && Double.parseDouble(message.toString().split(":")[4]+"")<900000){
+                        
+                        xAxis.add(time);
+
+                        yAxis_sensor1.add(Double.parseDouble(message.toString().split(":")[1]+""));
+
+                        yAxis_sensor2.add(Double.parseDouble(message.toString().split(":")[2]+""));
+
+                        yAxis_sensor3.add(Double.parseDouble(message.toString().split(":")[3]+""));
+
+
+                        double fx1 = 0;
+
+                        double fx2 = Double.parseDouble(message.toString().split(":")[2]+"")*
+                                        Math.sin(Math.toRadians(30))*Math.sin(Math.toRadians(60));; 
+
+                        double fx3 = Double.parseDouble(message.toString().split(":")[3]+"")*
+                                        Math.sin(Math.toRadians(30))*Math.sin(Math.toRadians(60));
+
+                        double fz1 = Double.parseDouble(message.toString().split(":")[1]+"")*
+                                        Math.cos(Math.toRadians(30));
+
+                        double fz2 = Double.parseDouble(message.toString().split(":")[2]+"")*
+                                        Math.cos(Math.toRadians(30));;
+
+                        double fz3 = Double.parseDouble(message.toString().split(":")[3]+"")*
+                                        Math.cos(Math.toRadians(30));
+
+                        double fy1 = Double.parseDouble(message.toString().split(":")[1]+"")*
+                                        Math.sin(Math.toRadians(30));
+
+                        double fy2 = Double.parseDouble(message.toString().split(":")[2]+"")*
+                                        Math.sin(Math.toRadians(30))*Math.sin(Math.toRadians(60));
+
+                        double fy3 = Double.parseDouble(message.toString().split(":")[3]+"")*
+                                        Math.sin(Math.toRadians(30))*Math.sin(Math.toRadians(60));;
+
+
+                        x_force.add(fx2 - fx3);
+
+                        y_force.add(fy1 - (fy2 + fy3));
+
+                        z_force.add(fz1 + fz2 + fz3);
+
+                        x_moment.add((fx2 - fx3)*11);
+
+                        y_moment.add((fy1 - (fy2 + fy3))*11);
+
+                        z_moment.add( fx2*4*Math.cos(Math.toRadians(60)) - 
+                                fx3*4*Math.cos(Math.toRadians(60)) - fy2*4*Math.sin(Math.toRadians(60))
+                        + fy3*4*Math.sin(Math.toRadians(60)));
+
+
+                        plotData(xAxis, yAxis_sensor1, 0, "load cell");
+
+                        plotData(xAxis, yAxis_sensor2, 1, "load cell");
+
+                        plotData(xAxis, yAxis_sensor3, 2, "load cell");
+
+
+                        plotForce(xAxis, x_force, 0, "Force X");
+
+                        plotForce(xAxis, y_force, 1, "Force Y");
+
+                        plotForce(xAxis, z_force, 2, "Force Z");
+
+
+                        plotMoment(xAxis, x_moment, 0, "Moment X");
+
+                        plotMoment(xAxis, y_moment, 1, "Moment Y");
+
+                        plotMoment(xAxis, z_moment, 2, "Moment Z");
+
                     //process message and plot
-                    
+                    }
                 }
             }
         
@@ -619,16 +627,30 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
         
                 if(message.toString().split(":")[1].equalsIgnoreCase("start_time")){
                     
-                    drawLine("Start time",start_x_point, 0);
+                    if(!flag_start_time){
+                        
+                        drawLine("Start time",start_x_point, 0);
                     
-                }else if(message.toString().split(":")[1].equalsIgnoreCase("end_time")){
+                    }
                     
-                    drawLine("End time",end_x_point, 0);
+                    flag_start_time = true;
+                    
+                }else if(message.toString().split(":")[1].equalsIgnoreCase("end_time") ){
+                    
+                    if(!flag_end_time){
+                       drawLine("End time",end_x_point, 0);
+                    }
+                    
+                    flag_end_time = true;
                     
                 }
                 else if(message.toString().split(":")[1].equalsIgnoreCase("start_race")){
                     
-                    drawLine("Start race",race_start_x_point, 0);
+                    if(!flag_start_race){
+                        drawLine("Start race",race_start_x_point, 0);
+                    }
+                    
+                    flag_start_race = true;
                     
                 }else if(message.toString().split(":")[1].equalsIgnoreCase("mac_id")){
                     
@@ -727,18 +749,42 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
         
         else if(message.toString().split(":")[0].equalsIgnoreCase("identifier_exp2lc")){
             
-                if(message.toString().split(":")[1].equalsIgnoreCase("start_time")){
+            
+                if(message.toString().split(":")[1].equalsIgnoreCase("start_time")){                  
                     
-                    drawLine("Start time",start_x_point, 1);
+                    if(!flag_start_time){
+                        drawLine("Start time1",start_x_point, 0);
+
+                        drawLine("Start time2",start_x_point, 1);
+                    }
+                    
+                    flag_start_time = true;
                     
                 }else if(message.toString().split(":")[1].equalsIgnoreCase("end_time")){
                     
-                    drawLine("End time",end_x_point, 1);
+                    
+                    if(!flag_end_time){
+                      
+                        drawLine("End time1",end_x_point, 0);
+
+                        drawLine("End time2",end_x_point, 1);
+                    
+                    }
+                    
+                    flag_end_time = true;
                     
                 }
-                else if(message.toString().split(":")[1].equalsIgnoreCase("start_race")){
+                else if(message.toString().split(":")[1].equalsIgnoreCase("start_race")/*&& !flag_start_race*/){
                     
-                    drawLine("Start race",race_start_x_point, 1);
+                    
+                    if( !flag_start_race) { 
+                        
+                        drawLine("Start race1",race_start_x_point, 0);
+
+                        drawLine("Start race2",race_start_x_point, 1);
+                    }
+                    
+                    flag_start_race = true;
                     
                     temp_arrList_time = new ArrayList<>();
                     //race started
@@ -768,6 +814,9 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                    double time = (Double.parseDouble(message.toString().split(":")[3]+"")
                            -initial_time)/1000;
             
+                   if(time>=0 && Double.parseDouble(message.toString().split(":")[3]+"") < 900000){
+                       
+                  
                     xAxis.add(time);
                     
                     //xAxis.add(Double.parseDouble(message.toString().split(":")[3]+""));
@@ -818,6 +867,7 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                     
                     //process message and plot
                     
+                   }
                 }
             }
         
@@ -918,79 +968,82 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                    double time = (Double.parseDouble(message.toString().split(":")[4]+"")
                            -initial_time)/1000;
             
-                    xAxis.add(time);
-                    
-                    yAxis_sensor1.add(Double.parseDouble(message.toString().split(":")[1]+""));
-                    
-                    yAxis_sensor2.add(Double.parseDouble(message.toString().split(":")[2]+""));
-                    
-                    yAxis_sensor3.add(Double.parseDouble(message.toString().split(":")[3]+""));
-                    
-                    
-                    double fx1 = 0;
-                    
-                    double fx2 = Double.parseDouble(message.toString().split(":")[2]+"")*
-                                    Math.sin(Math.toRadians(30))*Math.sin(Math.toRadians(60));; 
-                    
-                    double fx3 = Double.parseDouble(message.toString().split(":")[3]+"")*
-                                    Math.sin(Math.toRadians(30))*Math.sin(Math.toRadians(60));
-                    
-                    double fz1 = Double.parseDouble(message.toString().split(":")[1]+"")*
-                                    Math.cos(Math.toRadians(30));
-                    
-                    double fz2 = Double.parseDouble(message.toString().split(":")[2]+"")*
-                                    Math.cos(Math.toRadians(30));;
-                    
-                    double fz3 = Double.parseDouble(message.toString().split(":")[3]+"")*
-                                    Math.cos(Math.toRadians(30));
-                    
-                    double fy1 = Double.parseDouble(message.toString().split(":")[1]+"")*
-                                    Math.sin(Math.toRadians(30));
-                    
-                    double fy2 = Double.parseDouble(message.toString().split(":")[2]+"")*
-                                    Math.sin(Math.toRadians(30))*Math.sin(Math.toRadians(60));
-                    
-                    double fy3 = Double.parseDouble(message.toString().split(":")[3]+"")*
-                                    Math.sin(Math.toRadians(30))*Math.sin(Math.toRadians(60));;
-                  
                    
-                    x_force.add(fx2 - fx3);
-                    
-                    y_force.add(fy1 - (fy2 + fy3));
-                    
-                    z_force.add(fz1 + fz2 + fz3);
-                    
-                    x_moment.add((fx2 - fx3)*11);
-                    
-                    y_moment.add((fy1 - (fy2 + fy3))*11);
-                    
-                    z_moment.add( fx2*4*Math.cos(Math.toRadians(60)) - 
-                            fx3*4*Math.cos(Math.toRadians(60)) - fy2*4*Math.sin(Math.toRadians(60))
-                    + fy3*4*Math.sin(Math.toRadians(60)));
-                    
-                    
-                    plotData(xAxis, yAxis_sensor1, 0, "load cell");
-                    
-                    plotData(xAxis, yAxis_sensor2, 1, "load cell");
-                    
-                    plotData(xAxis, yAxis_sensor3, 2, "load cell");
-                    
-                    
-                    plotForce(xAxis, x_force, 0, "Force X");
-                    
-                    plotForce(xAxis, y_force, 1, "Force Y");
-                    
-                    plotForce(xAxis, z_force, 2, "Force Z");
-                    
-                    
-                    plotMoment(xAxis, x_moment, 0, "Moment X");
-                    
-                    plotMoment(xAxis, y_moment, 1, "Moment Y");
-                    
-                    plotMoment(xAxis, z_moment, 2, "Moment Z");
-                    
-                    //process message and plot
-                    
+                   if(time>=0 && Double.parseDouble(message.toString().split(":")[4]+"")<900000){
+                        
+                        xAxis.add(time);
+
+                        yAxis_sensor1.add(Double.parseDouble(message.toString().split(":")[1]+""));
+
+                        yAxis_sensor2.add(Double.parseDouble(message.toString().split(":")[2]+""));
+
+                        yAxis_sensor3.add(Double.parseDouble(message.toString().split(":")[3]+""));
+
+
+                        double fx1 = 0;
+
+                        double fx2 = Double.parseDouble(message.toString().split(":")[2]+"")*
+                                        Math.sin(Math.toRadians(30))*Math.sin(Math.toRadians(60));; 
+
+                        double fx3 = Double.parseDouble(message.toString().split(":")[3]+"")*
+                                        Math.sin(Math.toRadians(30))*Math.sin(Math.toRadians(60));
+
+                        double fz1 = Double.parseDouble(message.toString().split(":")[1]+"")*
+                                        Math.cos(Math.toRadians(30));
+
+                        double fz2 = Double.parseDouble(message.toString().split(":")[2]+"")*
+                                        Math.cos(Math.toRadians(30));;
+
+                        double fz3 = Double.parseDouble(message.toString().split(":")[3]+"")*
+                                        Math.cos(Math.toRadians(30));
+
+                        double fy1 = Double.parseDouble(message.toString().split(":")[1]+"")*
+                                        Math.sin(Math.toRadians(30));
+
+                        double fy2 = Double.parseDouble(message.toString().split(":")[2]+"")*
+                                        Math.sin(Math.toRadians(30))*Math.sin(Math.toRadians(60));
+
+                        double fy3 = Double.parseDouble(message.toString().split(":")[3]+"")*
+                                        Math.sin(Math.toRadians(30))*Math.sin(Math.toRadians(60));;
+
+
+                        x_force.add(fx2 - fx3);
+
+                        y_force.add(fy1 - (fy2 + fy3));
+
+                        z_force.add(fz1 + fz2 + fz3);
+
+                        x_moment.add((fx2 - fx3)*11);
+
+                        y_moment.add((fy1 - (fy2 + fy3))*11);
+
+                        z_moment.add( fx2*4*Math.cos(Math.toRadians(60)) - 
+                                fx3*4*Math.cos(Math.toRadians(60)) - fy2*4*Math.sin(Math.toRadians(60))
+                        + fy3*4*Math.sin(Math.toRadians(60)));
+
+
+                        plotData(xAxis, yAxis_sensor1, 0, "load cell");
+
+                        plotData(xAxis, yAxis_sensor2, 1, "load cell");
+
+                        plotData(xAxis, yAxis_sensor3, 2, "load cell");
+
+
+                        plotForce(xAxis, x_force, 0, "Force X");
+
+                        plotForce(xAxis, y_force, 1, "Force Y");
+
+                        plotForce(xAxis, z_force, 2, "Force Z");
+
+
+                        plotMoment(xAxis, x_moment, 0, "Moment X");
+
+                        plotMoment(xAxis, y_moment, 1, "Moment Y");
+
+                        plotMoment(xAxis, z_moment, 2, "Moment Z");
+
+                        //process message and plot
+                   }   
                 }
             }
         
@@ -1106,18 +1159,42 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
         
         else if(message.toString().split(":")[0].equalsIgnoreCase("identifier_exp2lc")){
             
-                if(message.toString().split(":")[1].equalsIgnoreCase("start_time")){
+            
+                if(message.toString().split(":")[1].equalsIgnoreCase("start_time")){                  
                     
-                    drawLine("Start time",start_x_point, 1);
+                    if(!flag_start_time){
+                        drawLine("Start time1",start_x_point, 0);
+
+                        drawLine("Start time2",start_x_point, 1);
+                    }
+                    
+                    flag_start_time = true;
                     
                 }else if(message.toString().split(":")[1].equalsIgnoreCase("end_time")){
                     
-                    drawLine("End time",end_x_point, 1);
+                    
+                    if(!flag_end_time){
+                      
+                        drawLine("End time1",end_x_point, 0);
+
+                        drawLine("End time2",end_x_point, 1);
+                    
+                    }
+                    
+                    flag_end_time = true;
                     
                 }
-                else if(message.toString().split(":")[1].equalsIgnoreCase("start_race")){
+                else if(message.toString().split(":")[1].equalsIgnoreCase("start_race")/*&& !flag_start_race*/){
                     
-                    drawLine("Start race",race_start_x_point, 1);
+                    
+                    if( !flag_start_race) { 
+                        
+                        drawLine("Start race1",race_start_x_point, 0);
+
+                        drawLine("Start race2",race_start_x_point, 1);
+                    }
+                    
+                    flag_start_race = true;
                     
                     temp_arrList_time = new ArrayList<>();
                     //race started
@@ -1146,56 +1223,58 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                    double time = (Double.parseDouble(message.toString().split(":")[3]+"")
                            -initial_time)/1000;
             
-                    xAxis.add(time);
-                    
-                    //xAxis.add(Double.parseDouble(message.toString().split(":")[3]+""));
+                   if(time>=0 && Double.parseDouble(message.toString().split(":")[3]+"")<900000){
 
-                    yAxis_sensor1.add(Double.parseDouble(message.toString().split(":")[1]+""));
-                    
-                    yAxis_sensor2.add(Double.parseDouble(message.toString().split(":")[2]+""));
-                    
-                    race_start_x_point = Double.parseDouble(message.toString().split(":")[2]+""); 
-                    end_x_point = Double.parseDouble(message.toString().split(":")[2]+""); 
-                    start_x_point =  Double.parseDouble(message.toString().split(":")[2]+"");
-                    
-                    x_force_val_front.add(
-                            Double.parseDouble(message.toString().split(":")[1]+"")*
-                                    Math.cos(Math.toRadians(front_block_angle)));
-                    
-                    z_force_val_front.add(
-                            Double.parseDouble(message.toString().split(":")[1]+"")*
-                                    Math.sin(Math.toRadians(front_block_angle)));
-                    
-                    x_force_val_rear.add(
-                            Double.parseDouble(message.toString().split(":")[2]+"")*
-                                    Math.cos(Math.toRadians(rear_block_angle)));
-                    
-                    z_force_val_rear.add(
-                            Double.parseDouble(message.toString().split(":")[2]+"")*
-                                    Math.sin(Math.toRadians(rear_block_angle)));
-                    
-                    moment_val_front.add(Double.parseDouble(message.toString().split(":")[1]+"")*DIST_FRONT);
+                        xAxis.add(time);
 
-                    moment_val_rear.add(Double.parseDouble(message.toString().split(":")[2]+"")*DIST_REAR);
+                        //xAxis.add(Double.parseDouble(message.toString().split(":")[3]+""));
 
-                    plotData(xAxis, yAxis_sensor1, 0, "load cell");
-                    
-                    plotData(xAxis, yAxis_sensor2, 1, "load cell");
-                    
-                    plotForce(xAxis, x_force_val_front, 0, "Force X Front");
-                    
-                    plotForce(xAxis, z_force_val_front, 1, "Force Z Front");
-                    
-                    plotForce(xAxis, x_force_val_rear, 2, "Force X Rear");
-                    
-                    plotForce(xAxis, z_force_val_rear, 3, "Force Z Rear");
-                    
-                    plotMoment(xAxis, moment_val_front, 0, "Moment Y Front");
-                    
-                    plotMoment(xAxis, moment_val_rear, 1, "Moment Y Rear");
-                    
+                        yAxis_sensor1.add(Double.parseDouble(message.toString().split(":")[1]+""));
+
+                        yAxis_sensor2.add(Double.parseDouble(message.toString().split(":")[2]+""));
+
+                        race_start_x_point = Double.parseDouble(message.toString().split(":")[2]+""); 
+                        end_x_point = Double.parseDouble(message.toString().split(":")[2]+""); 
+                        start_x_point =  Double.parseDouble(message.toString().split(":")[2]+"");
+
+                        x_force_val_front.add(
+                                Double.parseDouble(message.toString().split(":")[1]+"")*
+                                        Math.cos(Math.toRadians(front_block_angle)));
+
+                        z_force_val_front.add(
+                                Double.parseDouble(message.toString().split(":")[1]+"")*
+                                        Math.sin(Math.toRadians(front_block_angle)));
+
+                        x_force_val_rear.add(
+                                Double.parseDouble(message.toString().split(":")[2]+"")*
+                                        Math.cos(Math.toRadians(rear_block_angle)));
+
+                        z_force_val_rear.add(
+                                Double.parseDouble(message.toString().split(":")[2]+"")*
+                                        Math.sin(Math.toRadians(rear_block_angle)));
+
+                        moment_val_front.add(Double.parseDouble(message.toString().split(":")[1]+"")*DIST_FRONT);
+
+                        moment_val_rear.add(Double.parseDouble(message.toString().split(":")[2]+"")*DIST_REAR);
+
+                        plotData(xAxis, yAxis_sensor1, 0, "load cell");
+
+                        plotData(xAxis, yAxis_sensor2, 1, "load cell");
+
+                        plotForce(xAxis, x_force_val_front, 0, "Force X Front");
+
+                        plotForce(xAxis, z_force_val_front, 1, "Force Z Front");
+
+                        plotForce(xAxis, x_force_val_rear, 2, "Force X Rear");
+
+                        plotForce(xAxis, z_force_val_rear, 3, "Force Z Rear");
+
+                        plotMoment(xAxis, moment_val_front, 0, "Moment Y Front");
+
+                        plotMoment(xAxis, moment_val_rear, 1, "Moment Y Rear");
+
                     //process message and plot
-                    
+                   }
                 }
             }
         
@@ -1243,6 +1322,8 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
     
     public void drawLine(String series_name, double xpoint, int index){
         
+        System.out.println("Called");
+        
         this.start_x_point = xpoint;
         
         ArrayList<Double> x_point = new ArrayList();
@@ -1251,19 +1332,20 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
         
         ArrayList<Double> y_point = new ArrayList();
         y_point.add(0.0);
-        y_point.add(20.0);
+        y_point.add(5.0);
         
         int i = 0;
         
-        while(i<=index){
+        //while(i<=index){
             
         XYSeries series = chart[index].addSeries(series_name, x_point, y_point);
         series.setMarker(SeriesMarkers.CIRCLE);
         series.setMarkerColor(Color.RED);
         
+   
         panel[index].revalidate();
         panel[index].repaint();
-    }
+    //}//
         
     }
     /**
