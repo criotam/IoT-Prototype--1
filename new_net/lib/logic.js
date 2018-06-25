@@ -17,7 +17,6 @@
  * Write your transction processor functions here
  */
 
-
 /**
  * addPlayer
  * @param {org.criotam.prototype.managementTransactions.addPlayer} addPlayer
@@ -25,7 +24,7 @@
  */
 async function addPlayer(playerData) {
     var NS1 = 'org.criotam.prototype.participants';
-    var NS2 = 'org.criotam.prototype.managementTransactions'
+    var NS2 = 'org.criotam.prototype.managementTransactions';
     let factory = getFactory();
     let Player = factory.newResource(NS1, "Player", playerData.player_id);
     Player.player_id = playerData.player_id;
@@ -51,7 +50,7 @@ async function addPlayer(playerData) {
  */
  async function addScientist(scientistData) {
     var NS1 = 'org.criotam.prototype.participants';
-    var NS2 = 'org.criotam.prototype.managementTransactions'
+    var NS2 = 'org.criotam.prototype.managementTransactions';
     let factory = getFactory();
     let Scientist = factory.newResource(NS1,"Scientist",scientistData.scientistId);
     Scientist.scientistId = scientistData.scientistId;
@@ -74,9 +73,10 @@ async function addPlayer(playerData) {
  * @param {org.criotam.prototype.iotTransactions.experiment1lcDataAdd} experiment1lcDataAdd
  * @transaction
  */
+
 async function experiment1lcDataAdd(experiment1lcData) {
     const NS1 = 'org.criotam.prototype.iotAssets';
-    const NS2 = 'org.criotam.prototype.iotTransactions'
+    const NS2 = 'org.criotam.prototype.iotTransactions';
     let factory = getFactory();
     let Experiment = factory.newResource(NS1, "experiment1lcData", experiment1lcData.experimentId);
     Experiment.experimentId = experiment1lcData.experimentId;
@@ -127,10 +127,11 @@ async function readexperiment1lcData(experiment1lcData) {
  /**
   * Add transaction for experiment 2 load cell sensors
   * @param {org.criotam.prototype.iotTransactions.experiment2lcDataAdd} experiment2lcDataAdd
+  * @transaction
   */
 async function experiment2lcDataAdd(experiment2lcData) {
     const NS1 = 'org.criotam.prototype.iotAssets';
-    const NS2 = 'org.criotam.prototype.iotTransactions'
+    const NS2 = 'org.criotam.prototype.iotTransactions';
     let factory = getFactory();
     let Experiment = factory.newResource(NS1, "experiment2lcData", experiment2lcData.experimentId);
     Experiment.experimentId = experiment2lcData.experimentId;
@@ -143,7 +144,7 @@ async function experiment2lcDataAdd(experiment2lcData) {
     const assetRegistry = await getAssetRegistry('org.criotam.prototype.iotAssets.experiment2lcData');
     await assetRegistry.add(Experiment);
 
-    let event = factory.newEvent(NS2,'experiment2lcDataAdded');
+    let event = factory.newEvent(NS2,'experiment2emgDataAdded');
     event.experimentId = experiment2lcData.experimentId;
     emit(event);
 }
@@ -152,6 +153,7 @@ async function experiment2lcDataAdd(experiment2lcData) {
 /**
  * read experiment 2 lc Data
  * @param {org.criotam.prototype.iotTransactions.readexperiment2lcData} readexperiment2lcData
+ * @transaction
  */
 async function readexperiment2lcData(experiment2lcData) {
     var NS = 'org.criotam.prototype.iotTransactions';
@@ -173,37 +175,42 @@ async function readexperiment2lcData(experiment2lcData) {
 
 
 /**
- * add Experiment 2 emg sensor
+ * add Experiment 2 emg sensor 
  * @param {org.criotam.prototype.iotTransactions.experiment2emgDataAdd} experiment2emgDataAdd
+ * @transaction
  */
+
 async function experiment2emgDataAdd(experiment2emgData) {
-    const NS1 = 'org.criotam.prototype.iotAssets'
-    const NS2 = 'org.criotam.prototype.iotTransactions'
+    const NS1 = 'org.criotam.prototype.iotAssets';
+    const NS2 = 'org.criotam.prototype.iotTransactions';
     let factory = getFactory();
     let Experiment = factory.newResource(NS1, "experiment2emgData", experiment2emgData.experimentId);
-    Experiment.experimentId = experiment2emgData.experimetnId;
+    Experiment.experimentId = experiment2emgData.experimentId;
     Experiment.Raw_value = experiment2emgData.Raw_value;
-    Experiment.emg_Raw_value = experiment2emgData.emg_Raw_value;
-    Experimetnt.experimenter = experiment2emgData.experimenter;
+    Experiment.emg_Raw_value = experiment2emgData.emg_Raw_value ;
+    Experiment.experimenter = experiment2emgData.experimenter  ;
     Experiment.player = experiment2emgData.player;
-
+     
     const assetRegistry = await getAssetRegistry('org.criotam.prototype.iotAssets.experiment2emgData');
     await assetRegistry.add(Experiment);
 
     let event = factory.newEvent(NS2,'experiment2emgDataAdded');
     event.experimentId = experiment2emgData.experimentId;
     emit(event);
-}
+ }
+
 
 /**
  * read experiment 2 emg sensor
  * @param {org.criotam.prototype.iotTransactions.readexperiment2emgData} readexperiment2emgData
+ * @transaction
  */
+
  async function readexperiment2emgData(experiment2emgData) {
-     const NS = 'org.criotam.prototype.iotTransactions'
+     const NS = 'org.criotam.prototype.iotTransactions';
      let Raw_value = experiment2emgData.Raw_value;
      let emg_Raw_value = experiment2emgData.emg_Raw_value;
-     let expId = getExperimentId(Raw_value);
+     let expId = "EE02";
      let factory = getFactory();
      emg_Raw_value = getExpemg(Raw_value);
      experiment2emgData.experiment1.emg_Raw_value = emg_Raw_value;
@@ -212,7 +219,7 @@ async function experiment2emgDataAdd(experiment2emgData) {
      const assetRegistry = await getAssetRegistry('org.criotam.prototype.iotAssets.experiment2emgData');
      await assetRegistry.update(experiment2emgData.experiment1);
 
-     let event = factory.newEvent(NS, 'experiment2emgData');
+     let event = factory.newEvent(NS, 'experiment2emgDataread');
      event.experimentId = experiment2emgData.experiment1.experimentId;
      emit(event);
      }
@@ -221,7 +228,9 @@ async function experiment2emgDataAdd(experiment2emgData) {
 /**
  * add expeiment 3 fp sensor
  * @param {org.criotam.prototype.iotTransactions.experiment3fpDataAdd} experiment3fpDataAdd
+ * @transaction
  */
+
  async function experiment3fpDataAdd(experiment3fpData) {
      const NS1 = 'org.criotam.prototype.iotAssets';
      const NS2 = 'org.criotam.prototype.iotTransactions';
@@ -246,6 +255,7 @@ async function experiment2emgDataAdd(experiment2emgData) {
 /**
  * read experiment 3 fp Data
  * @param {org.criotam.prototype.iotTransactions.readexperiment3fpData} readexperiment3fpData
+ * @transaction
  */
 async function readexperiment3fpData(experiment3fpData) {
     var NS = 'org.criotam.prototype.iotTransactions';
@@ -269,7 +279,9 @@ async function readexperiment3fpData(experiment3fpData) {
 /**
  * add experiment 3 emg sensor
  * @param {org.criotam.prototype.iotTransactions.experiment3emgDataAdd} experiment3emgDataAdd
+ * @transaction
  */
+
 async function experiment3emgDataAdd(experiment3emgData) {
     const NS1 = 'org.criotam.prototype.iotAssets';
     const NS2 = 'org.criotam.prototype.iotTransaction';
@@ -291,6 +303,7 @@ async function experiment3emgDataAdd(experiment3emgData) {
 /**
  * read experiment 3 emg Data
  * @param {org.criotam.prototype.iotTransactions.readexperiment3emgData} readexperiment3emgData
+ * @transaction
  */
 async function readexperiment3emgData(experiment3emgData) {
     var NS = 'org.criotam.prototype.iotTransactions';

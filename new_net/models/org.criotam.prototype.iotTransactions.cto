@@ -33,7 +33,7 @@ transaction experiment2lcDataAdd extends experimentADDTx {
 }
 
 event experiment2lcDataAdded {
-  o String experimentId
+  o String experimentId 
 }
 
 transaction readexperiment2lcData extends experimentREADTx {
@@ -43,7 +43,7 @@ transaction readexperiment2lcData extends experimentREADTx {
 }
 
 event experiment2lcDataread {
-  o String experimnetId
+  o String experimentId
 }
 
 // End point 3 experiment2emg
@@ -52,7 +52,7 @@ transaction experiment2emgDataAdd extends experimentADDTx {
 }
 
 event experiment2emgDataAdded {
-  o String experimnetId
+  o String experimentId
 }
 
 
