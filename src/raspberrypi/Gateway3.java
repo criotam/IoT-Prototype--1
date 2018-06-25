@@ -40,25 +40,25 @@ public class Gateway3 {
         		
         		System.out.println("FORCE PLATE");
         		
-        	}
+        	}else {
+            	
+           	 session.close();
+           	
+           } 
         	
-        }else {
-        	
-        	 session.close();
-        	
-        } 
+        }
         
         if(message.equalsIgnoreCase("identifier_exp2emg:mac_id")) {
         	
-			if(message.split(":")[2]== mc_id_emg) {
+			if(message.split(":")[2].trim().equalsIgnoreCase(mc_id_emg)) {
 				
 				System.out.println("EMG");
 			        		
-			}
-        }else {
-        	
-        	session.close();
-        	
+			}else {
+	        	
+	        	session.close();
+	        	
+	        }
         }
 
         data_buffer.add(message);

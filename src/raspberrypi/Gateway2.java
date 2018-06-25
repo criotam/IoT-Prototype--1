@@ -40,7 +40,8 @@ public class Gateway2 {
     
     @OnMessage
     public void onMessage(String message, Session session) throws IOException {
-        System.out.println("onMessage::From=" + session.getId() + " Message=" + message);
+        
+    	System.out.println("onMessage::From=" + session.getId() + " Message=" + message);
         
         
         if(message.equalsIgnoreCase("identifier_exp2lc:start_race")){
