@@ -98,7 +98,7 @@ public class ExperimentActivity extends AppCompatActivity {
                 intent.putExtra("player_weight", getIntent().getStringExtra("player_weight")+"");
                 intent.putExtra("player_height", getIntent().getStringExtra("player_height")+"");
                 intent.putExtra("player_sex", getIntent().getStringExtra("player_sex")+"");
-                intent.putExtra("exp","exp2");
+                intent.putExtra("exp","exp3");
 
                 startActivity(intent);
             }

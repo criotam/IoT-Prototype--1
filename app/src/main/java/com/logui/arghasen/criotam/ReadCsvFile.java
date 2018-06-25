@@ -1,10 +1,14 @@
 package com.logui.arghasen.criotam;
 
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
@@ -21,7 +25,16 @@ public class ReadCsvFile extends AppCompatActivity{
     @BindView(R.id.live_stream_graph)
     GraphView graphView;
 
-    private LineGraphSeries<DataPoint> stream_points;
+    //private LineGraphSeries<DataPoint> stream_points;
+
+    LineGraphSeries<DataPoint> series1;
+
+    LineGraphSeries<DataPoint> series2;
+
+    LineGraphSeries<DataPoint> series3;
+
+    LineGraphSeries<DataPoint> series4;
+
 
     public ArrayList<String> message;
 
@@ -38,10 +51,21 @@ public class ReadCsvFile extends AppCompatActivity{
 
         ButterKnife.bind(this);
 
-        stream_points = new LineGraphSeries<DataPoint>();
+        series1 = new LineGraphSeries<>( new DataPoint[]{new DataPoint(0, 0)});
 
-        graphView.addSeries(stream_points);
-        graphView.getViewport().setXAxisBoundsManual(true);
+        series2 = new LineGraphSeries<>( new DataPoint[]{new DataPoint(0, 0)});
+
+        series3 = new LineGraphSeries<>( new DataPoint[]{new DataPoint(0, 0)});
+
+        series4 = new LineGraphSeries<>( new DataPoint[]{new DataPoint(0, 0)});
+
+        //graphView.addSeries(series1);
+        //graphView.getViewport().setXAxisBoundsManual(true);
+
+        graphView.getViewport().setScrollable(true);
+        graphView.getViewport().setScrollableY(true);
+        graphView.getViewport().setScalable(true);
+        graphView.getViewport().setScalableY(true);
 
         fileName = getIntent().getStringExtra("filename");
         readCsv();
@@ -64,17 +88,23 @@ public class ReadCsvFile extends AppCompatActivity{
 
             while (scanner.hasNextLine()) {
 
-                System.out.println("reading csv...");
-
                 line = scanner.nextLine().toString().trim();
 
-                blockChaindata = blockChaindata + line + "$";
+                System.out.println("reading csv..."+line);
+                //blockChaindata = blockChaindata + line + "$";
 
                 message.add(line);
 
             }
 
-            showPlot(message);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    showPlot(message);
+
+                }
+            },300);
 
 
         } catch (FileNotFoundException ex) {
@@ -86,28 +116,265 @@ public class ReadCsvFile extends AppCompatActivity{
 
     Double initial_time = -1.0;
 
-
     public void showPlot(ArrayList<String> message) {
 
-        //GraphPlotterActivity graphPlotActivity = new GraphPlotterActivity(4, message.get(0).split(":")[0]);
-        //graphPlotActivity.plotHistoryGraph(message);
-
+        Log.d("size: ",""+message.size());
         //storeDataOnBlockChain();
-
+        //DataPoint[] dataPoints = new DataPoint[message.size()];
+/*
         if(initial_time == -1){
             initial_time = Double.parseDouble(message.get(0).split(":")[3]);
         }
 
+        int i = 0;
+
         for(String msg: message){
-            plot_points(new DataPoint((Double.parseDouble(msg.split(":")[3])-initial_time)
-                    ,(Double.parseDouble(msg.split(":")[1]))));
+            dataPoints[i] = new DataPoint(((Double.parseDouble(msg.split(":")[3]))-initial_time)/1000
+                    ,(Double.parseDouble(msg.split(":")[1])));
+            i++;
+        }
+        */
+
+        //plot_points(dataPoints);
+
+        plotHistoryGraph(message);
+    }
+
+    public void plot_points(DataPoint[] dataPoint){
+
+
+        series1.resetData(dataPoint);
+        graphView.addSeries(series1);
+
+    }
+
+    public void plotHistoryGraph(ArrayList<String> message){
+
+        //System.out.println("Received message at GraphPlotter: " + message);
+
+        int index = 0;
+
+        int i = 0;
+
+
+        DataPoint[] dataPoints1 = new DataPoint[message.size()];
+
+        DataPoint[] dataPoints2 = new DataPoint[message.size()];
+
+        DataPoint[] dataPoints3 = new DataPoint[message.size()];
+
+        DataPoint[] dataPoints4 = new DataPoint[message.size()];
+
+
+        for(String msg: message) {
+
+            if (msg.toString().split(":")[0].equalsIgnoreCase("identifier_exp3fp")) {
+
+                index = 3;
+
+                if (msg.toString().split(":")[1].equalsIgnoreCase("mac_id")) {
+
+                    //device mac id
+
+                } else {
+                    //xAxis.add(Double.parseDouble(msg.toString().split(":")[4]+""));
+
+                    if (initial_time == -1) {
+                        initial_time = Double.parseDouble(msg.toString().split(":")[4] + "");
+                    }
+
+                    double time = (Double.parseDouble(msg.toString().split(":")[4] + "")
+                            - initial_time) / 1000;
+
+                    dataPoints1[i] = new DataPoint(time
+                            ,(Double.parseDouble(msg.split(":")[1])));
+
+                    dataPoints2[i] = new DataPoint(time
+                            ,(Double.parseDouble(msg.split(":")[2])));
+
+                    dataPoints3[i] = new DataPoint(time
+                            ,(Double.parseDouble(msg.split(":")[3])));
+
+                    i++;
+                }
+            } else if (msg.toString().split(":")[0].equalsIgnoreCase("identifier_exp2emg")) {
+
+
+                index = 1;
+
+                if (msg.toString().split(":")[1].equalsIgnoreCase("start_time")) {
+
+                    //drawLine("Start time", start_x_point, 0);
+
+                } else if (msg.toString().split(":")[1].equalsIgnoreCase("end_time")) {
+
+                    //drawLine("End time", end_x_point, 0);
+
+                } else if (msg.toString().split(":")[1].equalsIgnoreCase("start_race")) {
+
+                    //drawLine("Start time", race_start_x_point, 0);
+
+                } else if (msg.toString().split(":")[1].equalsIgnoreCase("mac_id")) {
+
+                    //device mac id
+
+                } else {
+
+                    //xAxis.add(Double.parseDouble(msg.toString().split(":")[2]+""));
+
+                    if (initial_time == -1) {
+                        initial_time = Double.parseDouble(msg.toString().split(":")[2] + "");
+                    }
+
+                    double time = (Double.parseDouble(msg.toString().split(":")[2] + "")
+                            - initial_time) / 1000;
+
+                    dataPoints1[i] = new DataPoint(time
+                            ,(Double.parseDouble(msg.split(":")[1])));
+
+                    i++;
+                }
+            } else if (msg.toString().split(":")[0].equalsIgnoreCase("identifier_exp1lc")) {
+
+                index = 2;
+
+                if (msg.toString().split(":")[1].equalsIgnoreCase("mac_id")) {
+
+                    //device mac id
+
+                } else {
+
+                    //xAxis.add(Double.parseDouble(msg.toString().split(":")[3]+""));
+
+                    if (initial_time == -1) {
+                        initial_time = Double.parseDouble(msg.toString().split(":")[3] + "");
+                    }
+
+                    double time = (Double.parseDouble(msg.toString().split(":")[3] + "")
+                            - initial_time) / 1000;
+
+                    dataPoints1[i] = new DataPoint(time
+                            ,(Double.parseDouble(msg.split(":")[1])));
+
+                    dataPoints2[i] = new DataPoint(time
+                            ,(Double.parseDouble(msg.split(":")[2])));
+
+                    i++;
+
+                }
+            } else if (msg.toString().split(":")[0].equalsIgnoreCase("identifier_exp2lc")) {
+
+                index = 2;
+
+                if (msg.toString().split(":")[1].equalsIgnoreCase("start_time")) {
+
+                    //drawLine("Start time", start_x_point, 1);
+
+                } else if (msg.toString().split(":")[1].equalsIgnoreCase("end_time")) {
+
+                    //drawLine("End time", end_x_point, 1);
+
+                } else if (msg.toString().split(":")[1].equalsIgnoreCase("start_race")) {
+
+                    //drawLine("Start race", race_start_x_point, 1);
+
+                    //temp_arrList_time = new ArrayList<>();
+                    //race started
+
+                } else if (msg.toString().split(":")[1].equalsIgnoreCase("mac_id")) {
+
+                    //device mac id
+
+                } else {
+
+                    if (initial_time == -1) {
+                        initial_time = Double.parseDouble(msg.toString().split(":")[3] + "");
+                    }
+
+                    double time = (Double.parseDouble(msg.toString().split(":")[3] + "")
+                            - initial_time) / 1000;
+
+                    dataPoints1[i] = new DataPoint(time
+                            ,(Double.parseDouble(msg.split(":")[1])));
+
+                    dataPoints2[i] = new DataPoint(time
+                            ,(Double.parseDouble(msg.split(":")[2])));
+
+                    i++;
+
+                }
+            } else if (msg.toString().split(":")[0].equalsIgnoreCase("identifier_exp3emg")) {
+
+                index = 1;
+
+                if (msg.toString().split(":")[1].equalsIgnoreCase("mac_id")) {
+
+                    //device mac id
+
+                } else {
+
+                    //xAxis.add(Double.parseDouble(msg.toString().split(":")[2]+""));
+
+                    if (initial_time == -1) {
+                        initial_time = Double.parseDouble(msg.toString().split(":")[2] + "");
+                    }
+
+                    double time = (Double.parseDouble(msg.toString().split(":")[2] + "")
+                            - initial_time) / 1000;
+
+                    dataPoints1[i] = new DataPoint(time
+                            ,(Double.parseDouble(msg.split(":")[1])));
+
+                    i++;
+
+                }
+            }
         }
 
+        if(index == 1){
+
+            series1.resetData(dataPoints1);
+            graphView.addSeries(series1);
+
+        }else if(index == 2){
+
+            series1.resetData(dataPoints1);
+            graphView.addSeries(series1);
+
+            series2.resetData(dataPoints2);
+            graphView.addSeries(series2);
+            series2.setColor(Color.RED);
+            //graphView.getGridLabelRenderer().setVerticalLabelsSecondScaleColor(Color.RED);
+
+            series1.setTitle("Load Cell 1");
+            series2.setTitle("Load Cell 2");
+            graphView.getLegendRenderer().setVisible(true);
+            graphView.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
+
+        }else if(index == 3){
+
+            series1.resetData(dataPoints1);
+            graphView.addSeries(series1);
+
+            series2.resetData(dataPoints2);
+            graphView.addSeries(series2);
+            series2.setColor(Color.RED);
+            //graphView.getGridLabelRenderer().setVerticalLabelsSecondScaleColor(Color.RED);
+
+            series3.resetData(dataPoints3);
+            graphView.addSeries(series3);
+            series3.setColor(Color.GREEN);
+
+            series1.setTitle("Load Cell 1");
+            series2.setTitle("Load Cell 2");
+            series3.setTitle("Load Cell 3");
+            graphView.getLegendRenderer().setVisible(true);
+            graphView.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
+
+        }
+
+        graphView.getViewport().scrollToEnd();
+
     }
 
-    public void plot_points(DataPoint dataPoint){
-
-        stream_points.appendData(dataPoint, true, 1000);
-
-    }
 }
