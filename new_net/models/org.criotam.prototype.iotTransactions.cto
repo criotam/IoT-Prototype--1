@@ -2,7 +2,11 @@ namespace org.criotam.prototype.iotTransactions
 
 import org.criotam.prototype.abstracts.*
 import org.criotam.prototype.iotAssets.*
-
+//experiment2lc
+//experiment2emg
+//experiment3fp
+//experiment3emg
+// End point 1 experiment1 lc sensor data
 transaction experiment1lcDataAdd extends experimentADDTx{
   o String[] lc1_Raw_value optional
   o String[] lc2_Raw_value optional
@@ -20,4 +24,86 @@ transaction readexperiment1lcData extends experimentREADTx{
 
 event experiment1lcDataread {
   o String experimentId 
+}
+
+// End point 2 experiment2lc data
+transaction experiment2lcDataAdd extends experimentADDTx {
+  o String[] lc1_Raw_value optional
+  o String[] lc2_Raw_value optional
+}
+
+event experiment2lcDataAdded {
+  o String experimentId
+}
+
+transaction readexperiment2lcData extends experimentREADTx {
+  --> experiment2lcData experiment1
+  o String[] lc1_Raw_value optional
+  o String[] lc2_Raw_value optional
+}
+
+event experiment2lcDataread {
+  o String experimnetId
+}
+
+// End point 3 experiment2emg
+transaction experiment2emgDataAdd extends experimentADDTx {
+  o String[] emg_Raw_value optional
+}
+
+event experiment2emgDataAdded {
+  o String experimnetId
+}
+
+
+transaction readexperiment2emgData extends experimentREADTx {
+  --> experiment2emgData experiment1 
+  o String[] emg_Raw_value optional
+}
+
+event experiment2emgDataread {
+  o String experimentId
+}
+
+
+
+//End point 4 experiment3fp
+
+transaction experiment3fpDataAdd extends experimentADDTx {
+  o String[] lc1_Raw_value optional
+  o String[] lc2_Raw_value optional
+  o String[] lc3_Raw_value optional
+}
+
+event experiment3fpDataAdded {
+  o String experimentId
+}
+
+transaction readexperiment3fpData extends experimentREADTx {
+  --> experiment3fpData experiment1
+  o String[] lc1_Raw_value optional
+  o String[] lc2_Raw_value optional
+  o String[] lc3_Raw_value optional
+}
+
+event experiment3fpDataread {
+  o String experimentId
+}
+
+// End point 5 experiment3emg 
+
+transaction experiment3emgDataAdd extends experimentADDTx {
+  o String[] emg_Raw_value optional
+}
+
+event experiment3emgDataAdded {
+  o String experimentId
+}
+
+transaction readexperiment3emgData extends experimentREADTx {
+  o String[] emg_Raw_value optional
+}
+
+event experiment3emgDataread {
+  o String[] experimentId
 }

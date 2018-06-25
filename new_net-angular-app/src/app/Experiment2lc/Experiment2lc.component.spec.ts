@@ -21,24 +21,24 @@ import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import * as sinon from 'sinon';
 import { DataService } from '../data.service';
-import { addSensorComponent } from './addSensor.component';
-import {addSensorService} from './addSensor.service';
+import { Experiment2lcComponent } from './Experiment2lc.component';
+import { Experiment2lcService } from './Experiment2lc.service';
 
-describe('addSensorComponent', () => {
-  let component: addSensorComponent;
-  let fixture: ComponentFixture<addSensorComponent>;
+describe('Experiment2lcComponent', () => {
+  let component: Experiment2lcComponent;
+  let fixture: ComponentFixture<Experiment2lcComponent>;
 
-  let mockaddSensorService;
+  let mockExperiment2lcService;
   let mockDataService
 
   beforeEach(async(() => {
 
-    mockaddSensorService = sinon.createStubInstance(addSensorService);
-    mockaddSensorService.getAll.returns([]);
+    mockExperiment2lcService = sinon.createStubInstance(Experiment2lcService);
+    mockExperiment2lcService.getAll.returns([]);
     mockDataService = sinon.createStubInstance(DataService);
 
     TestBed.configureTestingModule({
-      declarations: [ addSensorComponent ],
+      declarations: [ Experiment2lcComponent ],
       imports: [
         BrowserModule,
         FormsModule,
@@ -46,20 +46,18 @@ describe('addSensorComponent', () => {
         HttpModule
       ],
       providers: [
-        {provide: addSensorService, useValue: mockaddSensorService },
+        {provide: Experiment2lcService, useValue: mockExperiment2lcService },
         {provide: DataService, useValue: mockDataService },
       ]
     });
 
-    fixture = TestBed.createComponent(addSensorComponent);
+    fixture = TestBed.createComponent(Experiment2lcComponent);
     component = fixture.componentInstance;
 
   }));
-
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
 });
-

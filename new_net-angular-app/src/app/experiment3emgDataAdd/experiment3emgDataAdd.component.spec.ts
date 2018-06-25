@@ -21,24 +21,24 @@ import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import * as sinon from 'sinon';
 import { DataService } from '../data.service';
-import { readSensorComponent } from './readSensor.component';
-import {readSensorService} from './readSensor.service';
+import { experiment3emgDataAddComponent } from './experiment3emgDataAdd.component';
+import {experiment3emgDataAddService} from './experiment3emgDataAdd.service';
 
-describe('readSensorComponent', () => {
-  let component: readSensorComponent;
-  let fixture: ComponentFixture<readSensorComponent>;
+describe('experiment3emgDataAddComponent', () => {
+  let component: experiment3emgDataAddComponent;
+  let fixture: ComponentFixture<experiment3emgDataAddComponent>;
 
-  let mockreadSensorService;
+  let mockexperiment3emgDataAddService;
   let mockDataService
 
   beforeEach(async(() => {
 
-    mockreadSensorService = sinon.createStubInstance(readSensorService);
-    mockreadSensorService.getAll.returns([]);
+    mockexperiment3emgDataAddService = sinon.createStubInstance(experiment3emgDataAddService);
+    mockexperiment3emgDataAddService.getAll.returns([]);
     mockDataService = sinon.createStubInstance(DataService);
 
     TestBed.configureTestingModule({
-      declarations: [ readSensorComponent ],
+      declarations: [ experiment3emgDataAddComponent ],
       imports: [
         BrowserModule,
         FormsModule,
@@ -46,12 +46,12 @@ describe('readSensorComponent', () => {
         HttpModule
       ],
       providers: [
-        {provide: readSensorService, useValue: mockreadSensorService },
+        {provide: experiment3emgDataAddService, useValue: mockexperiment3emgDataAddService },
         {provide: DataService, useValue: mockDataService },
       ]
     });
 
-    fixture = TestBed.createComponent(readSensorComponent);
+    fixture = TestBed.createComponent(experiment3emgDataAddComponent);
     component = fixture.componentInstance;
 
   }));

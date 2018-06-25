@@ -14,7 +14,7 @@
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
       <div class="navbar-header">
-        <p class="network-name">new_net@0.4.3.bna</p>
+        <p class="network-name">new_net@0.5.5.bna</p>
         <p class="navbar-brand">new_net-angular-app</p>
       </div>
       <ul class="nav navbar-nav">
@@ -24,7 +24,15 @@
               
               <li><a [routerLink]="['/Player']">Player</a></li>
               
-              <li><a [routerLink]="['/Sensor']">Sensor</a></li>
+              <li><a [routerLink]="['/Experiment1lc']">Experiment1lc</a></li>
+              
+              <li><a [routerLink]="['/Experiment2lc']">Experiment2lc</a></li>
+              
+              <li><a [routerLink]="['/Experiment2emg']">Experiment2emg</a></li>
+              
+              <li><a [routerLink]="['/Experiment3fp']">Experiment3fp</a></li>
+              
+              <li><a [routerLink]="['/Experiment3emg']">Experiment3emg</a></li>
               
             </ul>
         </li>
@@ -40,11 +48,17 @@
         <a class="dropdown-toggle" data-toggle="dropdown">Transactions</a>
         <ul class="dropdown-menu scrollable-menu">
           
-          <li><a [routerLink]="['/readSensor']">readSensor</a></li>
+          <li><a [routerLink]="['/experiment1lcDataAdd']">experiment1lcDataAdd</a></li>
+          
+          <li><a [routerLink]="['/experiment2lcDataAdd']">experiment2lcDataAdd</a></li>
+          
+          <li><a [routerLink]="['/experiment2emgDataAdd']">experiment2emgDataAdd</a></li>
+          
+          <li><a [routerLink]="['/experiment3fpDataAdd']">experiment3fpDataAdd</a></li>
+          
+          <li><a [routerLink]="['/experiment3emgDataAdd']">experiment3emgDataAdd</a></li>
           
           <li><a [routerLink]="['/addPlayer']">addPlayer</a></li>
-          
-          <li><a [routerLink]="['/addSensor']">addSensor</a></li>
           
           <li><a [routerLink]="['/addScientist']">addScientist</a></li>
           

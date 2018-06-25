@@ -22,13 +22,20 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 
 import { PlayerComponent } from './Player/Player.component';
-import { SensorComponent } from './Sensor/Sensor.component';
+import { Experiment1lcComponent } from './Experiment1lc/Experiment1lc.component';
+import { Experiment2lcComponent } from './Experiment2lc/Experiment2lc.component';
+import { Experiment2emgComponent } from './Experiment2emg/Experiment2emg.component';
+import { Experiment3fpComponent } from './Experiment3fp/Experiment3fp.component';
+import { Experiment3emgComponent } from './Experiment3emg/Experiment3emg.component';
 
 import { ScientistComponent } from './Scientist/Scientist.component';
 
-import { readSensorComponent } from './readSensor/readSensor.component';
+import { experiment1lcDataAddComponent } from './experiment1lcDataAdd/experiment1lcDataAdd.component';
+import { experiment2lcDataAddComponent } from './experiment2lcDataAdd/experiment2lcDataAdd.component';
+import { experiment2emgDataAddComponent } from './experiment2emgDataAdd/experiment2emgDataAdd.component';
+import { experiment3fpDataAddComponent } from './experiment3fpDataAdd/experiment3fpDataAdd.component';
+import { experiment3emgDataAddComponent } from './experiment3emgDataAdd/experiment3emgDataAdd.component';
 import { addPlayerComponent } from './addPlayer/addPlayer.component';
-import { addSensorComponent } from './addSensor/addSensor.component';
 import { addScientistComponent } from './addScientist/addScientist.component';
 
   @NgModule({
@@ -36,11 +43,18 @@ import { addScientistComponent } from './addScientist/addScientist.component';
     AppComponent,
     HomeComponent,
     PlayerComponent,
-    SensorComponent,
+    Experiment1lcComponent,
+    Experiment2lcComponent,
+    Experiment2emgComponent,
+    Experiment3fpComponent,
+    Experiment3emgComponent,
     ScientistComponent,
-    readSensorComponent,
+    experiment1lcDataAddComponent,
+    experiment2lcDataAddComponent,
+    experiment2emgDataAddComponent,
+    experiment3fpDataAddComponent,
+    experiment3emgDataAddComponent,
     addPlayerComponent,
-    addSensorComponent,
     addScientistComponent
   ],
   imports: [

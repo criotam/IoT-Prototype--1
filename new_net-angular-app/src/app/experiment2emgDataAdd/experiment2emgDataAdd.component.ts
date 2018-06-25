@@ -14,16 +14,16 @@
 
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { addSensorService } from './addSensor.service';
+import { experiment2emgDataAddService } from './experiment2emgDataAdd.service';
 import 'rxjs/add/operator/toPromise';
 
 @Component({
-  selector: 'app-addsensor',
-  templateUrl: './addSensor.component.html',
-  styleUrls: ['./addSensor.component.css'],
-  providers: [addSensorService]
+  selector: 'app-experiment2emgdataadd',
+  templateUrl: './experiment2emgDataAdd.component.html',
+  styleUrls: ['./experiment2emgDataAdd.component.css'],
+  providers: [experiment2emgDataAddService]
 })
-export class addSensorComponent implements OnInit {
+export class experiment2emgDataAddComponent implements OnInit {
 
   myForm: FormGroup;
 
@@ -32,22 +32,18 @@ export class addSensorComponent implements OnInit {
   private currentId;
   private errorMessage;
 
-  sensorId = new FormControl('', Validators.required);
-  sensorMAC = new FormControl('', Validators.required);
-  value = new FormControl('', Validators.required);
-  owner = new FormControl('', Validators.required);
-  player = new FormControl('', Validators.required);
+  experimentId = new FormControl('', Validators.required);
+  Raw_value = new FormControl('', Validators.required);
+  emg_Raw_value = new FormControl('', Validators.required);
   transactionId = new FormControl('', Validators.required);
   timestamp = new FormControl('', Validators.required);
 
 
-  constructor(private serviceaddSensor: addSensorService, fb: FormBuilder) {
+  constructor(private serviceexperiment2emgDataAdd: experiment2emgDataAddService, fb: FormBuilder) {
     this.myForm = fb.group({
-      sensorId: this.sensorId,
-      sensorMAC: this.sensorMAC,
-      value: this.value,
-      owner: this.owner,
-      player: this.player,
+      experimentId: this.experimentId,
+      Raw_value: this.Raw_value,
+      emg_Raw_value: this.emg_Raw_value,
       transactionId: this.transactionId,
       timestamp: this.timestamp
     });
@@ -59,7 +55,7 @@ export class addSensorComponent implements OnInit {
 
   loadAll(): Promise<any> {
     const tempList = [];
-    return this.serviceaddSensor.getAll()
+    return this.serviceexperiment2emgDataAdd.getAll()
     .toPromise()
     .then((result) => {
       this.errorMessage = null;
@@ -106,36 +102,30 @@ export class addSensorComponent implements OnInit {
 
   addTransaction(form: any): Promise<any> {
     this.Transaction = {
-      $class: 'org.criotam.prototype.sensor.addSensor',
-      'sensorId': this.sensorId.value,
-      'sensorMAC': this.sensorMAC.value,
-      'value': this.value.value,
-      'owner': this.owner.value,
-      'player': this.player.value,
+      $class: 'org.criotam.prototype.sensor.experiment2emgDataAdd',
+      'experimentId': this.experimentId.value,
+      'Raw_value': this.Raw_value.value,
+      'emg_Raw_value': this.emg_Raw_value.value,
       'transactionId': this.transactionId.value,
       'timestamp': this.timestamp.value
     };
 
     this.myForm.setValue({
-      'sensorId': null,
-      'sensorMAC': null,
-      'value': null,
-      'owner': null,
-      'player': null,
+      'experimentId': null,
+      'Raw_value': null,
+      'emg_Raw_value': null,
       'transactionId': null,
       'timestamp': null
     });
 
-    return this.serviceaddSensor.addTransaction(this.Transaction)
+    return this.serviceexperiment2emgDataAdd.addTransaction(this.Transaction)
     .toPromise()
     .then(() => {
       this.errorMessage = null;
       this.myForm.setValue({
-        'sensorId': null,
-        'sensorMAC': null,
-        'value': null,
-        'owner': null,
-        'player': null,
+        'experimentId': null,
+        'Raw_value': null,
+        'emg_Raw_value': null,
         'transactionId': null,
         'timestamp': null
       });
@@ -151,16 +141,14 @@ export class addSensorComponent implements OnInit {
 
   updateTransaction(form: any): Promise<any> {
     this.Transaction = {
-      $class: 'org.criotam.prototype.sensor.addSensor',
-      'sensorId': this.sensorId.value,
-      'sensorMAC': this.sensorMAC.value,
-      'value': this.value.value,
-      'owner': this.owner.value,
-      'player': this.player.value,
+      $class: 'org.criotam.prototype.sensor.experiment2emgDataAdd',
+      'experimentId': this.experimentId.value,
+      'Raw_value': this.Raw_value.value,
+      'emg_Raw_value': this.emg_Raw_value.value,
       'timestamp': this.timestamp.value
     };
 
-    return this.serviceaddSensor.updateTransaction(form.get('transactionId').value, this.Transaction)
+    return this.serviceexperiment2emgDataAdd.updateTransaction(form.get('transactionId').value, this.Transaction)
     .toPromise()
     .then(() => {
       this.errorMessage = null;
@@ -178,7 +166,7 @@ export class addSensorComponent implements OnInit {
 
   deleteTransaction(): Promise<any> {
 
-    return this.serviceaddSensor.deleteTransaction(this.currentId)
+    return this.serviceexperiment2emgDataAdd.deleteTransaction(this.currentId)
     .toPromise()
     .then(() => {
       this.errorMessage = null;
@@ -200,48 +188,34 @@ export class addSensorComponent implements OnInit {
 
   getForm(id: any): Promise<any> {
 
-    return this.serviceaddSensor.getTransaction(id)
+    return this.serviceexperiment2emgDataAdd.getTransaction(id)
     .toPromise()
     .then((result) => {
       this.errorMessage = null;
       const formObject = {
-        'sensorId': null,
-        'sensorMAC': null,
-        'value': null,
-        'owner': null,
-        'player': null,
+        'experimentId': null,
+        'Raw_value': null,
+        'emg_Raw_value': null,
         'transactionId': null,
         'timestamp': null
       };
 
-      if (result.sensorId) {
-        formObject.sensorId = result.sensorId;
+      if (result.experimentId) {
+        formObject.experimentId = result.experimentId;
       } else {
-        formObject.sensorId = null;
+        formObject.experimentId = null;
       }
 
-      if (result.sensorMAC) {
-        formObject.sensorMAC = result.sensorMAC;
+      if (result.Raw_value) {
+        formObject.Raw_value = result.Raw_value;
       } else {
-        formObject.sensorMAC = null;
+        formObject.Raw_value = null;
       }
 
-      if (result.value) {
-        formObject.value = result.value;
+      if (result.emg_Raw_value) {
+        formObject.emg_Raw_value = result.emg_Raw_value;
       } else {
-        formObject.value = null;
-      }
-
-      if (result.owner) {
-        formObject.owner = result.owner;
-      } else {
-        formObject.owner = null;
-      }
-
-      if (result.player) {
-        formObject.player = result.player;
-      } else {
-        formObject.player = null;
+        formObject.emg_Raw_value = null;
       }
 
       if (result.transactionId) {
@@ -272,11 +246,9 @@ export class addSensorComponent implements OnInit {
 
   resetForm(): void {
     this.myForm.setValue({
-      'sensorId': null,
-      'sensorMAC': null,
-      'value': null,
-      'owner': null,
-      'player': null,
+      'experimentId': null,
+      'Raw_value': null,
+      'emg_Raw_value': null,
       'transactionId': null,
       'timestamp': null
     });

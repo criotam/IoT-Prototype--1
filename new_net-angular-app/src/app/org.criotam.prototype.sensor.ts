@@ -18,21 +18,88 @@ import {Event} from './org.hyperledger.composer.system';
       player_sex: string;
       experimenter: Scientist;
    }
-   export class Sensor extends Asset {
-      sensorId: string;
-      sensorMAC: string;
-      value: string[];
-      owner: Scientist;
+   export class Experiment1lc extends Asset {
+      experimentId: string;
+      Raw_value: string;
+      lc1_Raw_value: string[];
+      lc2_Raw_value: string[];
+      experimenter: Scientist;
       player: Player;
    }
-   export class readSensor extends Transaction {
-      sensor: Sensor;
-      newValue: string[];
+   export class Experiment2lc extends Asset {
+      experimentId: string;
+      Raw_value: string;
+      lc1_Raw_value: string[];
+      lc2_Raw_value: string[];
+      experimenter: Scientist;
+      player: Player;
    }
-   export class sensorRead extends Event {
-      sensor: Sensor;
-      oldValue: string[];
-      newValue: string[];
+   export class Experiment2emg extends Asset {
+      experimentId: string;
+      Raw_value: string;
+      emg_Raw_value: string[];
+      experimenter: Scientist;
+      player: Player;
+   }
+   export class Experiment3fp extends Asset {
+      experimentId: string;
+      Raw_value: string;
+      lc1_Raw_value: string[];
+      lc2_Raw_value: string[];
+      lc3_Raw_value: string[];
+      experimenter: Scientist;
+      player: Player;
+   }
+   export class Experiment3emg extends Asset {
+      experimentId: string;
+      Raw_value: string;
+      emg_Raw_value: string[];
+      experimenter: Scientist;
+      player: Player;
+   }
+   export class experiment1lcDataAdd extends Transaction {
+      experimentId: string;
+      Raw_value: string;
+      lc1_Raw_value: string[];
+      lc2_Raw_value: string[];
+   }
+   export class experiment1lcDataread extends Event {
+      experimentId: string;
+   }
+   export class experiment2lcDataAdd extends Transaction {
+      experimentId: string;
+      Raw_value: string;
+      lc1_Raw_value: string[];
+      lc2_Raw_value: string[];
+   }
+   export class experiment2lcDataread extends Event {
+      experimentId: string;
+   }
+   export class experiment2emgDataAdd extends Transaction {
+      experimentId: string;
+      Raw_value: string;
+      emg_Raw_value: string[];
+   }
+   export class experiment2emgDataread extends Event {
+      experimentId: string;
+   }
+   export class experiment3fpDataAdd extends Transaction {
+      experimentId: string;
+      Raw_value: string;
+      lc1_Raw_value: string[];
+      lc2_Raw_value: string[];
+      lc3_Raw_value: string[];
+   }
+   export class experiment3fpDataread extends Event {
+      experimentId: string;
+   }
+   export class experiment3emgDataAdd extends Transaction {
+      experimentId: string;
+      Raw_value: string;
+      emg_Raw_value: string[];
+   }
+   export class experiment3emgDataread extends Event {
+      experimentId: string;
    }
    export class addPlayer extends Transaction {
       player_id: string;
@@ -44,16 +111,6 @@ import {Event} from './org.hyperledger.composer.system';
    }
    export class addedPlayer extends Event {
       player_id: string;
-   }
-   export class addSensor extends Transaction {
-      sensorId: string;
-      sensorMAC: string;
-      value: string[];
-      owner: Scientist;
-      player: Player;
-   }
-   export class addedSensor extends Event {
-      sensorId: string;
    }
    export class addScientist extends Transaction {
       scientistId: string;

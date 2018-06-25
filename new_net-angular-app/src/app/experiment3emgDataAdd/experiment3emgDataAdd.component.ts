@@ -14,16 +14,16 @@
 
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { readSensorService } from './readSensor.service';
+import { experiment3emgDataAddService } from './experiment3emgDataAdd.service';
 import 'rxjs/add/operator/toPromise';
 
 @Component({
-  selector: 'app-readsensor',
-  templateUrl: './readSensor.component.html',
-  styleUrls: ['./readSensor.component.css'],
-  providers: [readSensorService]
+  selector: 'app-experiment3emgdataadd',
+  templateUrl: './experiment3emgDataAdd.component.html',
+  styleUrls: ['./experiment3emgDataAdd.component.css'],
+  providers: [experiment3emgDataAddService]
 })
-export class readSensorComponent implements OnInit {
+export class experiment3emgDataAddComponent implements OnInit {
 
   myForm: FormGroup;
 
@@ -32,16 +32,18 @@ export class readSensorComponent implements OnInit {
   private currentId;
   private errorMessage;
 
-  sensor = new FormControl('', Validators.required);
-  newValue = new FormControl('', Validators.required);
+  experimentId = new FormControl('', Validators.required);
+  Raw_value = new FormControl('', Validators.required);
+  emg_Raw_value = new FormControl('', Validators.required);
   transactionId = new FormControl('', Validators.required);
   timestamp = new FormControl('', Validators.required);
 
 
-  constructor(private servicereadSensor: readSensorService, fb: FormBuilder) {
+  constructor(private serviceexperiment3emgDataAdd: experiment3emgDataAddService, fb: FormBuilder) {
     this.myForm = fb.group({
-      sensor: this.sensor,
-      newValue: this.newValue,
+      experimentId: this.experimentId,
+      Raw_value: this.Raw_value,
+      emg_Raw_value: this.emg_Raw_value,
       transactionId: this.transactionId,
       timestamp: this.timestamp
     });
@@ -53,7 +55,7 @@ export class readSensorComponent implements OnInit {
 
   loadAll(): Promise<any> {
     const tempList = [];
-    return this.servicereadSensor.getAll()
+    return this.serviceexperiment3emgDataAdd.getAll()
     .toPromise()
     .then((result) => {
       this.errorMessage = null;
@@ -100,27 +102,30 @@ export class readSensorComponent implements OnInit {
 
   addTransaction(form: any): Promise<any> {
     this.Transaction = {
-      $class: 'org.criotam.prototype.sensor.readSensor',
-      'sensor': this.sensor.value,
-      'newValue': this.newValue.value,
+      $class: 'org.criotam.prototype.sensor.experiment3emgDataAdd',
+      'experimentId': this.experimentId.value,
+      'Raw_value': this.Raw_value.value,
+      'emg_Raw_value': this.emg_Raw_value.value,
       'transactionId': this.transactionId.value,
       'timestamp': this.timestamp.value
     };
 
     this.myForm.setValue({
-      'sensor': null,
-      'newValue': null,
+      'experimentId': null,
+      'Raw_value': null,
+      'emg_Raw_value': null,
       'transactionId': null,
       'timestamp': null
     });
 
-    return this.servicereadSensor.addTransaction(this.Transaction)
+    return this.serviceexperiment3emgDataAdd.addTransaction(this.Transaction)
     .toPromise()
     .then(() => {
       this.errorMessage = null;
       this.myForm.setValue({
-        'sensor': null,
-        'newValue': null,
+        'experimentId': null,
+        'Raw_value': null,
+        'emg_Raw_value': null,
         'transactionId': null,
         'timestamp': null
       });
@@ -136,13 +141,14 @@ export class readSensorComponent implements OnInit {
 
   updateTransaction(form: any): Promise<any> {
     this.Transaction = {
-      $class: 'org.criotam.prototype.sensor.readSensor',
-      'sensor': this.sensor.value,
-      'newValue': this.newValue.value,
+      $class: 'org.criotam.prototype.sensor.experiment3emgDataAdd',
+      'experimentId': this.experimentId.value,
+      'Raw_value': this.Raw_value.value,
+      'emg_Raw_value': this.emg_Raw_value.value,
       'timestamp': this.timestamp.value
     };
 
-    return this.servicereadSensor.updateTransaction(form.get('transactionId').value, this.Transaction)
+    return this.serviceexperiment3emgDataAdd.updateTransaction(form.get('transactionId').value, this.Transaction)
     .toPromise()
     .then(() => {
       this.errorMessage = null;
@@ -160,7 +166,7 @@ export class readSensorComponent implements OnInit {
 
   deleteTransaction(): Promise<any> {
 
-    return this.servicereadSensor.deleteTransaction(this.currentId)
+    return this.serviceexperiment3emgDataAdd.deleteTransaction(this.currentId)
     .toPromise()
     .then(() => {
       this.errorMessage = null;
@@ -182,27 +188,34 @@ export class readSensorComponent implements OnInit {
 
   getForm(id: any): Promise<any> {
 
-    return this.servicereadSensor.getTransaction(id)
+    return this.serviceexperiment3emgDataAdd.getTransaction(id)
     .toPromise()
     .then((result) => {
       this.errorMessage = null;
       const formObject = {
-        'sensor': null,
-        'newValue': null,
+        'experimentId': null,
+        'Raw_value': null,
+        'emg_Raw_value': null,
         'transactionId': null,
         'timestamp': null
       };
 
-      if (result.sensor) {
-        formObject.sensor = result.sensor;
+      if (result.experimentId) {
+        formObject.experimentId = result.experimentId;
       } else {
-        formObject.sensor = null;
+        formObject.experimentId = null;
       }
 
-      if (result.newValue) {
-        formObject.newValue = result.newValue;
+      if (result.Raw_value) {
+        formObject.Raw_value = result.Raw_value;
       } else {
-        formObject.newValue = null;
+        formObject.Raw_value = null;
+      }
+
+      if (result.emg_Raw_value) {
+        formObject.emg_Raw_value = result.emg_Raw_value;
+      } else {
+        formObject.emg_Raw_value = null;
       }
 
       if (result.transactionId) {
@@ -233,8 +246,9 @@ export class readSensorComponent implements OnInit {
 
   resetForm(): void {
     this.myForm.setValue({
-      'sensor': null,
-      'newValue': null,
+      'experimentId': null,
+      'Raw_value': null,
+      'emg_Raw_value': null,
       'transactionId': null,
       'timestamp': null
     });

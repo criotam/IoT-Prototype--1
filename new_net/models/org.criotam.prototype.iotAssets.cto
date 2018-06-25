@@ -13,3 +13,24 @@ asset experiment1lcData extends ExperimentData{
   o String[] lc1_Raw_value optional
   o String[] lc2_Raw_value optional
 }
+
+
+asset experiment2lcData extends ExperimentData{
+  o String[] lc1_Raw_value optional
+  o String[] lc2_Raw_value optional
+}
+
+asset experiment2emgData extends ExperimentData{
+  o String[] emg_Raw_value optional
+}
+
+asset experiment3fpData extends ExperimentData{
+  o String[] lc1_Raw_value optional
+  o String[] lc2_Raw_value optional
+  o String[] lc3_Raw_value optional
+  }
+
+asset experiment3emgData extends ExperimentData{
+  o String[] emg_Raw_value optional
+}
+

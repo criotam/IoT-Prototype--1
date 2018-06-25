@@ -27,9 +27,9 @@
 
             
               <div class="form-group text-left">
-                <label for="sensor">sensor</label>
+                <label for="experimentId">experimentId</label>
                 
-                    <textarea formControlName="sensor" class="form-control" rows="3"></textarea>
+                  <input formControlName="experimentId" type="text" class="form-control">
                 
               </div>
             
@@ -37,9 +37,19 @@
 
             
               <div class="form-group text-left">
-                <label for="newValue">newValue</label>
+                <label for="Raw_value">Raw_value</label>
                 
-                  <input formControlName="newValue" type="text" class="form-control">
+                  <input formControlName="Raw_value" type="text" class="form-control">
+                
+              </div>
+            
+          
+
+            
+              <div class="form-group text-left">
+                <label for="emg_Raw_value">emg_Raw_value</label>
+                
+                  <input formControlName="emg_Raw_value" type="text" class="form-control">
                 
               </div>
             
@@ -92,21 +102,28 @@
 
           
             <div class="form-group text-left">
-              <label for="sensor">sensor</label>
+              <label for="experimentId">experimentId</label>
 
               
-                
-                  <textarea [ngModel]="sensor" formControlName="sensor" class="form-control" rows="3"></textarea>
-                
+                <input [ngModel]="experimentId"formControlName="experimentId" type="text" class="form-control">
               
 
             </div>
           
             <div class="form-group text-left">
-              <label for="newValue">newValue</label>
+              <label for="Raw_value">Raw_value</label>
 
               
-                <input [ngModel]="newValue"formControlName="newValue" type="text" class="form-control">
+                <input [ngModel]="Raw_value"formControlName="Raw_value" type="text" class="form-control">
+              
+
+            </div>
+          
+            <div class="form-group text-left">
+              <label for="emg_Raw_value">emg_Raw_value</label>
+
+              
+                <input [ngModel]="emg_Raw_value"formControlName="emg_Raw_value" type="text" class="form-control">
               
 
             </div>
@@ -180,7 +197,7 @@
   
   <div class="row">
     <div class="col-md-12">
-        <h1 class="transaction-title" id='transactionName'>readSensor</h1>
+        <h1 class="transaction-title" id='transactionName'>experiment2emgDataAdd</h1>
         <p class="invoke_cancel" id='invoke_cancel'>Invoke</p>
     </div>
   </div>
@@ -195,12 +212,17 @@
             
 
               
-                <li><span class="attribute"><b>sensor</b></span></li>
+                <li><span class="attribute"><b>experimentId</b></span></li>
               
             
 
               
-                <li><span class="attribute"><b>newValue</b></span></li>
+                <li><span class="attribute"><b>Raw_value</b></span></li>
+              
+            
+
+              
+                <li><span class="attribute"><b>emg_Raw_value</b></span></li>
               
             
 

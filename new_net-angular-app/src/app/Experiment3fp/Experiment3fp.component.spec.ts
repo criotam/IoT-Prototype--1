@@ -21,24 +21,24 @@ import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import * as sinon from 'sinon';
 import { DataService } from '../data.service';
-import { SensorComponent } from './Sensor.component';
-import { SensorService } from './Sensor.service';
+import { Experiment3fpComponent } from './Experiment3fp.component';
+import { Experiment3fpService } from './Experiment3fp.service';
 
-describe('SensorComponent', () => {
-  let component: SensorComponent;
-  let fixture: ComponentFixture<SensorComponent>;
+describe('Experiment3fpComponent', () => {
+  let component: Experiment3fpComponent;
+  let fixture: ComponentFixture<Experiment3fpComponent>;
 
-  let mockSensorService;
+  let mockExperiment3fpService;
   let mockDataService
 
   beforeEach(async(() => {
 
-    mockSensorService = sinon.createStubInstance(SensorService);
-    mockSensorService.getAll.returns([]);
+    mockExperiment3fpService = sinon.createStubInstance(Experiment3fpService);
+    mockExperiment3fpService.getAll.returns([]);
     mockDataService = sinon.createStubInstance(DataService);
 
     TestBed.configureTestingModule({
-      declarations: [ SensorComponent ],
+      declarations: [ Experiment3fpComponent ],
       imports: [
         BrowserModule,
         FormsModule,
@@ -46,12 +46,12 @@ describe('SensorComponent', () => {
         HttpModule
       ],
       providers: [
-        {provide: SensorService, useValue: mockSensorService },
+        {provide: Experiment3fpService, useValue: mockExperiment3fpService },
         {provide: DataService, useValue: mockDataService },
       ]
     });
 
-    fixture = TestBed.createComponent(SensorComponent);
+    fixture = TestBed.createComponent(Experiment3fpComponent);
     component = fixture.componentInstance;
 
   }));

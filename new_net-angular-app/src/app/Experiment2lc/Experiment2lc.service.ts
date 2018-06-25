@@ -15,35 +15,35 @@
 import { Injectable } from '@angular/core';
 import { DataService } from '../data.service';
 import { Observable } from 'rxjs/Observable';
-import { Sensor } from '../org.criotam.prototype.sensor';
+import { Experiment2lc } from '../org.criotam.prototype.sensor';
 import 'rxjs/Rx';
 
 // Can be injected into a constructor
 @Injectable()
-export class SensorService {
+export class Experiment2lcService {
 
-  private NAMESPACE = 'org.criotam.prototype.sensor.Sensor';
+  private NAMESPACE = 'org.criotam.prototype.sensor.Experiment2lc';
 
-  constructor(private dataService: DataService<Sensor>) {
+  constructor(private dataService: DataService<Experiment2lc>) {
   };
 
-  public getAll(): Observable<Sensor[]> {
+  public getAll(): Observable<Experiment2lc[]> {
     return this.dataService.getAll(this.NAMESPACE);
   }
 
-  public getAsset(id: any): Observable<Sensor> {
+  public getAsset(id: any): Observable<Experiment2lc> {
     return this.dataService.getSingle(this.NAMESPACE, id);
   }
 
-  public addAsset(itemToAdd: any): Observable<Sensor> {
+  public addAsset(itemToAdd: any): Observable<Experiment2lc> {
     return this.dataService.add(this.NAMESPACE, itemToAdd);
   }
 
-  public updateAsset(id: any, itemToUpdate: any): Observable<Sensor> {
+  public updateAsset(id: any, itemToUpdate: any): Observable<Experiment2lc> {
     return this.dataService.update(this.NAMESPACE, id, itemToUpdate);
   }
 
-  public deleteAsset(id: any): Observable<Sensor> {
+  public deleteAsset(id: any): Observable<Experiment2lc> {
     return this.dataService.delete(this.NAMESPACE, id);
   }
 

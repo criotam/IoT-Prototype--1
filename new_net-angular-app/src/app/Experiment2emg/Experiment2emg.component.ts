@@ -14,16 +14,16 @@
 
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { SensorService } from './Sensor.service';
+import { Experiment2emgService } from './Experiment2emg.service';
 import 'rxjs/add/operator/toPromise';
 
 @Component({
-  selector: 'app-sensor',
-  templateUrl: './Sensor.component.html',
-  styleUrls: ['./Sensor.component.css'],
-  providers: [SensorService]
+  selector: 'app-experiment2emg',
+  templateUrl: './Experiment2emg.component.html',
+  styleUrls: ['./Experiment2emg.component.css'],
+  providers: [Experiment2emgService]
 })
-export class SensorComponent implements OnInit {
+export class Experiment2emgComponent implements OnInit {
 
   myForm: FormGroup;
 
@@ -32,18 +32,18 @@ export class SensorComponent implements OnInit {
   private currentId;
   private errorMessage;
 
-  sensorId = new FormControl('', Validators.required);
-  sensorMAC = new FormControl('', Validators.required);
-  value = new FormControl('', Validators.required);
-  owner = new FormControl('', Validators.required);
+  experimentId = new FormControl('', Validators.required);
+  Raw_value = new FormControl('', Validators.required);
+  emg_Raw_value = new FormControl('', Validators.required);
+  experimenter = new FormControl('', Validators.required);
   player = new FormControl('', Validators.required);
 
-  constructor(private serviceSensor: SensorService, fb: FormBuilder) {
+  constructor(private serviceExperiment2emg: Experiment2emgService, fb: FormBuilder) {
     this.myForm = fb.group({
-      sensorId: this.sensorId,
-      sensorMAC: this.sensorMAC,
-      value: this.value,
-      owner: this.owner,
+      experimentId: this.experimentId,
+      Raw_value: this.Raw_value,
+      emg_Raw_value: this.emg_Raw_value,
+      experimenter: this.experimenter,
       player: this.player
     });
   };
@@ -54,7 +54,7 @@ export class SensorComponent implements OnInit {
 
   loadAll(): Promise<any> {
     const tempList = [];
-    return this.serviceSensor.getAll()
+    return this.serviceExperiment2emg.getAll()
     .toPromise()
     .then((result) => {
       this.errorMessage = null;
@@ -101,31 +101,31 @@ export class SensorComponent implements OnInit {
 
   addAsset(form: any): Promise<any> {
     this.asset = {
-      $class: 'org.criotam.prototype.sensor.Sensor',
-      'sensorId': this.sensorId.value,
-      'sensorMAC': this.sensorMAC.value,
-      'value': this.value.value,
-      'owner': this.owner.value,
+      $class: 'org.criotam.prototype.sensor.Experiment2emg',
+      'experimentId': this.experimentId.value,
+      'Raw_value': this.Raw_value.value,
+      'emg_Raw_value': this.emg_Raw_value.value,
+      'experimenter': this.experimenter.value,
       'player': this.player.value
     };
 
     this.myForm.setValue({
-      'sensorId': null,
-      'sensorMAC': null,
-      'value': null,
-      'owner': null,
+      'experimentId': null,
+      'Raw_value': null,
+      'emg_Raw_value': null,
+      'experimenter': null,
       'player': null
     });
 
-    return this.serviceSensor.addAsset(this.asset)
+    return this.serviceExperiment2emg.addAsset(this.asset)
     .toPromise()
     .then(() => {
       this.errorMessage = null;
       this.myForm.setValue({
-        'sensorId': null,
-        'sensorMAC': null,
-        'value': null,
-        'owner': null,
+        'experimentId': null,
+        'Raw_value': null,
+        'emg_Raw_value': null,
+        'experimenter': null,
         'player': null
       });
     })
@@ -141,14 +141,14 @@ export class SensorComponent implements OnInit {
 
   updateAsset(form: any): Promise<any> {
     this.asset = {
-      $class: 'org.criotam.prototype.sensor.Sensor',
-      'sensorMAC': this.sensorMAC.value,
-      'value': this.value.value,
-      'owner': this.owner.value,
+      $class: 'org.criotam.prototype.sensor.Experiment2emg',
+      'Raw_value': this.Raw_value.value,
+      'emg_Raw_value': this.emg_Raw_value.value,
+      'experimenter': this.experimenter.value,
       'player': this.player.value
     };
 
-    return this.serviceSensor.updateAsset(form.get('sensorId').value, this.asset)
+    return this.serviceExperiment2emg.updateAsset(form.get('experimentId').value, this.asset)
     .toPromise()
     .then(() => {
       this.errorMessage = null;
@@ -167,7 +167,7 @@ export class SensorComponent implements OnInit {
 
   deleteAsset(): Promise<any> {
 
-    return this.serviceSensor.deleteAsset(this.currentId)
+    return this.serviceExperiment2emg.deleteAsset(this.currentId)
     .toPromise()
     .then(() => {
       this.errorMessage = null;
@@ -189,40 +189,40 @@ export class SensorComponent implements OnInit {
 
   getForm(id: any): Promise<any> {
 
-    return this.serviceSensor.getAsset(id)
+    return this.serviceExperiment2emg.getAsset(id)
     .toPromise()
     .then((result) => {
       this.errorMessage = null;
       const formObject = {
-        'sensorId': null,
-        'sensorMAC': null,
-        'value': null,
-        'owner': null,
+        'experimentId': null,
+        'Raw_value': null,
+        'emg_Raw_value': null,
+        'experimenter': null,
         'player': null
       };
 
-      if (result.sensorId) {
-        formObject.sensorId = result.sensorId;
+      if (result.experimentId) {
+        formObject.experimentId = result.experimentId;
       } else {
-        formObject.sensorId = null;
+        formObject.experimentId = null;
       }
 
-      if (result.sensorMAC) {
-        formObject.sensorMAC = result.sensorMAC;
+      if (result.Raw_value) {
+        formObject.Raw_value = result.Raw_value;
       } else {
-        formObject.sensorMAC = null;
+        formObject.Raw_value = null;
       }
 
-      if (result.value) {
-        formObject.value = result.value;
+      if (result.emg_Raw_value) {
+        formObject.emg_Raw_value = result.emg_Raw_value;
       } else {
-        formObject.value = null;
+        formObject.emg_Raw_value = null;
       }
 
-      if (result.owner) {
-        formObject.owner = result.owner;
+      if (result.experimenter) {
+        formObject.experimenter = result.experimenter;
       } else {
-        formObject.owner = null;
+        formObject.experimenter = null;
       }
 
       if (result.player) {
@@ -247,10 +247,10 @@ export class SensorComponent implements OnInit {
 
   resetForm(): void {
     this.myForm.setValue({
-      'sensorId': null,
-      'sensorMAC': null,
-      'value': null,
-      'owner': null,
+      'experimentId': null,
+      'Raw_value': null,
+      'emg_Raw_value': null,
+      'experimenter': null,
       'player': null
       });
   }

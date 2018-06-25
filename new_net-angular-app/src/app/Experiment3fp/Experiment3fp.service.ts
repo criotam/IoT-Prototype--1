@@ -15,37 +15,36 @@
 import { Injectable } from '@angular/core';
 import { DataService } from '../data.service';
 import { Observable } from 'rxjs/Observable';
-import { readSensor } from '../org.criotam.prototype.sensor';
+import { Experiment3fp } from '../org.criotam.prototype.sensor';
 import 'rxjs/Rx';
 
 // Can be injected into a constructor
 @Injectable()
-export class readSensorService {
+export class Experiment3fpService {
 
-  private NAMESPACE = 'org.criotam.prototype.sensor.readSensor';
+  private NAMESPACE = 'org.criotam.prototype.sensor.Experiment3fp';
 
-  constructor(private dataService: DataService<readSensor>) {
+  constructor(private dataService: DataService<Experiment3fp>) {
   };
 
-  public getAll(): Observable<readSensor[]> {
-      return this.dataService.getAll(this.NAMESPACE);
+  public getAll(): Observable<Experiment3fp[]> {
+    return this.dataService.getAll(this.NAMESPACE);
   }
 
-  public getTransaction(id: any): Observable<readSensor> {
+  public getAsset(id: any): Observable<Experiment3fp> {
     return this.dataService.getSingle(this.NAMESPACE, id);
   }
 
-  public addTransaction(itemToAdd: any): Observable<readSensor> {
+  public addAsset(itemToAdd: any): Observable<Experiment3fp> {
     return this.dataService.add(this.NAMESPACE, itemToAdd);
   }
 
-  public updateTransaction(id: any, itemToUpdate: any): Observable<readSensor> {
+  public updateAsset(id: any, itemToUpdate: any): Observable<Experiment3fp> {
     return this.dataService.update(this.NAMESPACE, id, itemToUpdate);
   }
 
-  public deleteTransaction(id: any): Observable<readSensor> {
+  public deleteAsset(id: any): Observable<Experiment3fp> {
     return this.dataService.delete(this.NAMESPACE, id);
   }
 
 }
-

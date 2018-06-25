@@ -27,19 +27,9 @@
 
             
               <div class="form-group text-left">
-                <label for="sensorId">sensorId</label>
+                <label for="experimentId">experimentId</label>
                 
-                  <input formControlName="sensorId" type="text" class="form-control">
-                
-              </div>
-            
-          
-
-            
-              <div class="form-group text-left">
-                <label for="sensorMAC">sensorMAC</label>
-                
-                  <input formControlName="sensorMAC" type="text" class="form-control">
+                  <input formControlName="experimentId" type="text" class="form-control">
                 
               </div>
             
@@ -47,19 +37,9 @@
 
             
               <div class="form-group text-left">
-                <label for="value">value</label>
+                <label for="Raw_value">Raw_value</label>
                 
-                  <input formControlName="value" type="text" class="form-control">
-                
-              </div>
-            
-          
-
-            
-              <div class="form-group text-left">
-                <label for="owner">owner</label>
-                
-                    <textarea formControlName="owner" class="form-control" rows="3"></textarea>
+                  <input formControlName="Raw_value" type="text" class="form-control">
                 
               </div>
             
@@ -67,9 +47,29 @@
 
             
               <div class="form-group text-left">
-                <label for="player">player</label>
+                <label for="lc1_Raw_value">lc1_Raw_value</label>
                 
-                    <textarea formControlName="player" class="form-control" rows="3"></textarea>
+                  <input formControlName="lc1_Raw_value" type="text" class="form-control">
+                
+              </div>
+            
+          
+
+            
+              <div class="form-group text-left">
+                <label for="lc2_Raw_value">lc2_Raw_value</label>
+                
+                  <input formControlName="lc2_Raw_value" type="text" class="form-control">
+                
+              </div>
+            
+          
+
+            
+              <div class="form-group text-left">
+                <label for="lc3_Raw_value">lc3_Raw_value</label>
+                
+                  <input formControlName="lc3_Raw_value" type="text" class="form-control">
                 
               </div>
             
@@ -122,50 +122,46 @@
 
           
             <div class="form-group text-left">
-              <label for="sensorId">sensorId</label>
+              <label for="experimentId">experimentId</label>
 
               
-                <input [ngModel]="sensorId"formControlName="sensorId" type="text" class="form-control">
-              
-
-            </div>
-          
-            <div class="form-group text-left">
-              <label for="sensorMAC">sensorMAC</label>
-
-              
-                <input [ngModel]="sensorMAC"formControlName="sensorMAC" type="text" class="form-control">
+                <input [ngModel]="experimentId"formControlName="experimentId" type="text" class="form-control">
               
 
             </div>
           
             <div class="form-group text-left">
-              <label for="value">value</label>
+              <label for="Raw_value">Raw_value</label>
 
               
-                <input [ngModel]="value"formControlName="value" type="text" class="form-control">
-              
-
-            </div>
-          
-            <div class="form-group text-left">
-              <label for="owner">owner</label>
-
-              
-                
-                  <textarea [ngModel]="owner" formControlName="owner" class="form-control" rows="3"></textarea>
-                
+                <input [ngModel]="Raw_value"formControlName="Raw_value" type="text" class="form-control">
               
 
             </div>
           
             <div class="form-group text-left">
-              <label for="player">player</label>
+              <label for="lc1_Raw_value">lc1_Raw_value</label>
 
               
-                
-                  <textarea [ngModel]="player" formControlName="player" class="form-control" rows="3"></textarea>
-                
+                <input [ngModel]="lc1_Raw_value"formControlName="lc1_Raw_value" type="text" class="form-control">
+              
+
+            </div>
+          
+            <div class="form-group text-left">
+              <label for="lc2_Raw_value">lc2_Raw_value</label>
+
+              
+                <input [ngModel]="lc2_Raw_value"formControlName="lc2_Raw_value" type="text" class="form-control">
+              
+
+            </div>
+          
+            <div class="form-group text-left">
+              <label for="lc3_Raw_value">lc3_Raw_value</label>
+
+              
+                <input [ngModel]="lc3_Raw_value"formControlName="lc3_Raw_value" type="text" class="form-control">
               
 
             </div>
@@ -239,7 +235,7 @@
   
   <div class="row">
     <div class="col-md-12">
-        <h1 class="transaction-title" id='transactionName'>addSensor</h1>
+        <h1 class="transaction-title" id='transactionName'>experiment3fpDataAdd</h1>
         <p class="invoke_cancel" id='invoke_cancel'>Invoke</p>
     </div>
   </div>
@@ -254,27 +250,27 @@
             
 
               
-                <li><span class="attribute"><b>sensorId</b></span></li>
+                <li><span class="attribute"><b>experimentId</b></span></li>
               
             
 
               
-                <li><span class="attribute"><b>sensorMAC</b></span></li>
+                <li><span class="attribute"><b>Raw_value</b></span></li>
               
             
 
               
-                <li><span class="attribute"><b>value</b></span></li>
+                <li><span class="attribute"><b>lc1_Raw_value</b></span></li>
               
             
 
               
-                <li><span class="attribute"><b>owner</b></span></li>
+                <li><span class="attribute"><b>lc2_Raw_value</b></span></li>
               
             
 
               
-                <li><span class="attribute"><b>player</b></span></li>
+                <li><span class="attribute"><b>lc3_Raw_value</b></span></li>
               
             
 
