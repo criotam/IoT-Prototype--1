@@ -460,7 +460,7 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
     ArrayList<Double> z_moment = new ArrayList();
     
     double initial_time = -1;
-    
+    double initial_timestamp = -1;
     
     
     public void plotForce(ArrayList<Double> time, ArrayList<Double> val,
@@ -515,11 +515,11 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
            
         //System.out.println("Received message at GraphPlotter: " + message);
   
-        if(initial_time == -1){
-                initial_time = getTimeStamp(); 
-            }
+        //if(initial_timestamp == -1){
+          //      initial_timestamp = getTimeStamp(); 
+            //}
             
-            double time = (getTimeStamp()-initial_time)/1000;
+            //double time = (getTimeStamp()-initial_time)/1000;
             
             
         if(message.toString().split(":")[0].equalsIgnoreCase("identifier_exp3fp")){
@@ -528,7 +528,15 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                     
                     //device mac id
                     
-                }else{                    
+                }else{                
+                    
+                    if(initial_time == -1){
+                        initial_time = Double.parseDouble(message.toString().split(":")[4]+""); 
+                    }
+            
+                   double time = (Double.parseDouble(message.toString().split(":")[4]+"")
+                           -initial_time)/1000;
+            
                     //xAxis.add(Double.parseDouble(message.toString().split(":")[4]+""));
 
                     xAxis.add(time);
@@ -620,7 +628,7 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                 }
                 else if(message.toString().split(":")[1].equalsIgnoreCase("start_race")){
                     
-                    drawLine("Start time",race_start_x_point, 0);
+                    drawLine("Start race",race_start_x_point, 0);
                     
                 }else if(message.toString().split(":")[1].equalsIgnoreCase("mac_id")){
                     
@@ -630,6 +638,13 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                     
                     //xAxis.add(Double.parseDouble(message.toString().split(":")[2]+""));
 
+                    if(initial_time == -1){
+                        initial_time = Double.parseDouble(message.toString().split(":")[2]+""); 
+                    }
+            
+                   double time = (Double.parseDouble(message.toString().split(":")[2]+"")
+                           -initial_time)/1000;
+            
                     xAxis.add(time);
                     
                     race_start_x_point = time; 
@@ -655,6 +670,13 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                     
                     //xAxis.add(Double.parseDouble(message.toString().split(":")[3]+""));
 
+                    if(initial_time == -1){
+                        initial_time = Double.parseDouble(message.toString().split(":")[3]+""); 
+                    }
+            
+                   double time = (Double.parseDouble(message.toString().split(":")[3]+"")
+                           -initial_time)/1000;
+            
                     xAxis.add(time);
 
                     yAxis_sensor1.add(Double.parseDouble(message.toString().split(":")[1]+""));
@@ -738,6 +760,14 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                         }
                     }
                     */
+                    
+                    if(initial_time == -1){
+                        initial_time = Double.parseDouble(message.toString().split(":")[3]+""); 
+                    }
+            
+                   double time = (Double.parseDouble(message.toString().split(":")[3]+"")
+                           -initial_time)/1000;
+            
                     xAxis.add(time);
                     
                     //xAxis.add(Double.parseDouble(message.toString().split(":")[3]+""));
@@ -801,6 +831,13 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                     
                     //xAxis.add(Double.parseDouble(message.toString().split(":")[2]+""));
 
+                    if(initial_time == -1){
+                        initial_time = Double.parseDouble(message.toString().split(":")[2]+""); 
+                    }
+            
+                   double time = (Double.parseDouble(message.toString().split(":")[2]+"")
+                           -initial_time)/1000;
+            
                     xAxis.add(time);
                             
                     yAxis_sensor1.add(Double.parseDouble(message.toString().split(":")[1]+""));
@@ -872,9 +909,16 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                     //device mac id
                     
                 }else{                    
-                    xAxis.add(Double.parseDouble(message.toString().split(":")[4]+""));
+                    //xAxis.add(Double.parseDouble(message.toString().split(":")[4]+""));
 
-                    //xAxis.add(time);
+                    if(initial_time == -1){
+                        initial_time = Double.parseDouble(message.toString().split(":")[4]+""); 
+                    }
+            
+                   double time = (Double.parseDouble(message.toString().split(":")[4]+"")
+                           -initial_time)/1000;
+            
+                    xAxis.add(time);
                     
                     yAxis_sensor1.add(Double.parseDouble(message.toString().split(":")[1]+""));
                     
@@ -963,7 +1007,7 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                 }
                 else if(message.toString().split(":")[1].equalsIgnoreCase("start_race")){
                     
-                    drawLine("Start time",race_start_x_point, 0);
+                    drawLine("Start race",race_start_x_point, 0);
                     
                 }else if(message.toString().split(":")[1].equalsIgnoreCase("mac_id")){
                     
@@ -971,9 +1015,16 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                     
                 }else{
                     
-                    xAxis.add(Double.parseDouble(message.toString().split(":")[2]+""));
+                    //xAxis.add(Double.parseDouble(message.toString().split(":")[2]+""));
 
-                    //xAxis.add(time);
+                    if(initial_time == -1){
+                        initial_time = Double.parseDouble(message.toString().split(":")[2]+""); 
+                    }
+            
+                   double time = (Double.parseDouble(message.toString().split(":")[2]+"")
+                           -initial_time)/1000;
+            
+                    xAxis.add(time);
                     
                     race_start_x_point = Double.parseDouble(message.toString().split(":")[2]+""); 
                     end_x_point = Double.parseDouble(message.toString().split(":")[2]+""); 
@@ -996,10 +1047,17 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                     
                 }else{
                     
-                    xAxis.add(Double.parseDouble(message.toString().split(":")[3]+""));
+                    //xAxis.add(Double.parseDouble(message.toString().split(":")[3]+""));
 
-                    //xAxis.add(time);
-
+                    if(initial_time == -1){
+                        initial_time = Double.parseDouble(message.toString().split(":")[3]+""); 
+                    }
+            
+                   double time = (Double.parseDouble(message.toString().split(":")[3]+"")
+                           -initial_time)/1000;
+            
+                    xAxis.add(time);
+                    
                     yAxis_sensor1.add(Double.parseDouble(message.toString().split(":")[1]+""));
                     
                     yAxis_sensor2.add(Double.parseDouble(message.toString().split(":")[2]+""));
@@ -1081,9 +1139,16 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                         }
                     }
                     */
-                    //xAxis.add(time);
+                    if(initial_time == -1){
+                        initial_time = Double.parseDouble(message.toString().split(":")[3]+""); 
+                    }
+            
+                   double time = (Double.parseDouble(message.toString().split(":")[3]+"")
+                           -initial_time)/1000;
+            
+                    xAxis.add(time);
                     
-                    xAxis.add(Double.parseDouble(message.toString().split(":")[3]+""));
+                    //xAxis.add(Double.parseDouble(message.toString().split(":")[3]+""));
 
                     yAxis_sensor1.add(Double.parseDouble(message.toString().split(":")[1]+""));
                     
@@ -1142,10 +1207,17 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                     
                 }else{
                     
-                    xAxis.add(Double.parseDouble(message.toString().split(":")[2]+""));
+                    //xAxis.add(Double.parseDouble(message.toString().split(":")[2]+""));
 
-                    //xAxis.add(time);
-                            
+                    if(initial_time == -1){
+                        initial_time = Double.parseDouble(message.toString().split(":")[2]+""); 
+                    }
+            
+                   double time = (Double.parseDouble(message.toString().split(":")[2]+"")
+                           -initial_time)/1000;
+            
+                    xAxis.add(time);
+                    
                     yAxis_sensor1.add(Double.parseDouble(message.toString().split(":")[1]+""));
                     
                     start_x_point =  Double.parseDouble(message.toString().split(":")[2]);

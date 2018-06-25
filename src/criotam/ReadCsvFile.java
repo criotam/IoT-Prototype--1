@@ -51,36 +51,11 @@ public class ReadCsvFile {
                 
                 line = scanner.nextLine().toString().trim();
                 
-                //blockChaindata = blockChaindata +line +"$";
+                blockChaindata = blockChaindata +line +"$";
                 
                 message.add(line);
                 
-                //if(line.split(":")[0].equalsIgnoreCase("identifier_exp2emg")){
-			
-                        //dataScanner = new Scanner(line);
-			//dataScanner.useDelimiter(":");
-                        
-                        /*
-                        while (dataScanner.hasNext()) {
-				String data = dataScanner.next();
-                                
-				if (index == 0){
-					
-                                }
-				else if (index == 1){
-				    y_axisExp2EmgSensor.add(Double.parseDouble(data));
-                                }
-				else if (index == 2){
-                                    x_axis_time.add(Double.parseDouble(data));
-                                }	
-				else
-					System.out.println("invalid data:" + data);
-				index++;
-			}
-			index = 0;
-            */
-                        time_index++;
-                //}
+                
             }
             
             showPlot(message);
@@ -97,7 +72,7 @@ public class ReadCsvFile {
         GraphPlotterActivity graphPlotActivity = new GraphPlotterActivity(4, message.get(0).split(":")[0]);
         graphPlotActivity.plotHistoryGraph(message);
         
-        //storeDataOnBlockChain();
+        storeDataOnBlockChain();
         
     }
     
@@ -105,13 +80,18 @@ public class ReadCsvFile {
     
     public void storeDataOnBlockChain() throws MalformedURLException, IOException /*throws MalformedURLException, IOException*/{
         
-        URL url = new URL("http://192.168.1.6:3000/api/org.criotam.prototype.sensor.readSensor");
+        blockChaindata = blockChaindata.substring(0, blockChaindata.length()-2);
+        
+        System.out.println("File content:"+ blockChaindata);
+        
+        URL url = new URL("http://192.168.1.14:3000/"
+                + "api/org.criotam.prototype.iotTransactions.readexperiment2emgData");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
         
         parameters = new HashMap();
-        parameters.put("experiment", "s01");
-        parameters.put("Raw_newValue", blockChaindata);
+        parameters.put("experiment1", "resource:org.criotam.prototype.iotAssets.experiment2emgData#EX02");
+        parameters.put("Raw_value", blockChaindata);
         
         con.setConnectTimeout(100000);
         con.setReadTimeout(100000);
@@ -124,10 +104,13 @@ public class ReadCsvFile {
         
         int status = con.getResponseCode();
         if(status == 200){
-            System.out.println("####################player add successful----------------------------");
+            System.out.println("#################### add successful----------------------------");
+            con.disconnect();
+        }else if(status == 500){
+            System.out.println("Internal server error");
             con.disconnect();
         }else{
-            System.out.println("disconnect");
+            System.out.println("error");
             con.disconnect();
         }
         con.disconnect();

@@ -27,18 +27,24 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -1396,6 +1402,49 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
         
         
     }
+    
+    
+    Map<String, String> parameters;
+    
+    public void storeDataOnBlockChain( String blockChaindata) throws MalformedURLException, IOException /*throws MalformedURLException, IOException*/{
+        
+        blockChaindata = blockChaindata.substring(0, blockChaindata.length()-2);
+        
+        System.out.println("File content:"+ blockChaindata);
+        
+        URL url = new URL("http://192.168.1.14:3000/"
+                + "api/org.criotam.prototype.iotTransactions.readexperiment2emgData");
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("POST");
+        
+        parameters = new HashMap();
+        parameters.put("experiment1", "resource:org.criotam.prototype.iotAssets.experiment2emgData#EX02");
+        parameters.put("Raw_value", blockChaindata);
+        
+        con.setConnectTimeout(100000);
+        con.setReadTimeout(100000);
+        con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        con.setDoOutput(true);
+        DataOutputStream out = new DataOutputStream(con.getOutputStream());
+        out.writeBytes(ParameterBuilder.getParamsString(parameters));
+        out.flush();
+        out.close();
+        
+        int status = con.getResponseCode();
+        if(status == 200){
+            System.out.println("#################### add successful----------------------------");
+            con.disconnect();
+        }else if(status == 500){
+            System.out.println("Internal server error");
+            con.disconnect();
+        }else{
+            System.out.println("error");
+            con.disconnect();
+        }
+        con.disconnect();
+
+    }
+
     
     
     public void initializeFirebase(){
