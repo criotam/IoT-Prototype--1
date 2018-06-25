@@ -60,7 +60,9 @@ public class BroadCastListener extends HttpServlet{
 	         	        System.out.println(packet.getAddress().getHostName() + ": "
 	         	            + msg);
 
-	         	        ip = packet.getAddress().getHostName();
+	         	        //ip = packet.getAddress().getHostName();
+	         	        
+	         	       ip = msg.split("@")[1];
 	         	        
 	         	        if(!status1.equalsIgnoreCase("connecting")) {
 	         	        	new EstablishWebSocketConnection1().start();
@@ -429,6 +431,5 @@ public class BroadCastListener extends HttpServlet{
 	    }
 
 	}
-
 	
 }

@@ -14,6 +14,8 @@ import javax.websocket.server.ServerEndpoint;
 @ServerEndpoint("/gateway1")
 public class Gateway1 {
 	
+	private String mc_id_sb = "5C:CF:7F:69:1F:75";
+	
 	private static Queue<String> data_buffer = new LinkedList<>();
 	
 	@OnOpen
@@ -34,9 +36,23 @@ public class Gateway1 {
     }
     
     @OnMessage
-    public void onMessage(String message, Session session) {
+    public void onMessage(String message, Session session) throws IOException {
         System.out.println("onMessage::From=" + session.getId() + " Message=" + message);
        
+       if(message.equalsIgnoreCase("identifier_exp1lc:mac_id")) {
+        	
+        	if(message.split(":")[2].trim().equalsIgnoreCase(mc_id_sb)) {
+        		
+        		System.out.println("STARTING BLOCK");
+        		
+        	}else {
+        		
+        		session.close();
+        		
+        	}
+        	
+        }
+
     	data_buffer.add(message);
     	sendData(session);
         
