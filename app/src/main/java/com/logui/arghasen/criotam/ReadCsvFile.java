@@ -36,6 +36,8 @@ public class ReadCsvFile extends AppCompatActivity{
     LineGraphSeries<DataPoint> series4;
 
 
+    public String parameter;
+
     public ArrayList<String> message;
 
     public String line;
@@ -186,16 +188,19 @@ public class ReadCsvFile extends AppCompatActivity{
                     double time = (Double.parseDouble(msg.toString().split(":")[4] + "")
                             - initial_time) / 1000;
 
-                    dataPoints1[i] = new DataPoint(time
-                            ,(Double.parseDouble(msg.split(":")[1])));
+                    if(time>=0 && Double.parseDouble(msg.toString().split(":")[4] + "")<900000) {
 
-                    dataPoints2[i] = new DataPoint(time
-                            ,(Double.parseDouble(msg.split(":")[2])));
+                        dataPoints1[i] = new DataPoint(time
+                                , (Double.parseDouble(msg.split(":")[1])));
 
-                    dataPoints3[i] = new DataPoint(time
-                            ,(Double.parseDouble(msg.split(":")[3])));
+                        dataPoints2[i] = new DataPoint(time
+                                , (Double.parseDouble(msg.split(":")[2])));
 
-                    i++;
+                        dataPoints3[i] = new DataPoint(time
+                                , (Double.parseDouble(msg.split(":")[3])));
+                        i++;
+                    }
+
                 }
             } else if (msg.toString().split(":")[0].equalsIgnoreCase("identifier_exp2emg")) {
 
@@ -229,10 +234,13 @@ public class ReadCsvFile extends AppCompatActivity{
                     double time = (Double.parseDouble(msg.toString().split(":")[2] + "")
                             - initial_time) / 1000;
 
-                    dataPoints1[i] = new DataPoint(time
-                            ,(Double.parseDouble(msg.split(":")[1])));
+                    if(time>=0 && Double.parseDouble(msg.toString().split(":")[2] + "")<900000) {
 
-                    i++;
+                        dataPoints1[i] = new DataPoint(time
+                                , (Double.parseDouble(msg.split(":")[1])));
+
+                        i++;
+                    }
                 }
             } else if (msg.toString().split(":")[0].equalsIgnoreCase("identifier_exp1lc")) {
 
@@ -253,13 +261,15 @@ public class ReadCsvFile extends AppCompatActivity{
                     double time = (Double.parseDouble(msg.toString().split(":")[3] + "")
                             - initial_time) / 1000;
 
-                    dataPoints1[i] = new DataPoint(time
-                            ,(Double.parseDouble(msg.split(":")[1])));
+                    if(time>=0 && Double.parseDouble(msg.toString().split(":")[3] + "")<900000) {
 
-                    dataPoints2[i] = new DataPoint(time
-                            ,(Double.parseDouble(msg.split(":")[2])));
+                        dataPoints1[i] = new DataPoint(time
+                                , (Double.parseDouble(msg.split(":")[1])));
 
-                    i++;
+                        dataPoints2[i] = new DataPoint(time
+                                , (Double.parseDouble(msg.split(":")[2])));
+                        i++;
+                    }
 
                 }
             } else if (msg.toString().split(":")[0].equalsIgnoreCase("identifier_exp2lc")) {
@@ -294,13 +304,15 @@ public class ReadCsvFile extends AppCompatActivity{
                     double time = (Double.parseDouble(msg.toString().split(":")[3] + "")
                             - initial_time) / 1000;
 
-                    dataPoints1[i] = new DataPoint(time
-                            ,(Double.parseDouble(msg.split(":")[1])));
+                    if(time>=0 && Double.parseDouble(msg.toString().split(":")[3] + "")<900000) {
 
-                    dataPoints2[i] = new DataPoint(time
-                            ,(Double.parseDouble(msg.split(":")[2])));
+                        dataPoints1[i] = new DataPoint(time
+                                , (Double.parseDouble(msg.split(":")[1])));
 
-                    i++;
+                        dataPoints2[i] = new DataPoint(time
+                                , (Double.parseDouble(msg.split(":")[2])));
+                        i++;
+                    }
 
                 }
             } else if (msg.toString().split(":")[0].equalsIgnoreCase("identifier_exp3emg")) {
@@ -322,10 +334,13 @@ public class ReadCsvFile extends AppCompatActivity{
                     double time = (Double.parseDouble(msg.toString().split(":")[2] + "")
                             - initial_time) / 1000;
 
-                    dataPoints1[i] = new DataPoint(time
-                            ,(Double.parseDouble(msg.split(":")[1])));
+                    if(time>=0 && Double.parseDouble(msg.toString().split(":")[3] + "")<900000) {
 
-                    i++;
+                        dataPoints1[i] = new DataPoint(time
+                                , (Double.parseDouble(msg.split(":")[1])));
+
+                        i++;
+                    }
 
                 }
             }

@@ -34,6 +34,8 @@ public class LiveStreamingActivity extends AppCompatActivity {
 
     private LineGraphSeries<DataPoint> stream_points4;
 
+    private String parameter;
+
     @BindView(R.id.parent_layout)
     LinearLayout parent_layout;
     @BindView(R.id.live_stream_graph)
@@ -79,15 +81,21 @@ public class LiveStreamingActivity extends AppCompatActivity {
 
                 param = "exp1_lc_streaming";
 
+                parameter = "load_cell";
+
             }else if(getIntent().getStringExtra("parameter").toString().
                     trim().equalsIgnoreCase("force")){
 
                 param = "exp1_lc_streaming";
 
+                parameter = "force";
+
             }else if(getIntent().getStringExtra("parameter").toString().
                     trim().equalsIgnoreCase("moment")){
 
                 param = "exp1_lc_streaming";
+
+                parameter = "moment";
             }
 
         }else if(getIntent().getStringExtra("exp").toString().trim().equalsIgnoreCase("exp2")){
@@ -97,15 +105,21 @@ public class LiveStreamingActivity extends AppCompatActivity {
 
                 param = "exp2_lc_streaming";
 
+                parameter = "load_cell";
+
             }else if(getIntent().getStringExtra("parameter").toString().
                     trim().equalsIgnoreCase("force")){
 
                 param = "exp2_lc_streaming";
 
+                parameter = "force";
+
             }else if(getIntent().getStringExtra("parameter").toString().
                     trim().equalsIgnoreCase("moment")){
 
                 param = "exp2_lc_streaming";
+
+                parameter = "moment";
 
             }else if(getIntent().getStringExtra("parameter").toString().
                     trim().equalsIgnoreCase("emg")){
@@ -218,15 +232,18 @@ public class LiveStreamingActivity extends AppCompatActivity {
                             - initial_time) / 1000;
 
 
-                    stream_points1.appendData(new DataPoint(time
-                            ,(Double.parseDouble(message.split(":")[1]))), true, 1000);
+                    if(time>=0 && Double.parseDouble(message.toString().split(":")[4] + "")<900000) {
 
-                    stream_points2.appendData(new DataPoint(time
-                            ,(Double.parseDouble(message.split(":")[2]))), true, 1000);
+                        stream_points1.appendData(new DataPoint(time
+                                , (Double.parseDouble(message.split(":")[1]))), true, 1000);
 
-                    stream_points3.appendData(new DataPoint(time
-                            ,(Double.parseDouble(message.split(":")[3]))), true, 1000);
+                        stream_points2.appendData(new DataPoint(time
+                                , (Double.parseDouble(message.split(":")[2]))), true, 1000);
 
+                        stream_points3.appendData(new DataPoint(time
+                                , (Double.parseDouble(message.split(":")[3]))), true, 1000);
+
+                    }
 
                 }
             } else if (message.toString().split(":")[0].equalsIgnoreCase("identifier_exp2emg")) {
@@ -260,8 +277,12 @@ public class LiveStreamingActivity extends AppCompatActivity {
                     double time = (Double.parseDouble(message.toString().split(":")[2] + "")
                             - initial_time) / 1000;
 
-                    stream_points1.appendData(new DataPoint(time
-                            ,(Double.parseDouble(message.split(":")[1]))), true, 1000);
+                    if(time>=0 && Double.parseDouble(message.toString().split(":")[2] + "")<900000) {
+
+                        stream_points1.appendData(new DataPoint(time
+                                , (Double.parseDouble(message.split(":")[1]))), true, 1000);
+
+                    }
 
                 }
             } else if (message.toString().split(":")[0].equalsIgnoreCase("identifier_exp1lc")) {
@@ -293,12 +314,15 @@ public class LiveStreamingActivity extends AppCompatActivity {
                     double time = (Double.parseDouble(message.toString().split(":")[3] + "")
                             - initial_time) / 1000;
 
-                    stream_points1.appendData(new DataPoint(time
-                            ,(Double.parseDouble(message.split(":")[1]))), true, 1000);
+                    if(time>=0 && Double.parseDouble(message.toString().split(":")[3] + "")<900000) {
 
-                    stream_points2.appendData(new DataPoint(time
-                            ,(Double.parseDouble(message.split(":")[2]))), true, 1000);
+                        stream_points1.appendData(new DataPoint(time
+                                , (Double.parseDouble(message.split(":")[1]))), true, 1000);
 
+                        stream_points2.appendData(new DataPoint(time
+                                , (Double.parseDouble(message.split(":")[2]))), true, 1000);
+
+                    }
 
                 }
             } else if (message.toString().split(":")[0].equalsIgnoreCase("identifier_exp2lc")) {
@@ -345,12 +369,15 @@ public class LiveStreamingActivity extends AppCompatActivity {
                     double time = (Double.parseDouble(message.toString().split(":")[3] + "")
                             - initial_time) / 1000;
 
-                    stream_points1.appendData(new DataPoint(time
-                            ,(Double.parseDouble(message.split(":")[1]))), true, 100000);
+                    if(time>=0 && Double.parseDouble(message.toString().split(":")[3] + "")<900000) {
 
-                    stream_points2.appendData(new DataPoint(time
-                            ,(Double.parseDouble(message.split(":")[2]))), true, 100000);
+                        stream_points1.appendData(new DataPoint(time
+                                , (Double.parseDouble(message.split(":")[1]))), true, 100000);
 
+                        stream_points2.appendData(new DataPoint(time
+                                , (Double.parseDouble(message.split(":")[2]))), true, 100000);
+
+                    }
 
                 }
             } else if (message.toString().split(":")[0].equalsIgnoreCase("identifier_exp3emg")) {
@@ -374,9 +401,12 @@ public class LiveStreamingActivity extends AppCompatActivity {
                     double time = (Double.parseDouble(message.toString().split(":")[2] + "")
                             - initial_time) / 1000;
 
-                    stream_points1.appendData(new DataPoint(time
-                            ,(Double.parseDouble(message.split(":")[1]))), true, 1000);
+                    if(time>=0 && Double.parseDouble(message.toString().split(":")[2] + "")<900000) {
 
+                        stream_points1.appendData(new DataPoint(time
+                                , (Double.parseDouble(message.split(":")[1]))), true, 1000);
+
+                    }
                 }
             }
 
