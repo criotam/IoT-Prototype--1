@@ -27,11 +27,11 @@ public class ExperimentActivity extends AppCompatActivity {
     @BindView(R.id.gender)
     TextView gender;
     @BindView(R.id.btnexp1)
-    Button btnexp1;
+    TextView btnexp1;
     @BindView(R.id.btnexp2)
-    Button btnexp2;
+    TextView btnexp2;
     @BindView(R.id.btnexp3)
-    Button btnexp3;
+    TextView btnexp3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
