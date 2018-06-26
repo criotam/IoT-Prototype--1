@@ -28,7 +28,14 @@ public class Exp2EmgListener {
     
     @OnMessage
     public String onMessage(String message) {
-        System.out.println("Message from receiver:"+message);
+        //System.out.println("Message from receiver:"+message);
+        
+        //notify at the start of the race
+        if(message.contains("start_race")){
+            //ring buzzer: send signal to arduino
+            //gateway should send the signal to arduino
+        }
+        
         if(message.toString().trim().equalsIgnoreCase("storeMySession")){
             System.out.println("session stored");
             sessions.put("storeMySession", session);
@@ -51,12 +58,15 @@ public class Exp2EmgListener {
 
     @OnOpen
     public void onOpen(Session session) {
-        System.out.print("opened");
+        System.out.print("#-------------------opened---------------------------");
+        System.out.println("Connected to endpoint: " + session.getBasicRemote());
+        
         this.session = session;
     }
 
     @OnError
     public void onError(Throwable t) {
+        t.printStackTrace();
         System.out.print("error");
         sessions.clear();
     }

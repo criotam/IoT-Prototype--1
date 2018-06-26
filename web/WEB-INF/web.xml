@@ -59,4 +59,9 @@
         <welcome-file>faces/index.xhtml</welcome-file>
         <welcome-file>redirect.jsp</welcome-file>
     </welcome-file-list>
+    <servlet>
+        <servlet-name>Broadcast server</servlet-name>
+        <servlet-class>org.sample.dataListener.BroadCastIP</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
 </web-app>

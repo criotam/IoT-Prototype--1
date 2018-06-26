@@ -28,7 +28,7 @@ public class Exp3ForcePlateListener {
     
     @OnMessage
     public String onMessage(String message) {
-        System.out.println("Message from receiver:"+message);
+        //System.out.println("Message from receiver:"+message);
         if(message.toString().trim().equalsIgnoreCase("storeMySession")){
             System.out.println("session stored");
             sessions.put("storeMySession", session);
@@ -51,7 +51,9 @@ public class Exp3ForcePlateListener {
 
     @OnOpen
     public void onOpen(Session session) {
-        System.out.print("opened");
+        System.out.print("#-------------------opened---------------------------");
+        System.out.println("Connected to endpoint: " + session.getBasicRemote());
+        
         this.session = session;
     }
 
