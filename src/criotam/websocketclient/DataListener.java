@@ -12,19 +12,26 @@ import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import criotam.ParameterBuilder;
 import criotam.graph.GraphPlotterUtil;
 import criotam.database.Sensordb;
 import static criotam.TestServer.playerID;
 import criotam.graph.GraphPlotterActivity;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -73,6 +80,10 @@ public class DataListener {
     private boolean flag = true;
     
     private connectionListener conn_manager;
+    
+    private String blockchaindata;
+    
+    private static String BLOCK_CHAIN_IP = "192.168.1.14";
     
     public interface connectionListener{
        
@@ -172,6 +183,8 @@ public class DataListener {
                 }
                 flag = false;
                 saveinFile();
+                
+                (new storeOnBlockchain()).start();
             }
         }
     }
@@ -187,6 +200,8 @@ public class DataListener {
                 flag = false;
                 saveinFile();
                 conn_manager.onClosed(fileName);
+                
+                (new storeOnBlockchain()).start();
             }
                 
     }
@@ -256,6 +271,8 @@ public class DataListener {
                     //System.out.println("Received message in client: " + data_buffer.peek());
            
                     builder.append(data_buffer.peek()+"\n");
+                    
+                    blockchaindata = blockchaindata + data_buffer.peek()+"@";
                    
                     //graphPlotUtil.plotGraph(data_buffer.peek().toString());
                     graphPlotActivity.plotGraph(data_buffer.peek().toString());
@@ -268,6 +285,106 @@ public class DataListener {
     
     public void reOpenGraphPlot(){
         graphPlotActivity.setVisible(true);
+    }
+    
+    
+    private class storeOnBlockchain extends Thread{
+        
+        @Override
+        public void run(){
+            
+            try {
+                storeDataOnBlockChain(blockchaindata);
+            } catch (IOException ex) {
+                Logger.getLogger(DataListener.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+    }
+    
+    Map<String, String> parameters;
+    
+    public void storeDataOnBlockChain( String blockchaindata) throws MalformedURLException, IOException /*throws MalformedURLException, IOException*/{
+        
+        
+        blockchaindata = blockchaindata.substring(0, blockchaindata.length()-2);
+        
+        System.out.println("File content:"+ blockchaindata);
+        
+        URL url = new URL("http://"+ BLOCK_CHAIN_IP+":3000/"
+                + "api/org.criotam.prototype.iotTransactions.readexperiment2emgData");
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("POST");
+        
+        parameters = new HashMap();
+        
+        
+        if(blockchaindata.split("@")[0].toString().split(":")[0].equalsIgnoreCase("identifier_exp1lc")){
+            
+            url = new URL("http://"+ BLOCK_CHAIN_IP+":3000/"
+                + "api/org.criotam.prototype.iotTransactions.readexperiment1lcData");
+            
+            parameters.put("experiment1", 
+                    "resource:org.criotam.prototype.iotAssets.experiment1lcData#EX01");
+        
+        }else if(blockchaindata.split("@")[0].toString().split(":")[0].equalsIgnoreCase("identifier_exp2lc")){
+            
+            url = new URL("http://"+ BLOCK_CHAIN_IP+":3000/"
+                + "api/org.criotam.prototype.iotTransactions.readexperiment2lcData");
+            
+            parameters.put("experiment1", 
+                    "resource:org.criotam.prototype.iotAssets.experiment2lcData#EX02a");
+        
+        }else if(blockchaindata.split("@")[0].toString().split(":")[0].equalsIgnoreCase("identifier_exp2emg")){
+            
+            url = new URL("http://"+ BLOCK_CHAIN_IP+":3000/"
+                + "api/org.criotam.prototype.iotTransactions.readexperiment2emgData");
+            
+            parameters.put("experiment1", 
+                    "resource:org.criotam.prototype.iotAssets.experiment2emgData#EX02b");
+        
+        }else if(blockchaindata.split("@")[0].toString().split(":")[0].equalsIgnoreCase("identifier_exp3fp")){
+            
+            url = new URL("http://"+ BLOCK_CHAIN_IP+":3000/"
+                + "api/org.criotam.prototype.iotTransactions.readexperiment3lcData");
+            
+            parameters.put("experiment1", 
+                    "resource:org.criotam.prototype.iotAssets.experiment3lcData#EX03a");
+        
+        }else if(blockchaindata.split("@")[0].toString().split(":")[0].equalsIgnoreCase("identifier_exp3emg")){
+            
+            url = new URL("http://"+ BLOCK_CHAIN_IP+":3000/"
+                + "api/org.criotam.prototype.iotTransactions.readexperiment3emgData");
+            
+            parameters.put("experiment1", 
+                    "resource:org.criotam.prototype.iotAssets.experiment3emgData#EX03b");
+        
+        }
+        
+        parameters.put("Raw_value", blockchaindata);
+        
+        con.setConnectTimeout(100000);
+        con.setReadTimeout(100000);
+        con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        con.setDoOutput(true);
+        DataOutputStream out = new DataOutputStream(con.getOutputStream());
+        out.writeBytes(ParameterBuilder.getParamsString(parameters));
+        out.flush();
+        out.close();
+        
+        int status = con.getResponseCode();
+        if(status == 200){
+            System.out.println("#################### add successful----------------------------");
+            con.disconnect();
+        }else if(status == 500){
+            System.out.println("Internal server error");
+            con.disconnect();
+        }else{
+            System.out.println("error");
+            con.disconnect();
+        }
+        //con.disconnect();
+
     }
     
     
@@ -334,9 +451,9 @@ public class DataListener {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 if (databaseError != null) {
-                    System.out.println("Data could not be saved " + databaseError.getMessage());
+                    //System.out.println("Data could not be saved " + databaseError.getMessage());
                 } else {
-                    System.out.println("Data saved successfully.");
+                    //System.out.println("Data saved successfully.");
                 }
     }
     });

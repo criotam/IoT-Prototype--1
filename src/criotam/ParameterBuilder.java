@@ -14,7 +14,7 @@ import java.util.Map;
  *
  * @author AVINASH
  */
-class ParameterBuilder {
+public class ParameterBuilder {
  
     public static String getParamsString(Map<String, String> params) 
       throws UnsupportedEncodingException{

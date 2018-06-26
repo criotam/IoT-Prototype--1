@@ -984,7 +984,9 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
     private void stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopActionPerformed
         // TODO add your handling code here:
         if(graphHandler!=null)
-        graphHandler.close();
+            if(!graphHandler.isClosed())
+                graphHandler.close();
+        
     }//GEN-LAST:event_stopActionPerformed
 
     
@@ -1051,14 +1053,16 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
     private void exp2_lc_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp2_lc_stopActionPerformed
         // TODO add your handling code here:
         if(graphHandler1!=null)
-        graphHandler1.close();
+            if(!graphHandler1.isClosed())
+               graphHandler1.close();
         //store file
     }//GEN-LAST:event_exp2_lc_stopActionPerformed
 
     private void exp2_emg_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp2_emg_stopActionPerformed
         // TODO add your handling code here:
         if(graphHandler2!=null)
-        graphHandler2.close();
+            if(!graphHandler2.isClosed())
+                graphHandler2.close();
     }//GEN-LAST:event_exp2_emg_stopActionPerformed
 
     private void exp2_history_menuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp2_history_menuActionPerformed
@@ -1128,7 +1132,9 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
     private void exp3_fp_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp3_fp_stopActionPerformed
         // TODO add your handling code here:
         if(graphHandler3!=null)
-        graphHandler3.close();
+            if(!graphHandler3.isClosed())
+               graphHandler3.close();
+        
     }//GEN-LAST:event_exp3_fp_stopActionPerformed
 
     private void exp3_emg_startActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp3_emg_startActionPerformed
@@ -1164,7 +1170,9 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
     private void exp3_emg_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp3_emg_stopActionPerformed
         // TODO add your handling code here:
         if(graphHandler4!=null)
-        graphHandler4.close();
+            if(!graphHandler4.isClosed())
+                graphHandler4.close();
+        
     }//GEN-LAST:event_exp3_emg_stopActionPerformed
 
     private void exp3_history_menuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exp3_history_menuActionPerformed
@@ -1401,48 +1409,6 @@ public class PlayerDashboardUI extends javax.swing.JFrame {
         }
         
         
-    }
-    
-    
-    Map<String, String> parameters;
-    
-    public void storeDataOnBlockChain( String blockChaindata) throws MalformedURLException, IOException /*throws MalformedURLException, IOException*/{
-        
-        blockChaindata = blockChaindata.substring(0, blockChaindata.length()-2);
-        
-        System.out.println("File content:"+ blockChaindata);
-        
-        URL url = new URL("http://192.168.1.14:3000/"
-                + "api/org.criotam.prototype.iotTransactions.readexperiment2emgData");
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("POST");
-        
-        parameters = new HashMap();
-        parameters.put("experiment1", "resource:org.criotam.prototype.iotAssets.experiment2emgData#EX02");
-        parameters.put("Raw_value", blockChaindata);
-        
-        con.setConnectTimeout(100000);
-        con.setReadTimeout(100000);
-        con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-        con.setDoOutput(true);
-        DataOutputStream out = new DataOutputStream(con.getOutputStream());
-        out.writeBytes(ParameterBuilder.getParamsString(parameters));
-        out.flush();
-        out.close();
-        
-        int status = con.getResponseCode();
-        if(status == 200){
-            System.out.println("#################### add successful----------------------------");
-            con.disconnect();
-        }else if(status == 500){
-            System.out.println("Internal server error");
-            con.disconnect();
-        }else{
-            System.out.println("error");
-            con.disconnect();
-        }
-        con.disconnect();
-
     }
 
     
