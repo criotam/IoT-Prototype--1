@@ -72,7 +72,7 @@ public class ReadCsvFile {
         GraphPlotterActivity graphPlotActivity = new GraphPlotterActivity(4, message.get(0).split(":")[0]);
         graphPlotActivity.plotHistoryGraph(message);
         
-        storeDataOnBlockChain();
+        //storeDataOnBlockChain();
         
     }
     

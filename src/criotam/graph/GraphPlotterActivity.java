@@ -1051,16 +1051,25 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
         
                 if(message.toString().split(":")[1].equalsIgnoreCase("start_time")){
                     
-                    drawLine("Start time",start_x_point, 0);
+                    if(!flag_start_time)
+                        drawLine("Start time",start_x_point, 0);
+                    
+                    flag_start_time = true;
                     
                 }else if(message.toString().split(":")[1].equalsIgnoreCase("end_time")){
                     
-                    drawLine("End time",end_x_point, 0);
+                    if(!flag_end_time)
+                        drawLine("End time",end_x_point, 0);
+                    
+                    flag_end_time = true;
                     
                 }
                 else if(message.toString().split(":")[1].equalsIgnoreCase("start_race")){
                     
-                    drawLine("Start race",race_start_x_point, 0);
+                    if(!flag_start_race)
+                        drawLine("Start race",race_start_x_point, 0);
+                    
+                    flag_start_race = true;
                     
                 }else if(message.toString().split(":")[1].equalsIgnoreCase("mac_id")){
                     
