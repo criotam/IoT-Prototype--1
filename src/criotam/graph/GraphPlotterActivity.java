@@ -510,12 +510,44 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
     }
     
     
-    ArrayList<Double> temp_arrList_time ;
+    ArrayList<Double> temp_arrList_time = new ArrayList();
     
     ArrayList<Double> temp_arrList_val = new ArrayList<>();
     
     boolean flag_start_race = false, flag_start_time = false, flag_end_time = false;
     
+    
+    
+    public void getReactiontime(){
+        
+        int i=0;
+        
+        double max = Double.MIN_VALUE;
+        for(i=0; i<temp_arrList_val.size(); i++){
+            if(temp_arrList_val.get(i) > max){
+                max = temp_arrList_val.get(i);
+            }
+        }
+        
+        System.out.println("MAX VAL:"+ max);
+        
+        max = 0.1*max;
+        
+        double distance = Math.abs(temp_arrList_val.get(0) - max);
+            int idx = 0;
+            for(int c = 1; c < temp_arrList_val.size(); c++){
+                double cdistance = Math.abs(temp_arrList_val.get(c) - max);
+                if(cdistance < distance){
+                    idx = c;
+                    distance = cdistance;
+                    }
+            }
+        
+            System.out.println("Reaction point:"+ idx + "time" + temp_arrList_time.get(idx));
+            
+            System.out.println("Reaction time: "+ (temp_arrList_time.get(idx) - race_start_x_point));
+            
+    }
     
     public void plotGraph(String message){
            
@@ -666,19 +698,50 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
             
                    double time = (Double.parseDouble(message.toString().split(":")[2]+"")
                            -initial_time)/1000;
+                   
+                   
+                   if(flag_start_race){
+                        
+                       if(time - race_start_x_point > 5){
+                           
+                           getReactiontime();
+                                   
+                       }else{
+                           temp_arrList_time.add(time);
+                           
+                           temp_arrList_val.add(Double.parseDouble(message.toString().split(":")[1]+""));
+                       }
+                       
+                    }else{
+                        race_start_x_point = time; 
+                    }
+                   
+                   if(flag_start_time){
+                       
+                   }else{
+                       start_x_point =  time;
+                   }
+                   
+                   if(flag_end_time){
+                       end_x_point = time; 
+                   }
+                   
             
-                    xAxis.add(time);
-                    
-                    race_start_x_point = time; 
-                    end_x_point = time; 
-                    start_x_point =  time;
+                   if(time>=0 && Double.parseDouble(message.toString().split(":")[2]+"")<900000000){
+                                        
+                        xAxis.add(time);
 
-                    yAxis_sensor1.add(Double.parseDouble(message.toString().split(":")[1]+""));
+                        //race_start_x_point = time; 
+                        //end_x_point = time; 
+                        //start_x_point =  time;
+
+                        yAxis_sensor1.add(Double.parseDouble(message.toString().split(":")[1]+""));
+
+                        //start_x_point =  Double.parseDouble(message.toString().split(":")[2]);
+
+                        plotData(xAxis, yAxis_sensor1, 0, "Emg");
                     
-                    start_x_point =  Double.parseDouble(message.toString().split(":")[2]);
-                    
-                    plotData(xAxis, yAxis_sensor1, 0, "Emg");
-                    
+                   }
                 }
             }
         
@@ -699,50 +762,53 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                    double time = (Double.parseDouble(message.toString().split(":")[3]+"")
                            -initial_time)/1000;
             
-                    xAxis.add(time);
+                   if(time>=0 && Double.parseDouble(message.toString().split(":")[4]+"")<900000000){
+                    
+                        xAxis.add(time);
 
-                    yAxis_sensor1.add(Double.parseDouble(message.toString().split(":")[1]+""));
-                    
-                    yAxis_sensor2.add(Double.parseDouble(message.toString().split(":")[2]+""));
-                    
-                    x_force_val_front.add(
-                            Double.parseDouble(message.toString().split(":")[1]+"")*
-                                    Math.cos(Math.toRadians(front_block_angle)));
-                    
-                    z_force_val_front.add(
-                            Double.parseDouble(message.toString().split(":")[1]+"")*
-                                    Math.sin(Math.toRadians(front_block_angle)));
-                    
-                    x_force_val_rear.add(
-                            Double.parseDouble(message.toString().split(":")[2]+"")*
-                                    Math.cos(Math.toRadians(rear_block_angle)));
-                    
-                    z_force_val_rear.add(
-                            Double.parseDouble(message.toString().split(":")[2]+"")*
-                                    Math.sin(Math.toRadians(rear_block_angle)));
-                    
-                    moment_val_front.add(Double.parseDouble(message.toString().split(":")[1]+"")*DIST_FRONT);
+                        yAxis_sensor1.add(Double.parseDouble(message.toString().split(":")[1]+""));
 
-                    moment_val_rear.add(Double.parseDouble(message.toString().split(":")[2]+"")*DIST_REAR);
+                        yAxis_sensor2.add(Double.parseDouble(message.toString().split(":")[2]+""));
 
-                    
-                    plotData(xAxis, yAxis_sensor1, 0, "load cell");
-                    
-                    plotData(xAxis, yAxis_sensor2, 1, "load cell");
-                    
-                    plotForce(xAxis, x_force_val_front, 0, "Force X Front");
-                    
-                    plotForce(xAxis, z_force_val_front, 1, "Force Z Front");
-                    
-                    plotForce(xAxis, x_force_val_rear, 2, "Force X Rear");
-                    
-                    plotForce(xAxis, z_force_val_rear, 3, "Force Z Rear");
-                    
-                    plotMoment(xAxis, moment_val_front, 0, "Moment Y Front");
-                    
-                    plotMoment(xAxis, moment_val_rear, 1, "Moment Y Rear");
-                    
+                        x_force_val_front.add(
+                                Double.parseDouble(message.toString().split(":")[1]+"")*
+                                        Math.cos(Math.toRadians(front_block_angle)));
+
+                        z_force_val_front.add(
+                                Double.parseDouble(message.toString().split(":")[1]+"")*
+                                        Math.sin(Math.toRadians(front_block_angle)));
+
+                        x_force_val_rear.add(
+                                Double.parseDouble(message.toString().split(":")[2]+"")*
+                                        Math.cos(Math.toRadians(rear_block_angle)));
+
+                        z_force_val_rear.add(
+                                Double.parseDouble(message.toString().split(":")[2]+"")*
+                                        Math.sin(Math.toRadians(rear_block_angle)));
+
+                        moment_val_front.add(Double.parseDouble(message.toString().split(":")[1]+"")*DIST_FRONT);
+
+                        moment_val_rear.add(Double.parseDouble(message.toString().split(":")[2]+"")*DIST_REAR);
+
+
+                        plotData(xAxis, yAxis_sensor1, 0, "load cell");
+
+                        plotData(xAxis, yAxis_sensor2, 1, "load cell");
+
+                        plotForce(xAxis, x_force_val_front, 0, "Force X Front");
+
+                        plotForce(xAxis, z_force_val_front, 1, "Force Z Front");
+
+                        plotForce(xAxis, x_force_val_rear, 2, "Force X Rear");
+
+                        plotForce(xAxis, z_force_val_rear, 3, "Force Z Rear");
+
+                        plotMoment(xAxis, moment_val_front, 0, "Moment Y Front");
+
+                        plotMoment(xAxis, moment_val_rear, 1, "Moment Y Rear");
+
                     //process message and plot
+                   }
                     
                 }
             }
@@ -782,11 +848,13 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                         drawLine("Start race1",race_start_x_point, 0);
 
                         drawLine("Start race2",race_start_x_point, 1);
+                        
+                        temp_arrList_time = new ArrayList<>();
+                        
                     }
                     
                     flag_start_race = true;
                     
-                    temp_arrList_time = new ArrayList<>();
                     //race started
                     
                 }else if(message.toString().split(":")[1].equalsIgnoreCase("mac_id")){
@@ -794,6 +862,7 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                     //device mac id
                     
                 }else{
+                    
                     
                     /*
                     if(temp_arrList_time!=null){
@@ -814,6 +883,31 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                    double time = (Double.parseDouble(message.toString().split(":")[3]+"")
                            -initial_time)/1000;
             
+                   
+                   
+                   if(flag_start_race){
+                        
+                       if(time - race_start_x_point > 5){
+                           
+                       }else{
+                          
+                       }
+                       
+                    }else{
+                        race_start_x_point = time; 
+                    }
+                   
+                   if(flag_start_time){
+                       
+                   }else{
+                       start_x_point =  time;
+                   }
+                   
+                   if(flag_end_time){
+                       end_x_point = time; 
+                   }
+                   
+                   
                    if(time>=0 && Double.parseDouble(message.toString().split(":")[3]+"") < 900000000){
                        
                   
@@ -824,10 +918,6 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                     yAxis_sensor1.add(Double.parseDouble(message.toString().split(":")[1]+""));
                     
                     yAxis_sensor2.add(Double.parseDouble(message.toString().split(":")[2]+""));
-                    
-                    race_start_x_point = time; 
-                    end_x_point = time; 
-                    start_x_point =  time;
                     
                     x_force_val_front.add(
                             Double.parseDouble(message.toString().split(":")[1]+"")*
@@ -900,51 +990,6 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
             }
         
     }
-    
-    
-    public double getReactionTime(ArrayList<Double> time, ArrayList<Double> val){
-        
-        int i=0;
-        
-        double max = Double.MIN_VALUE;
-        for(i=0; i<val.size(); i++){
-            if(val.get(i) > max){
-                max = val.get(i);
-            }else{
-                break;
-            }
-        }
-        
-        ArrayList<Double> new_list = new ArrayList<>();
-        ArrayList<Double> new_list2 = new ArrayList<>();
-        
-        for(int j=0; j<i; j++){
-            
-            new_list.add(val.get(j));
-            new_list2.add(time.get(j));
-            
-        }
-        
-        return getReactTime(max, new_list, new_list2 );
-        
-    }
-    
-    public double getReactTime(double max, ArrayList<Double> val, ArrayList<Double> time_list){
-        
-            double distance = Math.abs(val.get(0) - max);
-            int idx = 0;
-            for(int c = 1; c < val.size(); c++){
-                double cdistance = Math.abs(val.get(c) - max);
-                if(cdistance < distance){
-                    idx = c;
-                    distance = cdistance;
-                    }
-            }
-            double closest_number = val.get(idx);
-            
-            return time_list.get(idx);
-    }
-    
     
     
     public void plotHistoryGraph(String message){
@@ -1086,15 +1131,44 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                    double time = (Double.parseDouble(message.toString().split(":")[2]+"")
                            -initial_time)/1000;
             
+                   
+                   
+                   if(flag_start_race){
+                        
+                       if(time - race_start_x_point > 5){
+                           
+                           getReactiontime();
+                                   
+                       }else{
+                           temp_arrList_time.add(time);
+                           
+                           temp_arrList_val.add(Double.parseDouble(message.toString().split(":")[1]+""));
+                       }
+                       
+                    }else{
+                        race_start_x_point = time; 
+                    }
+                   
+                   if(flag_start_time){
+                       
+                   }else{
+                       start_x_point =  time;
+                   }
+                   
+                   if(flag_end_time){
+                       end_x_point = time; 
+                   }
+                   
+                   
                     xAxis.add(time);
                     
-                    race_start_x_point = time; 
-                    end_x_point = time; 
-                    start_x_point =  time;
+                    //race_start_x_point = time; 
+                    //end_x_point = time; 
+                    //start_x_point =  time;
 
                     yAxis_sensor1.add(Double.parseDouble(message.toString().split(":")[1]+""));
                     
-                    start_x_point =  Double.parseDouble(message.toString().split(":")[2]);
+                    //start_x_point =  Double.parseDouble(message.toString().split(":")[2]);
                     
                     plotData(xAxis, yAxis_sensor1, 0, "Emg");
                     

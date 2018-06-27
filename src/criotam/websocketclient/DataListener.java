@@ -184,7 +184,7 @@ public class DataListener {
                 flag = false;
                 saveinFile();
                 
-                (new storeOnBlockchain()).start();
+                //(new storeOnBlockchain()).start();
             }
         }
     }
@@ -201,7 +201,7 @@ public class DataListener {
                 saveinFile();
                 conn_manager.onClosed(fileName);
                 
-                (new storeOnBlockchain()).start();
+                //(new storeOnBlockchain()).start();
             }
                 
     }
