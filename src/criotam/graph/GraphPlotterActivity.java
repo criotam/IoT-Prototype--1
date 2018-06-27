@@ -545,7 +545,7 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
             
                     //xAxis.add(Double.parseDouble(message.toString().split(":")[4]+""));
 
-                    if(time>=0 && Double.parseDouble(message.toString().split(":")[4]+"")<900000){
+                    if(time>=0 && Double.parseDouble(message.toString().split(":")[4]+"")<900000000){
                         
                         xAxis.add(time);
 
@@ -814,7 +814,7 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                    double time = (Double.parseDouble(message.toString().split(":")[3]+"")
                            -initial_time)/1000;
             
-                   if(time>=0 && Double.parseDouble(message.toString().split(":")[3]+"") < 900000){
+                   if(time>=0 && Double.parseDouble(message.toString().split(":")[3]+"") < 900000000){
                        
                   
                     xAxis.add(time);
@@ -1088,9 +1088,9 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
             
                     xAxis.add(time);
                     
-                    race_start_x_point = Double.parseDouble(message.toString().split(":")[2]+""); 
-                    end_x_point = Double.parseDouble(message.toString().split(":")[2]+""); 
-                    start_x_point =  Double.parseDouble(message.toString().split(":")[2]+"");
+                    race_start_x_point = time; 
+                    end_x_point = time; 
+                    start_x_point =  time;
 
                     yAxis_sensor1.add(Double.parseDouble(message.toString().split(":")[1]+""));
                     
@@ -1236,15 +1236,14 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
 
                         xAxis.add(time);
 
+                        race_start_x_point = time; 
+                        end_x_point = time; 
+                        start_x_point =  time;
                         //xAxis.add(Double.parseDouble(message.toString().split(":")[3]+""));
 
                         yAxis_sensor1.add(Double.parseDouble(message.toString().split(":")[1]+""));
 
                         yAxis_sensor2.add(Double.parseDouble(message.toString().split(":")[2]+""));
-
-                        race_start_x_point = Double.parseDouble(message.toString().split(":")[2]+""); 
-                        end_x_point = Double.parseDouble(message.toString().split(":")[2]+""); 
-                        start_x_point =  Double.parseDouble(message.toString().split(":")[2]+"");
 
                         x_force_val_front.add(
                                 Double.parseDouble(message.toString().split(":")[1]+"")*
