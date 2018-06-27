@@ -131,6 +131,10 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
         this.identifer = identifier;
         setUpPlotArea(tab_count, identifier);
         
+        reaction_time.setVisible(false);
+        start_time.setVisible(false);
+        end_time.setVisible(false);
+        total_time.setVisible(false);
         
     }
 
@@ -338,9 +342,12 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
             chart[index-1].getStyler().setMarkerSize(2);//radius of the marker
             chart[index-1].getStyler().setChartBackgroundColor(new Color(52, 51, 51));
             chart[index-1].getStyler().setChartFontColor(new Color(204, 255, 0));
+            chart[index-1].getStyler().setLegendPosition(LegendPosition.InsideNE);
             //chart[index-1].getStyler().setLegendPosition(LegendPosition.InsideSW);
             chart[index-1].getStyler().setAxisTickLabelsColor(Color.white);
-            
+            //chart[index-1].getStyler().setYAxisMax(50.0);
+            //chart[index-1].getStyler().setYAxisMin(-50.0);
+                    
             panel[index-1] = new XChartPanel<XYChart>(chart[index-1]);
 
             panel[index-1].setBackground(Color.WHITE);
@@ -439,9 +446,18 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
     public void plotData(ArrayList<Double> time, ArrayList<Double> val,
             int index, String series){
         
-        chart[index].updateXYSeries(series, time, val, null);
-        panel[index].revalidate();
-        panel[index].repaint();
+        
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+
+        @Override
+        public void run() {
+
+          chart[index].updateXYSeries(series, time, val, null);
+          panel[index].revalidate();
+          panel[index].repaint();
+        
+        }
+      });
         
     }
     
@@ -470,18 +486,35 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
     public void plotForce(ArrayList<Double> time, ArrayList<Double> val,
             int index, String series){
         
-        force_chart[index].updateXYSeries(series, time, val, null);
-        force_panel[index].revalidate();
-        force_panel[index].repaint();
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+
+        @Override
+        public void run() {
+
+          force_chart[index].updateXYSeries(series, time, val, null);
+          force_panel[index].revalidate();
+          force_panel[index].repaint();
+        
+        }
+      });
         
     }
     
     public void plotMoment(ArrayList<Double> time, ArrayList<Double> val,
             int index, String series){
   
-        moment_chart[index].updateXYSeries(series, time, val, null);
-        moment_panel[index].revalidate();
-        moment_panel[index].repaint();
+        
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+
+        @Override
+        public void run() {
+
+           moment_chart[index].updateXYSeries(series, time, val, null);
+           moment_panel[index].revalidate();
+           moment_panel[index].repaint();
+        
+        }
+      });
         
     }
     
@@ -514,28 +547,60 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
     
     ArrayList<Double> temp_arrList_val = new ArrayList<>();
     
-    boolean flag_start_race = false, flag_start_time = false, flag_end_time = false;
+    boolean flag_start_race = false, flag_start_time = false, flag_end_time = false,
+            flag_reaction_time = false;
     
+    
+    
+    public class reactiontime extends Thread{
+        
+        @Override
+        public void run(){
+            getReactiontime();
+        }
+        
+    }
     
     
     public void getReactiontime(){
         
         int i=0;
         
+        double max_time = 0, prev_val = Double.MIN_VALUE;
+                
         double max = Double.MIN_VALUE;
         for(i=0; i<temp_arrList_val.size(); i++){
             if(temp_arrList_val.get(i) > max){
                 max = temp_arrList_val.get(i);
+                max_time = temp_arrList_time.get(i);
             }
         }
         
-        System.out.println("MAX VAL:"+ max);
+        System.out.println("MAX VAL:"+ max+ "max_time" + max_time);
         
-        max = 0.1*max;
+        max = 0.05*max;
         
         double distance = Math.abs(temp_arrList_val.get(0) - max);
             int idx = 0;
-            for(int c = 1; c < temp_arrList_val.size(); c++){
+            for(int c = 1; c < temp_arrList_val.size() ; c++){
+                
+                if(prev_val > temp_arrList_val.get(c)){
+                    
+                    if(prev_val > max){
+                             
+                        break;
+                        
+                    }
+                }
+                
+                prev_val = temp_arrList_val.get(c);
+                        
+                if(temp_arrList_time.get(c) > max_time){
+                  
+                    break;
+                    
+                }
+                
                 double cdistance = Math.abs(temp_arrList_val.get(c) - max);
                 if(cdistance < distance){
                     idx = c;
@@ -543,23 +608,18 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                     }
             }
         
+            reaction_time.setText("Reaction time: "+ 
+                    ((double)Math.round((temp_arrList_time.get(idx) - race_start_x_point) * 1000d) / 1000d) +"s");
+            
             System.out.println("Reaction point:"+ idx + "time" + temp_arrList_time.get(idx));
             
-            System.out.println("Reaction time: "+ (temp_arrList_time.get(idx) - race_start_x_point));
+            System.out.println("Reaction time: "+
+                    ((double)Math.round((temp_arrList_time.get(idx) - race_start_x_point) * 1000d) / 1000d) +"s");
             
     }
     
     public void plotGraph(String message){
            
-        //System.out.println("Received message at GraphPlotter: " + message);
-  
-        //if(initial_timestamp == -1){
-          //      initial_timestamp = getTimeStamp(); 
-            //}
-            
-            //double time = (getTimeStamp()-initial_time)/1000;
-            
-            
         if(message.toString().split(":")[0].equalsIgnoreCase("identifier_exp3fp")){
         
                 if(message.toString().split(":")[1].equalsIgnoreCase("mac_id")){
@@ -661,7 +721,8 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                     
                     if(!flag_start_time){
                         
-                        drawLine("Start time",start_x_point, 0);
+                        drawLine("Start time",start_x_point,
+                                yAxis_sensor1.get(yAxis_sensor1.size()-1), 0);
                     
                     }
                     
@@ -670,7 +731,8 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                 }else if(message.toString().split(":")[1].equalsIgnoreCase("end_time") ){
                     
                     if(!flag_end_time){
-                       drawLine("End time",end_x_point, 0);
+                       drawLine("End time",end_x_point,
+                               yAxis_sensor1.get(yAxis_sensor1.size()-1),0);
                     }
                     
                     flag_end_time = true;
@@ -679,7 +741,8 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                 else if(message.toString().split(":")[1].equalsIgnoreCase("start_race")){
                     
                     if(!flag_start_race){
-                        drawLine("Start race",race_start_x_point, 0);
+                        drawLine("Start race",race_start_x_point,
+                                yAxis_sensor1.get(yAxis_sensor1.size()-1),0);
                     }
                     
                     flag_start_race = true;
@@ -704,7 +767,11 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                         
                        if(time - race_start_x_point > 5){
                            
-                           getReactiontime();
+                           reaction_time.setVisible(true);
+                           
+                           (new reactiontime()).start();
+                           
+                           flag_reaction_time = true;
                                    
                        }else{
                            temp_arrList_time.add(time);
@@ -718,12 +785,28 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                    
                    if(flag_start_time){
                        
+                       start_time.setVisible(true);
+                       
+                       start_time.setText("Start time:"+ start_x_point + "s");
+                              
                    }else{
                        start_x_point =  time;
                    }
                    
                    if(flag_end_time){
-                       end_x_point = time; 
+                       
+                       
+                       end_time.setVisible(true);
+                       
+                       end_time.setText("End time:"+ end_x_point + "s");
+                       
+                       total_time.setVisible(true);
+                       
+                       total_time.setText("Total time:"+ (end_x_point - start_x_point) + "s");
+                       
+                   }else{
+                       
+                       end_x_point = time;
                    }
                    
             
@@ -819,9 +902,11 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                 if(message.toString().split(":")[1].equalsIgnoreCase("start_time")){                  
                     
                     if(!flag_start_time){
-                        drawLine("Start time1",start_x_point, 0);
+                        drawLine("Start time1",start_x_point,
+                                yAxis_sensor1.get(yAxis_sensor1.size()-1),0);
 
-                        drawLine("Start time2",start_x_point, 1);
+                        drawLine("Start time2",start_x_point,
+                                yAxis_sensor2.get(yAxis_sensor2.size()-1),1);
                     }
                     
                     flag_start_time = true;
@@ -831,9 +916,11 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                     
                     if(!flag_end_time){
                       
-                        drawLine("End time1",end_x_point, 0);
+                        drawLine("End time1",end_x_point,
+                                yAxis_sensor1.get(yAxis_sensor1.size()-1),0);
 
-                        drawLine("End time2",end_x_point, 1);
+                        drawLine("End time2",end_x_point,
+                                yAxis_sensor2.get(yAxis_sensor2.size()-1),1);
                     
                     }
                     
@@ -845,9 +932,11 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                     
                     if( !flag_start_race) { 
                         
-                        drawLine("Start race1",race_start_x_point, 0);
+                        drawLine("Start race1",race_start_x_point,
+                                yAxis_sensor1.get(yAxis_sensor1.size()-1),0);
 
-                        drawLine("Start race2",race_start_x_point, 1);
+                        drawLine("Start race2",race_start_x_point,
+                                yAxis_sensor2.get(yAxis_sensor2.size()-1),1);
                         
                         temp_arrList_time = new ArrayList<>();
                         
@@ -863,18 +952,6 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                     
                 }else{
                     
-                    
-                    /*
-                    if(temp_arrList_time!=null){
-                        if(time-race_start_x_point>5){
-                            System.out.println(getReactionTime(temp_arrList_time, temp_arrList_val));
-                            temp_arrList_time = null;
-                        }else{
-                            temp_arrList_time.add(time);
-                            temp_arrList_val.add(Double.parseDouble(message.toString().split(":")[1]+""));
-                        }
-                    }
-                    */
                     
                     if(initial_time == -1){
                         initial_time = Double.parseDouble(message.toString().split(":")[3]+""); 
@@ -899,12 +976,28 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                    
                    if(flag_start_time){
                        
+                       start_time.setVisible(true);
+                       
+                       start_time.setText("Start time:"+ start_x_point + "s");
+                              
                    }else{
                        start_x_point =  time;
                    }
                    
                    if(flag_end_time){
-                       end_x_point = time; 
+                       
+                       
+                       end_time.setVisible(true);
+                       
+                       end_time.setText("End time:"+ end_x_point + "s");
+                       
+                       total_time.setVisible(true);
+                       
+                       total_time.setText("Total time:"+ (end_x_point - start_x_point) + "s");
+                       
+                   }else{
+                       
+                       end_x_point = time;
                    }
                    
                    
@@ -1097,14 +1190,16 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                 if(message.toString().split(":")[1].equalsIgnoreCase("start_time")){
                     
                     if(!flag_start_time)
-                        drawLine("Start time",start_x_point, 0);
+                        drawLine("Start time",start_x_point,
+                                yAxis_sensor1.get(yAxis_sensor1.size()-1),0);
                     
                     flag_start_time = true;
                     
                 }else if(message.toString().split(":")[1].equalsIgnoreCase("end_time")){
                     
                     if(!flag_end_time)
-                        drawLine("End time",end_x_point, 0);
+                        drawLine("End time",end_x_point,
+                                yAxis_sensor1.get(yAxis_sensor1.size()-1),0);
                     
                     flag_end_time = true;
                     
@@ -1112,7 +1207,8 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                 else if(message.toString().split(":")[1].equalsIgnoreCase("start_race")){
                     
                     if(!flag_start_race)
-                        drawLine("Start race",race_start_x_point, 0);
+                        drawLine("Start race",race_start_x_point,
+                                yAxis_sensor1.get(yAxis_sensor1.size()-1),0);
                     
                     flag_start_race = true;
                     
@@ -1137,7 +1233,13 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                         
                        if(time - race_start_x_point > 5){
                            
-                           getReactiontime();
+                           if(!flag_reaction_time){
+                               
+                               reaction_time.setVisible(true);
+        
+                               (new reactiontime()).start();
+                               flag_reaction_time = true;
+                           }
                                    
                        }else{
                            temp_arrList_time.add(time);
@@ -1151,13 +1253,30 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                    
                    if(flag_start_time){
                        
+                       start_time.setVisible(true);
+                       
+                       start_time.setText("Start time:"+ start_x_point + "s");
+                              
                    }else{
                        start_x_point =  time;
                    }
                    
                    if(flag_end_time){
-                       end_x_point = time; 
+                       
+                       
+                       end_time.setVisible(true);
+                       
+                       end_time.setText("End time:"+ end_x_point + "s");
+                       
+                       total_time.setVisible(true);
+                       
+                       total_time.setText("Total time:"+ (end_x_point - start_x_point) + "s");
+                       
+                   }else{
+                       
+                       end_x_point = time;
                    }
+                   
                    
                    
                     xAxis.add(time);
@@ -1246,9 +1365,11 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                 if(message.toString().split(":")[1].equalsIgnoreCase("start_time")){                  
                     
                     if(!flag_start_time){
-                        drawLine("Start time1",start_x_point, 0);
+                        drawLine("Start time1",start_x_point,
+                                yAxis_sensor1.get(yAxis_sensor1.size()-1),0);
 
-                        drawLine("Start time2",start_x_point, 1);
+                        drawLine("Start time2",start_x_point,
+                                yAxis_sensor2.get(yAxis_sensor2.size()-1),1);
                     }
                     
                     flag_start_time = true;
@@ -1258,9 +1379,11 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                     
                     if(!flag_end_time){
                       
-                        drawLine("End time1",end_x_point, 0);
+                        drawLine("End time1",end_x_point,
+                                yAxis_sensor1.get(yAxis_sensor1.size()-1),0);
 
-                        drawLine("End time2",end_x_point, 1);
+                        drawLine("End time2",end_x_point,
+                                yAxis_sensor2.get(yAxis_sensor2.size()-1),1);
                     
                     }
                     
@@ -1272,9 +1395,11 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                     
                     if( !flag_start_race) { 
                         
-                        drawLine("Start race1",race_start_x_point, 0);
+                        drawLine("Start race1",race_start_x_point,
+                                yAxis_sensor1.get(yAxis_sensor1.size()-1),0);
 
-                        drawLine("Start race2",race_start_x_point, 1);
+                        drawLine("Start race2",race_start_x_point,
+                                yAxis_sensor2.get(yAxis_sensor2.size()-1),1);
                     }
                     
                     flag_start_race = true;
@@ -1288,31 +1413,63 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                     
                 }else{
                     
-                    /*
-                    if(temp_arrList_time!=null){
-                        if(time-race_start_x_point>5){
-                            System.out.println(getReactionTime(temp_arrList_time, temp_arrList_val));
-                            temp_arrList_time = null;
-                        }else{
-                            temp_arrList_time.add(time);
-                            temp_arrList_val.add(Double.parseDouble(message.toString().split(":")[1]+""));
-                        }
-                    }
-                    */
+                  
                     if(initial_time == -1){
                         initial_time = Double.parseDouble(message.toString().split(":")[3]+""); 
                     }
-            
-                   double time = (Double.parseDouble(message.toString().split(":")[3]+"")
+                    
+                    
+                    
+                    double time = (Double.parseDouble(message.toString().split(":")[3]+"")
                            -initial_time)/1000;
+                    
+                    
+                    if(flag_start_race){
+                        
+                       if(time - race_start_x_point > 5){
+                           
+                       }else{
+                          
+                       }
+                       
+                    }else{
+                        race_start_x_point = time; 
+                    }
+                    
+                    if(flag_start_time){
+                       
+                       start_time.setVisible(true);
+                       
+                       start_time.setText("Start time:"+ start_x_point + "s");
+                              
+                   }else{
+                       start_x_point =  time;
+                   }
+                   
+                   if(flag_end_time){
+                                            
+                       end_time.setVisible(true);
+                       
+                       end_time.setText("End time:"+ end_x_point + "s");
+                       
+                       total_time.setVisible(true);
+                       
+                       total_time.setText("Total time:"+ (end_x_point - start_x_point) + "s");
+                       
+                   }else{
+                       
+                       end_x_point = time;
+                   }
+                                      
             
+                   
                    if(time>=0 && Double.parseDouble(message.toString().split(":")[3]+"")<900000){
 
                         xAxis.add(time);
 
-                        race_start_x_point = time; 
-                        end_x_point = time; 
-                        start_x_point =  time;
+                        //race_start_x_point = time; 
+                        //end_x_point = time; 
+                        //start_x_point =  time;
                         //xAxis.add(Double.parseDouble(message.toString().split(":")[3]+""));
 
                         yAxis_sensor1.add(Double.parseDouble(message.toString().split(":")[1]+""));
@@ -1402,7 +1559,7 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
     }
     
     
-    public void drawLine(String series_name, double xpoint, int index){
+    public void drawLine(String series_name, double xpoint, double ypoint, int index){
         
         System.out.println("Called");
         
@@ -1413,8 +1570,8 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
         x_point.add(xpoint);
         
         ArrayList<Double> y_point = new ArrayList();
-        y_point.add(0.0);
-        y_point.add(5.0);
+        y_point.add(ypoint-5.0);
+        y_point.add(ypoint + 5.0);
         
         int i = 0;
         
@@ -1424,9 +1581,18 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
         series.setMarker(SeriesMarkers.CIRCLE);
         series.setMarkerColor(Color.RED);
         
+        
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+
+        @Override
+        public void run() {
+
+          panel[index].revalidate();
+          panel[index].repaint();
+        
+        }
+      });
    
-        panel[index].revalidate();
-        panel[index].repaint();
     //}//
         
     }
@@ -1456,6 +1622,10 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
         actionbar = new javax.swing.JPanel();
         back_tab4 = new javax.swing.JLabel();
         panel_tab4 = new javax.swing.JPanel();
+        reaction_time = new javax.swing.JLabel();
+        start_time = new javax.swing.JLabel();
+        end_time = new javax.swing.JLabel();
+        total_time = new javax.swing.JLabel();
 
         back_tab1.setVisible(false);
         back_tab2.setVisible(false);
@@ -1473,17 +1643,44 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
         back_tab1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         back_tab1.setIcon(new ImageIcon(new javax.swing.ImageIcon(getClass().getResource("/drawables/back.jpg")).getImage().getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
 
+        
+        reaction_time.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
+        reaction_time.setText("Reaction Time");
+
+        start_time.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
+        start_time.setText("Start Time");
+
+        end_time.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
+        end_time.setText("End Time");
+
+        total_time.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
+        total_time.setText("Total Time");
+
+        
         javax.swing.GroupLayout actionbar2Layout = new javax.swing.GroupLayout(actionbar2);
         actionbar2.setLayout(actionbar2Layout);
         actionbar2Layout.setHorizontalGroup(
             actionbar2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(actionbar2Layout.createSequentialGroup()
                 .addComponent(back_tab1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 585, Short.MAX_VALUE))
+                .addGap(46, 46, 46)
+                .addComponent(reaction_time)
+                .addGap(61, 61, 61)
+                .addComponent(start_time)
+                .addGap(70, 70, 70)
+                .addComponent(end_time)
+                .addGap(52, 52, 52)
+                .addComponent(total_time)
+                .addContainerGap(76, Short.MAX_VALUE))
         );
         actionbar2Layout.setVerticalGroup(
             actionbar2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(back_tab1, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
+            .addComponent(back_tab1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, actionbar2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(reaction_time, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(start_time)
+                .addComponent(end_time, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(total_time, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         panel_tab1.setBackground(new java.awt.Color(255, 255, 255));
@@ -1666,6 +1863,10 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         actionbar2 = new javax.swing.JPanel();
         back_tab1 = new javax.swing.JLabel();
+        reaction_time = new javax.swing.JLabel();
+        start_time = new javax.swing.JLabel();
+        end_time = new javax.swing.JLabel();
+        total_time = new javax.swing.JLabel();
         panel_tab1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         actionbar1 = new javax.swing.JPanel();
@@ -1695,17 +1896,42 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
         back_tab1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         back_tab1.setIcon(new ImageIcon(new javax.swing.ImageIcon(getClass().getResource("/drawables/back.jpg")).getImage().getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
 
+        reaction_time.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
+        reaction_time.setText("Reaction Time");
+
+        start_time.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
+        start_time.setText("Start Time");
+
+        end_time.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
+        end_time.setText("End Time");
+
+        total_time.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
+        total_time.setText("Total Time");
+
         javax.swing.GroupLayout actionbar2Layout = new javax.swing.GroupLayout(actionbar2);
         actionbar2.setLayout(actionbar2Layout);
         actionbar2Layout.setHorizontalGroup(
             actionbar2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(actionbar2Layout.createSequentialGroup()
                 .addComponent(back_tab1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 585, Short.MAX_VALUE))
+                .addGap(46, 46, 46)
+                .addComponent(reaction_time)
+                .addGap(61, 61, 61)
+                .addComponent(start_time)
+                .addGap(70, 70, 70)
+                .addComponent(end_time)
+                .addGap(52, 52, 52)
+                .addComponent(total_time)
+                .addContainerGap(76, Short.MAX_VALUE))
         );
         actionbar2Layout.setVerticalGroup(
             actionbar2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(back_tab1, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
+            .addComponent(back_tab1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, actionbar2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(reaction_time, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(start_time)
+                .addComponent(end_time, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(total_time, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         panel_tab1.setBackground(new java.awt.Color(255, 255, 255));
@@ -1956,6 +2182,7 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
     private javax.swing.JLabel back_tab2;
     private javax.swing.JLabel back_tab3;
     private javax.swing.JLabel back_tab4;
+    private javax.swing.JLabel end_time;
     private javax.swing.JPanel graphPanel;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -1965,6 +2192,9 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
     private javax.swing.JPanel panel_tab2;
     private javax.swing.JPanel panel_tab3;
     private javax.swing.JPanel panel_tab4;
+    private javax.swing.JLabel reaction_time;
+    private javax.swing.JLabel start_time;
     private javax.swing.JTabbedPane tab_container;
+    private javax.swing.JLabel total_time;
     // End of variables declaration//GEN-END:variables
 }
