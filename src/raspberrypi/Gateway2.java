@@ -19,7 +19,7 @@ public class Gateway2 {
 	private String mc_id_ir_start = "84:F3:EB:81:4B:3F";
 	private String mc_id_sb = "5C:CF:7F:69:1F:75";
 	
-	private String mc_id_emg = "A0:20:A6:1A:DC:80";
+	//private String mc_id_emg = "A0:20:A6:1A:DC:80";
 	
 	private static boolean flag_end = false, flag_start = false, flag_sb = false, flag_emg = false;
 	
@@ -55,9 +55,12 @@ public class Gateway2 {
                 }
             }
             
-            data_buffer.add("identifier_exp2emg:start_race");
+            sendStartRacetoEMG(session);
+            //data_buffer.add("identifier_exp2emg:start_race");
             
-        }else if(message.equalsIgnoreCase("identifier_exp2lc:mac_id")) {
+        }
+        
+        else if(message.equalsIgnoreCase("identifier_exp2lc:mac_id")) {
         	
         	if(message.split(":")[2].trim().equalsIgnoreCase(mc_id_ir_end)) {
         		
@@ -95,22 +98,7 @@ public class Gateway2 {
         		session.close();
         	}
         	
-        }else if(message.equalsIgnoreCase("identifier_exp2emg:mac_id")) {
-        	
-			if(message.split(":")[2].trim().equalsIgnoreCase(mc_id_emg)) {
-				
-				System.out.println("EMG");
-				flag_emg = true;
-			        		
-			}else {
-				System.out.println("INVALID MAC ID");
-				flag_emg = false;
-				
-				session.close();
-			}
-			
         }
-        
         
     	data_buffer.add(message);
     	sendData(session);
@@ -153,33 +141,36 @@ public class Gateway2 {
             	}
             }
             
-            if(BroadCastListener.gateway2_handler_emg==null) {
-            	try {
-    				session.getBasicRemote().sendText("Unreachable local server-:(");
-    			} catch (IOException e) {
-    				// TODO Auto-generated catch block
-    				e.printStackTrace();
-    			}
-            }else if(BroadCastListener.gateway2_handler_emg.isClosed()) {
-            	try {
-    				session.getBasicRemote().sendText("Unreachable local server-:(");
-    			} catch (IOException e) {
-    				// TODO Auto-generated catch block
-    				e.printStackTrace();
-    			}
-            }else {
-            
-            	//case exp1lc gwh1, exp2lc gwh2, exp2emg gwh3....
-            	if(data_buffer.peek().toString().contains("identifier_exp2emg")) {
-            		//add actual code here
-            		BroadCastListener.gateway2_handler_emg.sendMessage(data_buffer.peek().toString());
-            	}
-            }
-        
     		data_buffer.remove();
     		
     	}
     }
 
 
+   public void sendStartRacetoEMG(Session session) {
+	   
+	   if(BroadCastListener.gateway2_handler_emg==null) {
+       	try {
+				session.getBasicRemote().sendText("Unreachable local server-:(");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+       }else if(BroadCastListener.gateway2_handler_emg.isClosed()) {
+       	try {
+				session.getBasicRemote().sendText("Unreachable local server-:(");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+       }else {
+       
+       	//case exp1lc gwh1, exp2lc gwh2, exp2emg gwh3....
+       	//if(data_buffer.peek().toString().contains("identifier_exp2emg")) {
+       		//add actual code here
+       		BroadCastListener.gateway2_handler_emg.sendMessage("identifier_exp2emg:start_race");
+       	//}
+       }
+   
+   }
 }
