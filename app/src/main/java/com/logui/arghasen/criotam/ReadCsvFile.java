@@ -188,7 +188,7 @@ public class ReadCsvFile extends AppCompatActivity{
                     double time = (Double.parseDouble(msg.toString().split(":")[4] + "")
                             - initial_time) / 1000;
 
-                    if(time>=0 && Double.parseDouble(msg.toString().split(":")[4] + "")<900000) {
+                    if(time>=0 && Double.parseDouble(msg.toString().split(":")[4] + "")<900000000) {
 
                         dataPoints1[i] = new DataPoint(time
                                 , (Double.parseDouble(msg.split(":")[1])));
@@ -234,7 +234,7 @@ public class ReadCsvFile extends AppCompatActivity{
                     double time = (Double.parseDouble(msg.toString().split(":")[2] + "")
                             - initial_time) / 1000;
 
-                    if(time>=0 && Double.parseDouble(msg.toString().split(":")[2] + "")<900000) {
+                    if(time>=0 && Double.parseDouble(msg.toString().split(":")[2] + "")<900000000) {
 
                         dataPoints1[i] = new DataPoint(time
                                 , (Double.parseDouble(msg.split(":")[1])));
@@ -261,7 +261,7 @@ public class ReadCsvFile extends AppCompatActivity{
                     double time = (Double.parseDouble(msg.toString().split(":")[3] + "")
                             - initial_time) / 1000;
 
-                    if(time>=0 && Double.parseDouble(msg.toString().split(":")[3] + "")<900000) {
+                    if(time>=0 && Double.parseDouble(msg.toString().split(":")[3] + "")<900000000) {
 
                         dataPoints1[i] = new DataPoint(time
                                 , (Double.parseDouble(msg.split(":")[1])));
@@ -304,7 +304,7 @@ public class ReadCsvFile extends AppCompatActivity{
                     double time = (Double.parseDouble(msg.toString().split(":")[3] + "")
                             - initial_time) / 1000;
 
-                    if(time>=0 && Double.parseDouble(msg.toString().split(":")[3] + "")<900000) {
+                    if(time>=0 && Double.parseDouble(msg.toString().split(":")[3] + "")<900000000) {
 
                         dataPoints1[i] = new DataPoint(time
                                 , (Double.parseDouble(msg.split(":")[1])));
@@ -334,7 +334,7 @@ public class ReadCsvFile extends AppCompatActivity{
                     double time = (Double.parseDouble(msg.toString().split(":")[2] + "")
                             - initial_time) / 1000;
 
-                    if(time>=0 && Double.parseDouble(msg.toString().split(":")[3] + "")<900000) {
+                    if(time>=0 && Double.parseDouble(msg.toString().split(":")[3] + "")<900000000) {
 
                         dataPoints1[i] = new DataPoint(time
                                 , (Double.parseDouble(msg.split(":")[1])));
@@ -346,17 +346,36 @@ public class ReadCsvFile extends AppCompatActivity{
             }
         }
 
+        System.out.println("value of i:"+ i);
+
+        DataPoint[] dataPoint1 = new DataPoint[i];
+
+        DataPoint[] dataPoint2 = new DataPoint[i];
+
+        DataPoint[] dataPoint3 = new DataPoint[i];
+
+        for(int j = 0; j < i; j++){
+
+            dataPoint1[j] = dataPoints1[j];
+
+            dataPoint2[j] = dataPoints2[j];
+
+            dataPoint3[j] = dataPoints3[j];
+        }
+
+        System.out.println("size of datapoint:"+ dataPoint1.length+":"+dataPoint2.length+""+dataPoint3.length);
+
         if(index == 1){
 
-            series1.resetData(dataPoints1);
+            series1.resetData(dataPoint1);
             graphView.addSeries(series1);
 
         }else if(index == 2){
 
-            series1.resetData(dataPoints1);
+            series1.resetData(dataPoint1);
             graphView.addSeries(series1);
 
-            series2.resetData(dataPoints2);
+            series2.resetData(dataPoint2);
             graphView.addSeries(series2);
             series2.setColor(Color.RED);
             //graphView.getGridLabelRenderer().setVerticalLabelsSecondScaleColor(Color.RED);
@@ -368,15 +387,15 @@ public class ReadCsvFile extends AppCompatActivity{
 
         }else if(index == 3){
 
-            series1.resetData(dataPoints1);
+            series1.resetData(dataPoint1);
             graphView.addSeries(series1);
 
-            series2.resetData(dataPoints2);
+            series2.resetData(dataPoint2);
             graphView.addSeries(series2);
             series2.setColor(Color.RED);
             //graphView.getGridLabelRenderer().setVerticalLabelsSecondScaleColor(Color.RED);
 
-            series3.resetData(dataPoints3);
+            series3.resetData(dataPoint3);
             graphView.addSeries(series3);
             series3.setColor(Color.GREEN);
 

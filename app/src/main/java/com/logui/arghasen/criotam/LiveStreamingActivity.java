@@ -232,7 +232,7 @@ public class LiveStreamingActivity extends AppCompatActivity {
                             - initial_time) / 1000;
 
 
-                    if(time>=0 && Double.parseDouble(message.toString().split(":")[4] + "")<900000) {
+                    if(time>=0 && Double.parseDouble(message.toString().split(":")[4] + "")<900000000) {
 
                         stream_points1.appendData(new DataPoint(time
                                 , (Double.parseDouble(message.split(":")[1]))), true, 1000);
@@ -277,7 +277,7 @@ public class LiveStreamingActivity extends AppCompatActivity {
                     double time = (Double.parseDouble(message.toString().split(":")[2] + "")
                             - initial_time) / 1000;
 
-                    if(time>=0 && Double.parseDouble(message.toString().split(":")[2] + "")<900000) {
+                    if(time>=0 && Double.parseDouble(message.toString().split(":")[2] + "")<900000000) {
 
                         stream_points1.appendData(new DataPoint(time
                                 , (Double.parseDouble(message.split(":")[1]))), true, 1000);
@@ -314,7 +314,7 @@ public class LiveStreamingActivity extends AppCompatActivity {
                     double time = (Double.parseDouble(message.toString().split(":")[3] + "")
                             - initial_time) / 1000;
 
-                    if(time>=0 && Double.parseDouble(message.toString().split(":")[3] + "")<900000) {
+                    if(time>=0 && Double.parseDouble(message.toString().split(":")[3] + "")<900000000) {
 
                         stream_points1.appendData(new DataPoint(time
                                 , (Double.parseDouble(message.split(":")[1]))), true, 1000);
@@ -369,7 +369,7 @@ public class LiveStreamingActivity extends AppCompatActivity {
                     double time = (Double.parseDouble(message.toString().split(":")[3] + "")
                             - initial_time) / 1000;
 
-                    if(time>=0 && Double.parseDouble(message.toString().split(":")[3] + "")<900000) {
+                    if(time>=0 && Double.parseDouble(message.toString().split(":")[3] + "")<900000000) {
 
                         stream_points1.appendData(new DataPoint(time
                                 , (Double.parseDouble(message.split(":")[1]))), true, 100000);
@@ -401,7 +401,7 @@ public class LiveStreamingActivity extends AppCompatActivity {
                     double time = (Double.parseDouble(message.toString().split(":")[2] + "")
                             - initial_time) / 1000;
 
-                    if(time>=0 && Double.parseDouble(message.toString().split(":")[2] + "")<900000) {
+                    if(time>=0 && Double.parseDouble(message.toString().split(":")[2] + "")<900000000) {
 
                         stream_points1.appendData(new DataPoint(time
                                 , (Double.parseDouble(message.split(":")[1]))), true, 1000);
