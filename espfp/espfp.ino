@@ -2,8 +2,8 @@
 #include <ESP8266WiFi.h>
 #include <WebSocketClient.h>
 
-const char* ssid     = "RasPiVirus";
-const char* password = "brainlara";
+const char* ssid     = "RasPiVirus";            /*Enter hotspot name*/
+const char* password = "brainlara";             /*Enter Password*/
 char path[] = "/IOTGateway/gateway3";
 char host[] = "192.168.137.1";
   
