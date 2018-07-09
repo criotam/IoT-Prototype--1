@@ -1636,14 +1636,13 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
         setBackground(new java.awt.Color(255, 255, 255));
 
         graphPanel.setBackground(new java.awt.Color(255, 255, 255));
-
+        
         actionbar2.setBackground(new java.awt.Color(255, 255, 255));
         actionbar2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
 
         back_tab1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         back_tab1.setIcon(new ImageIcon(new javax.swing.ImageIcon(getClass().getResource("/drawables/back.jpg")).getImage().getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
 
-        
         reaction_time.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
         reaction_time.setText("Reaction Time");
 
@@ -1656,14 +1655,13 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
         total_time.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
         total_time.setText("Total Time");
 
-        
         javax.swing.GroupLayout actionbar2Layout = new javax.swing.GroupLayout(actionbar2);
         actionbar2.setLayout(actionbar2Layout);
         actionbar2Layout.setHorizontalGroup(
             actionbar2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(actionbar2Layout.createSequentialGroup()
                 .addComponent(back_tab1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(46, 46, 46)
+                .addGap(37, 37, 37)
                 .addComponent(reaction_time)
                 .addGap(61, 61, 61)
                 .addComponent(start_time)
@@ -1671,18 +1669,19 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                 .addComponent(end_time)
                 .addGap(52, 52, 52)
                 .addComponent(total_time)
-                .addContainerGap(76, Short.MAX_VALUE))
+                .addContainerGap(85, Short.MAX_VALUE))
         );
         actionbar2Layout.setVerticalGroup(
             actionbar2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(back_tab1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, actionbar2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(reaction_time, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(start_time)
-                .addComponent(end_time, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(start_time, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(total_time, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(end_time, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(back_tab1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
+        
         panel_tab1.setBackground(new java.awt.Color(255, 255, 255));
         panel_tab1.setForeground(new java.awt.Color(255, 255, 255));
 
@@ -1914,7 +1913,7 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
             actionbar2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(actionbar2Layout.createSequentialGroup()
                 .addComponent(back_tab1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(46, 46, 46)
+                .addGap(37, 37, 37)
                 .addComponent(reaction_time)
                 .addGap(61, 61, 61)
                 .addComponent(start_time)
@@ -1922,16 +1921,16 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
                 .addComponent(end_time)
                 .addGap(52, 52, 52)
                 .addComponent(total_time)
-                .addContainerGap(76, Short.MAX_VALUE))
+                .addContainerGap(85, Short.MAX_VALUE))
         );
         actionbar2Layout.setVerticalGroup(
             actionbar2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(back_tab1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, actionbar2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(reaction_time, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(start_time)
-                .addComponent(end_time, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(start_time, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(total_time, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(end_time, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(back_tab1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         panel_tab1.setBackground(new java.awt.Color(255, 255, 255));
@@ -1945,7 +1944,7 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
         );
         panel_tab1Layout.setVerticalGroup(
             panel_tab1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 442, Short.MAX_VALUE)
+            .addGap(0, 456, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -1995,7 +1994,7 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
         );
         panel_tab2Layout.setVerticalGroup(
             panel_tab2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 442, Short.MAX_VALUE)
+            .addGap(0, 456, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -2044,7 +2043,7 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
         );
         panel_tab3Layout.setVerticalGroup(
             panel_tab3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 442, Short.MAX_VALUE)
+            .addGap(0, 456, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -2093,7 +2092,7 @@ public class GraphPlotterActivity extends javax.swing.JFrame {
         );
         panel_tab4Layout.setVerticalGroup(
             panel_tab4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 442, Short.MAX_VALUE)
+            .addGap(0, 456, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);

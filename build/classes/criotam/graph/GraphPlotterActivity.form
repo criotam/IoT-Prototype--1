@@ -116,7 +116,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="back_tab1" min="-2" pref="26" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
                               <Component id="reaction_time" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="61" max="-2" attributes="0"/>
                               <Component id="start_time" min="-2" max="-2" attributes="0"/>
@@ -124,19 +124,19 @@
                               <Component id="end_time" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
                               <Component id="total_time" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="76" max="32767" attributes="0"/>
+                              <EmptySpace pref="85" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="back_tab1" max="32767" attributes="0"/>
                           <Group type="103" alignment="1" groupAlignment="3" attributes="0">
                               <Component id="reaction_time" alignment="3" max="32767" attributes="0"/>
-                              <Component id="start_time" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="end_time" alignment="3" min="-2" pref="27" max="-2" attributes="0"/>
+                              <Component id="start_time" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
                               <Component id="total_time" alignment="3" min="-2" pref="27" max="-2" attributes="0"/>
                           </Group>
+                          <Component id="end_time" max="32767" attributes="0"/>
+                          <Component id="back_tab1" alignment="0" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                   </Layout>
@@ -201,7 +201,7 @@
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <EmptySpace min="0" pref="442" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="456" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                   </Layout>
@@ -293,7 +293,7 @@
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <EmptySpace min="0" pref="442" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="456" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                   </Layout>
@@ -382,7 +382,7 @@
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <EmptySpace min="0" pref="442" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="456" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                   </Layout>
@@ -471,7 +471,7 @@
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <EmptySpace min="0" pref="442" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="456" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                   </Layout>
