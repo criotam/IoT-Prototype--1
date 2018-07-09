@@ -5,10 +5,12 @@
  */
 package com.raspberrypi.gateway;
 
+import java.io.IOException;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
+import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
 /**
@@ -19,7 +21,8 @@ import javax.websocket.server.ServerEndpoint;
 public class Gateway3 {
 
     @OnMessage
-    public String onMessage(String message) {
+    public String onMessage(String message, Session session) throws IOException {
+        session.getBasicRemote().sendText("You are now Connected to IoT Gateway3");
         return null;
     }
 
