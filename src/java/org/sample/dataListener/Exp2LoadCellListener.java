@@ -51,6 +51,7 @@ public class Exp2LoadCellListener {
         }
         */
                 //System.out.println("Message from receiver:"+message);
+                
         if(message.toString().trim().equalsIgnoreCase("storeMySession")){
             System.out.println("session stored");
             sessions.put("storeMySession", session);
