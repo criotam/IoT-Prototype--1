@@ -35,7 +35,6 @@ async function addPlayer(playerData) {
     Player.player_weight = playerData.player_weight;
     Player.player_height = playerData.player_height;
     Player.player_sex = playerData.player_sex;
-
     const assetRegistry = await getParticipantRegistry('org.criotam.prototype.participants.Player');
     await assetRegistry.add(Player);
 
@@ -43,27 +42,6 @@ async function addPlayer(playerData) {
     event.player_id = playerData.player_id;
     emit(event);
     
-    wss.on('connection', (ws) => {
-
-        ws.on('message', (message)=> {
-
-          console.log('recieved: %s', message);
-          ws.send(`Hello, you sent -> ${message}`);
-
-        });
-
-        ws.send('Hi there, I am a WebSocket server');
-
-      });
-      
-      // Add a broadcast method that sends data to all connected clients.
-      wss.broadcast = (data) => {
-          wss.clients.forEach((client) => {
-              if (client.readyState === WebSocket.OPEN) {
-                  client.send(data);
-              }
-          });
-      };
 }
 
 
