@@ -10,7 +10,7 @@ abstract asset ExperimentData identified by experimentId {
 }
 
 abstract transaction experimentADDTx {
-  o String experimentId optional
+  o String experimentId 
   o String Raw_value optional
   --> Scientist experimenter optional
   --> Player player optional

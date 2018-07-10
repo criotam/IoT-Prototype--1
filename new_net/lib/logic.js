@@ -13,9 +13,11 @@
  */
 
 'use strict';
+
 /**
  * Write your transction processor functions here
  */
+
 
 /**
  * addPlayer
@@ -40,6 +42,28 @@ async function addPlayer(playerData) {
     let event = factory.newEvent(NS2, 'addedPlayer');
     event.player_id = playerData.player_id;
     emit(event);
+    
+    wss.on('connection', (ws) => {
+
+        ws.on('message', (message)=> {
+
+          console.log('recieved: %s', message);
+          ws.send(`Hello, you sent -> ${message}`);
+
+        });
+
+        ws.send('Hi there, I am a WebSocket server');
+
+      });
+      
+      // Add a broadcast method that sends data to all connected clients.
+      wss.broadcast = (data) => {
+          wss.clients.forEach((client) => {
+              if (client.readyState === WebSocket.OPEN) {
+                  client.send(data);
+              }
+          });
+      };
 }
 
 
@@ -59,7 +83,7 @@ async function addPlayer(playerData) {
     Scientist.Password = scientistData.Password;
     const participantRegistry = await getParticipantRegistry('org.criotam.prototype.participants.Scientist');
     await participantRegistry.add(Scientist);
-
+    
     let event = factory.newEvent(NS2, 'addedScientist');
     event.scientistId = scientistData.scientistId;
     emit(event);
@@ -106,7 +130,7 @@ async function readexperiment1lcData(experiment1lcData) {
     let Raw_value = experiment1lcData.Raw_value;
   	let lc1_Raw_value = experiment1lcData.lc1_Raw_value;
   	let lc2_Raw_value = experiment1lcData.lc2_Raw_value;
-    let expId = getExperimentId(Raw_value);
+    let expId = "EX01"
     let factory = getFactory();
   	lc1_Raw_value = getExplc(Raw_value);
     lc2_Raw_value = getExplc(Raw_value);
@@ -158,7 +182,7 @@ async function experiment2lcDataAdd(experiment2lcData) {
 async function readexperiment2lcData(experiment2lcData) {
     var NS = 'org.criotam.prototype.iotTransactions';
     let Raw_value = experiment2lcData.Raw_value;
-    let expId = getExperimentId(Raw_value);
+    let expId = "EX02a"
     let factory = getFactory();
     lc_Raw_value = getExplc(Raw_value);
     experiment2lcData.experiment1.lc1_Raw_value = lc_Raw_value[0];
@@ -210,7 +234,7 @@ async function experiment2emgDataAdd(experiment2emgData) {
      const NS = 'org.criotam.prototype.iotTransactions';
      let Raw_value = experiment2emgData.Raw_value;
      let emg_Raw_value = experiment2emgData.emg_Raw_value;
-     let expId = "EE02";
+     let expId = "EX02b";
      let factory = getFactory();
      emg_Raw_value = getExpemg(Raw_value);
      experiment2emgData.experiment1.emg_Raw_value = emg_Raw_value;
@@ -234,7 +258,7 @@ async function experiment2emgDataAdd(experiment2emgData) {
  async function experiment3fpDataAdd(experiment3fpData) {
      const NS1 = 'org.criotam.prototype.iotAssets';
      const NS2 = 'org.criotam.prototype.iotTransactions';
-     let factory = getFactoy();
+     let factory = getFactory();
      let Experiment = factory.newResource(NS1, "experiment3fpData", experiment3fpData.experimentId);
      Experiment.experimentId = experiment3fpData.experimentId;
      Experiment.Raw_value = experiment3fpData.Raw_value;
@@ -260,7 +284,7 @@ async function experiment2emgDataAdd(experiment2emgData) {
 async function readexperiment3fpData(experiment3fpData) {
     var NS = 'org.criotam.prototype.iotTransactions';
     let Raw_value = experiment3fpData.Raw_value;
-    let expId = getExperimentId(Raw_value);
+    let expId = "EX03a";
     let factory = getFactory();
     lc_Raw_value = getExp3fp(Raw_value);
     experiment3fpData.experiment1.lc1_Raw_value = lc_Raw_value[0];
@@ -284,15 +308,15 @@ async function readexperiment3fpData(experiment3fpData) {
 
 async function experiment3emgDataAdd(experiment3emgData) {
     const NS1 = 'org.criotam.prototype.iotAssets';
-    const NS2 = 'org.criotam.prototype.iotTransaction';
+    const NS2 = 'org.criotam.prototype.iotTransactions';
     let factory = getFactory();
-    let Experiment = factory.newResource(NS1, "experiment3emgData", experiment3fpData.experimentId);
+    let Experiment = factory.newResource(NS1, "experiment3emgData", experiment3emgData.experimentId);
     Experiment.experimentId = experiment3emgData.experimentId;
     Experiment.emg_Raw_value = experiment3emgData.emg_Raw_value;
     Experiment.experimenter = experiment3emgData.experimenter;
     Experiment.player = experiment3emgData.player;
 
-    const assetRegistry = await getAssetRegistry('org.criotam.prototype.iotAsset.experiment3emgData');
+    const assetRegistry = await getAssetRegistry('org.criotam.prototype.iotAssets.experiment3emgData');
     await assetRegistry.add(Experiment);
 
     let event = factory.newEvent(NS2, 'experiment3emgDataAdded');
@@ -308,7 +332,7 @@ async function experiment3emgDataAdd(experiment3emgData) {
 async function readexperiment3emgData(experiment3emgData) {
     var NS = 'org.criotam.prototype.iotTransactions';
     let Raw_value = experiment3emgData.Raw_value;
-    let expId = getExperimentId(Raw_value);
+    let expId = "EX03b";
     let factory = getFactory();
     emg_Raw_value = getExpemg(Raw_value);
     experiment3emgData.experiment1.emg_Raw_value = emg_Raw_value;
