@@ -116,7 +116,7 @@ public class BroadCastListener extends HttpServlet{
     		if(gateway1_handler_lc!=null) {
     			if(gateway1_handler_lc.isClosed()) {
     				gateway1_handler_lc = new Arduino_Listener_Handler("ws://"+
-    	        			ip.toString().trim()+":8080/WebServer/loadCellStreaming",new Arduino_Listener_Handler.EventListenerHandler() {
+    	        			ip.toString().trim()+":8088/WebServer/loadCellStreaming",new Arduino_Listener_Handler.EventListenerHandler() {
 		        	            @Override
 		        	            public void onOpen(Session session) {
 		        	                System.out.println("onOpen:: BroadCastListener g1");
@@ -143,7 +143,7 @@ public class BroadCastListener extends HttpServlet{
     			}
     		}else {
     			gateway1_handler_lc = new Arduino_Listener_Handler("ws://"+
-            			ip.toString().trim()+":8080/WebServer/loadCellStreaming",new Arduino_Listener_Handler.EventListenerHandler() {
+            			ip.toString().trim()+":8088/WebServer/loadCellStreaming",new Arduino_Listener_Handler.EventListenerHandler() {
 	        	            @Override
 	        	            public void onOpen(Session session) {
 	        	            	System.out.println("onOpen:: BroadCastListener g1");
@@ -182,7 +182,7 @@ public class BroadCastListener extends HttpServlet{
     		if(gateway2_handler_lc!=null) {
     			if(gateway2_handler_lc.isClosed()) {
     				gateway2_handler_lc = new Arduino_Listener_Handler("ws://"+
-    	        			ip.toString().trim()+":8080/WebServer/exp2loadcelllistener",new Arduino_Listener_Handler.EventListenerHandler() {
+    	        			ip.toString().trim()+":8088/WebServer/exp2loadcelllistener",new Arduino_Listener_Handler.EventListenerHandler() {
 		        	            @Override
 		        	            public void onOpen(Session session) {
 		        	            	System.out.println("onOpen:: BroadCastListener g2");
@@ -209,7 +209,7 @@ public class BroadCastListener extends HttpServlet{
     			
     		}else {
     			gateway2_handler_lc = new Arduino_Listener_Handler("ws://"+
-            			ip.toString().trim()+":8080/WebServer/exp2loadcelllistener",new Arduino_Listener_Handler.EventListenerHandler() {
+            			ip.toString().trim()+":8088/WebServer/exp2loadcelllistener",new Arduino_Listener_Handler.EventListenerHandler() {
 	        	            @Override
 	        	            public void onOpen(Session session) {
 	        	            	System.out.println("onOpen:: BroadCastListener g2");
@@ -247,7 +247,7 @@ public class BroadCastListener extends HttpServlet{
     		if(gateway2_handler_emg!=null) {
     			if(gateway2_handler_emg.isClosed()) {
     				gateway2_handler_emg = new Arduino_Listener_Handler("ws://"+
-    	        			ip.toString().trim()+":8080/WebServer/exp2emglistener",new Arduino_Listener_Handler.EventListenerHandler() {
+    	        			ip.toString().trim()+":8088/WebServer/exp2emglistener",new Arduino_Listener_Handler.EventListenerHandler() {
 		        	            @Override
 		        	            public void onOpen(Session session) {
 		        	            	System.out.println("onOpen:: BroadCastListener g2");
@@ -273,7 +273,7 @@ public class BroadCastListener extends HttpServlet{
     			}
     		}else {
     			gateway2_handler_emg = new Arduino_Listener_Handler("ws://"+
-            			ip.toString().trim()+":8080/WebServer/exp2emglistener",new Arduino_Listener_Handler.EventListenerHandler() {
+            			ip.toString().trim()+":8088/WebServer/exp2emglistener",new Arduino_Listener_Handler.EventListenerHandler() {
 	        	            @Override
 	        	            public void onOpen(Session session) {
 	        	            	System.out.println("onOpen:: BroadCastListener g2");
@@ -311,7 +311,7 @@ public class BroadCastListener extends HttpServlet{
 			if(gateway3_handler_fp!=null) {
 				if(gateway3_handler_fp.isClosed()) {
 					gateway3_handler_fp = new Arduino_Listener_Handler("ws://"+
-		        			ip.toString().trim()+":8080/WebServer/exp3forceplatelistener",new Arduino_Listener_Handler.EventListenerHandler() {
+		        			ip.toString().trim()+":8088/WebServer/exp3forceplatelistener",new Arduino_Listener_Handler.EventListenerHandler() {
 		        	            @Override
 		        	            public void onOpen(Session session) {
 		        	            	System.out.println("onOpen:: BroadCastListener g3");
@@ -337,7 +337,7 @@ public class BroadCastListener extends HttpServlet{
 				}
 			}else {
 				gateway3_handler_fp = new Arduino_Listener_Handler("ws://"+
-	        			ip.toString().trim()+":8080/WebServer/exp3forceplatelistener",new Arduino_Listener_Handler.EventListenerHandler() {
+	        			ip.toString().trim()+":8088/WebServer/exp3forceplatelistener",new Arduino_Listener_Handler.EventListenerHandler() {
 	        	            @Override
 	        	            public void onOpen(Session session) {
 	        	            	System.out.println("onOpen:: BroadCastListener g3");
@@ -376,7 +376,7 @@ public class BroadCastListener extends HttpServlet{
 			if(gateway3_handler_emg!=null) {
 				if(gateway3_handler_emg.isClosed()) {
 					gateway3_handler_emg = new Arduino_Listener_Handler("ws://"+
-		        			ip.toString().trim()+":8080/WebServer/exp3emglistener",new Arduino_Listener_Handler.EventListenerHandler() {
+		        			ip.toString().trim()+":8088/WebServer/exp3emglistener",new Arduino_Listener_Handler.EventListenerHandler() {
 		        	            @Override
 		        	            public void onOpen(Session session) {
 		        	            	System.out.println("onOpen:: BroadCastListener g3");
@@ -402,7 +402,7 @@ public class BroadCastListener extends HttpServlet{
 				}
 			}else {
 				gateway3_handler_emg = new Arduino_Listener_Handler("ws://"+
-	        			ip.toString().trim()+":8080/WebServer/exp3emglistener",new Arduino_Listener_Handler.EventListenerHandler() {
+	        			ip.toString().trim()+":8088/WebServer/exp3emglistener",new Arduino_Listener_Handler.EventListenerHandler() {
 	        	            @Override
 	        	            public void onOpen(Session session) {
 	        	            	System.out.println("onOpen:: BroadCastListener g3");
